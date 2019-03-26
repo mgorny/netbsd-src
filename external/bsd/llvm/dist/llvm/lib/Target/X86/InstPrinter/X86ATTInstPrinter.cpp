@@ -92,7 +92,7 @@ void X86ATTInstPrinter::printOperand(const MCInst *MI, unsigned OpNo,
     // the hex value of the immediate operand when it isn't in the range
     // [-256,255].
     if (CommentStream && !HasCustomInstComment && (Imm > 255 || Imm < -256)) {
-      // Don't print unnecessary hex sign bits. 
+      // Don't print unnecessary hex sign bits.
       if (Imm == (int16_t)(Imm))
         *CommentStream << format("imm = 0x%" PRIX16 "\n", (uint16_t)Imm);
       else if (Imm == (int32_t)(Imm))
@@ -199,4 +199,15 @@ void X86ATTInstPrinter::printU8Imm(const MCInst *MI, unsigned Op,
 
   O << markup("<imm:") << '$' << formatImm(MI->getOperand(Op).getImm() & 0xff)
     << markup(">");
+}
+
+void X86ATTInstPrinter::printSTiRegOperand(const MCInst *MI, unsigned OpNo,
+                                           raw_ostream &OS) {
+  const MCOperand &Op = MI->getOperand(OpNo);
+  unsigned Reg = Op.getReg();
+  // Override the default printing to print st(0) instead st.
+  if (Reg == X86::ST0)
+    OS << markup("<reg:") << "%st(0)" << markup(">");
+  else
+    printRegName(OS, Reg);
 }

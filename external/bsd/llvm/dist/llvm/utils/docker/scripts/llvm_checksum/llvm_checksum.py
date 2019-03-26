@@ -79,7 +79,7 @@ def ComputeLLVMChecksums(root_path, projects):
   hash_algo = hashlib.sha256
 
   def collapse_svn_substitutions(contents):
-    # Replace svn substitutions for $Date: 2018/07/17 18:36:09 $ and $LastChangedDate$.
+    # Replace svn substitutions for $Date$ and $LastChangedDate$.
     # Unfortunately, these are locale-specific.
     return SVN_DATES_REGEX.sub("$\1$", contents)
 
@@ -183,7 +183,7 @@ def ValidateChecksums(reference_checksums,
     if len(new_checksums) != len(reference_checksums):
       return False
 
-  for proj, checksum in new_checksums.iteritems():
+  for proj, checksum in new_checksums.items():
     # We never computed a checksum for this project.
     if proj not in reference_checksums:
       return False

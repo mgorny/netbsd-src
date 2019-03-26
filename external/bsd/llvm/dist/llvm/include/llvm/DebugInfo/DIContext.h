@@ -81,7 +81,7 @@ class DIInliningInfo {
 public:
   DIInliningInfo() = default;
 
-  DILineInfo getFrame(unsigned Index) const {
+  const DILineInfo & getFrame(unsigned Index) const {
     assert(Index < Frames.size());
     return Frames[Index];
   }
@@ -98,6 +98,11 @@ public:
   void addFrame(const DILineInfo &Frame) {
     Frames.push_back(Frame);
   }
+  
+  void resize(unsigned i) {
+    Frames.resize(i);
+  }
+  
 };
 
 /// Container for description of a global variable.
@@ -154,6 +159,8 @@ enum DIDumpType : unsigned {
 struct DIDumpOptions {
   unsigned DumpType = DIDT_All;
   unsigned RecurseDepth = -1U;
+  uint16_t Version = 0; // DWARF version to assume when extracting.
+  uint8_t AddrSize = 4; // Address byte size to assume when extracting.
   bool ShowAddresses = true;
   bool ShowChildren = false;
   bool ShowParents = false;

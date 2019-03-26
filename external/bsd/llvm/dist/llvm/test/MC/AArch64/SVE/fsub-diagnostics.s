@@ -51,6 +51,15 @@ fsub    z0.h, p7/m, z0.h, z31.s
 // CHECK-NEXT: fsub    z0.h, p7/m, z0.h, z31.s
 // CHECK-NOT: [[@LINE-1]]:{{[0-9]+}}:
 
+fsub z0.b, z1.b, z2.b
+// CHECK: [[@LINE-1]]:{{[0-9]+}}: error: invalid element width
+// CHECK-NEXT: fsub z0.b, z1.b, z2.b
+// CHECK-NOT: [[@LINE-1]]:{{[0-9]+}}:
+
+fsub z0.h, z1.s, z2.s
+// CHECK: [[@LINE-1]]:{{[0-9]+}}: error: invalid element width
+// CHECK-NEXT: fsub z0.h, z1.s, z2.s
+// CHECK-NOT: [[@LINE-1]]:{{[0-9]+}}:
 
 // ------------------------------------------------------------------------- //
 // Invalid predicate
@@ -58,4 +67,20 @@ fsub    z0.h, p7/m, z0.h, z31.s
 fsub    z0.h, p8/m, z0.h, z31.h
 // CHECK: [[@LINE-1]]:{{[0-9]+}}: error: restricted predicate has range [0, 7].
 // CHECK-NEXT: fsub    z0.h, p8/m, z0.h, z31.h
+// CHECK-NOT: [[@LINE-1]]:{{[0-9]+}}:
+
+
+// --------------------------------------------------------------------------//
+// Negative tests for instructions that are incompatible with movprfx
+
+movprfx z0.d, p0/z, z7.d
+fsub z0.d, z1.d, z31.d
+// CHECK: [[@LINE-1]]:{{[0-9]+}}: error: instruction is unpredictable when following a movprfx, suggest replacing movprfx with mov
+// CHECK-NEXT: fsub z0.d, z1.d, z31.d
+// CHECK-NOT: [[@LINE-1]]:{{[0-9]+}}:
+
+movprfx z0, z7
+fsub z0.d, z1.d, z31.d
+// CHECK: [[@LINE-1]]:{{[0-9]+}}: error: instruction is unpredictable when following a movprfx, suggest replacing movprfx with mov
+// CHECK-NEXT: fsub z0.d, z1.d, z31.d
 // CHECK-NOT: [[@LINE-1]]:{{[0-9]+}}:
