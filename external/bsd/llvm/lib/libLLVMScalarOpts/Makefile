@@ -52,6 +52,7 @@ SRCS+=	ADCE.cpp \
 	LowerAtomic.cpp \
 	LowerExpectIntrinsic.cpp \
 	LowerGuardIntrinsic.cpp \
+	MakeGuardsExplicit.cpp \
 	MemCpyOptimizer.cpp \
 	MergedLoadStoreMotion.cpp \
 	MergeICmps.cpp \
@@ -74,7 +75,8 @@ SRCS+=	ADCE.cpp \
 	SROA.cpp \
 	StraightLineStrengthReduce.cpp \
 	StructurizeCFG.cpp \
-	TailRecursionElimination.cpp
+	TailRecursionElimination.cpp \
+	WarnMissedTransforms.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

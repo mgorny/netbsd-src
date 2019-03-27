@@ -9,10 +9,8 @@ LIB=	clangFrontend
 SRCS+=	ASTConsumers.cpp \
 	ASTMerge.cpp \
 	ASTUnit.cpp \
-	CacheTokens.cpp \
 	ChainedDiagnosticConsumer.cpp \
 	ChainedIncludesSource.cpp \
-	CodeGenOptions.cpp \
 	CompilerInstance.cpp \
 	CompilerInvocation.cpp \
 	CreateInvocationFromCommandLine.cpp \
@@ -31,7 +29,6 @@ SRCS+=	ASTConsumers.cpp \
 	LogDiagnosticPrinter.cpp \
 	ModuleDependencyCollector.cpp \
 	MultiplexConsumer.cpp \
-	PCHContainerOperations.cpp \
 	PrecompiledPreamble.cpp \
 	PrintPreprocessedOutput.cpp \
 	SerializedDiagnosticPrinter.cpp \

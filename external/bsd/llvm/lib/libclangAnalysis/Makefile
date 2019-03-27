@@ -18,16 +18,11 @@ SRCS+=	AnalysisDeclContext.cpp \
 	ConstructionContext.cpp \
 	Consumed.cpp \
 	Dominators.cpp \
-	FormatString.cpp \
 	LiveVariables.cpp \
-	OSLog.cpp \
 	ObjCNoReturn.cpp \
 	PostOrderCFGView.cpp \
 	ProgramPoint.cpp \
-	PrintfFormatString.cpp \
-	PseudoConstantAnalysis.cpp \
 	ReachableCode.cpp \
-	ScanfFormatString.cpp \
 	ThreadSafety.cpp \
 	ThreadSafetyCommon.cpp \
 	ThreadSafetyLogical.cpp \

@@ -110,7 +110,7 @@
 ./usr/include/c++
 ./usr/include/c++/experimental
 ./usr/include/c++/ext
-./usr/include/clang-7.0
+./usr/include/clang-8.0
 ./usr/include/crypto
 ./usr/include/dev
 ./usr/include/dev/apm

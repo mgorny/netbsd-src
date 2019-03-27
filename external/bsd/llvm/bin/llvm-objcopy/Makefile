@@ -7,7 +7,8 @@ NOMAN=		yes
 
 .PATH: ${LLVM_SRCDIR}/tools/llvm-objcopy
 
-SRCS=	Object.cpp \
+SRCS=	Buffer.cpp \
+	CopyConfig.cpp
 	llvm-objcopy.cpp
 
 TABLEGEN_SRC=		ObjcopyOpts.td StripOpts.td
@@ -18,6 +19,17 @@ TABLEGEN_OUTPUT.StripOpts.td= \
 	StripOpts.inc|-gen-opt-parser-defs
 .include "${.PARSEDIR}/../../tablegen.mk"
 
+.PATH: ${LLVM_SRCDIR}/tools/llvm-objcopy/COFF
+
+SRCS+=	COFFObjcopy.cpp \
+	Object.cpp \
+	Reader.cpp \
+	Writer.cpp
+
+.PATH: ${LLVM_SRCDIR}/tools/llvm-objcopy/ELF
+
+SRCS+=	ELFObjcopy.cpp \
+	Object.cpp
 LLVM_LIBS+= \
 
 LDADD+=	-lz

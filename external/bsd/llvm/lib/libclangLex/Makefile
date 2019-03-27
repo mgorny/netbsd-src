@@ -20,7 +20,6 @@ SRCS+=	HeaderMap.cpp \
 	PPExpressions.cpp \
 	PPLexerChange.cpp \
 	PPMacroExpansion.cpp \
-	PTHLexer.cpp \
 	Pragma.cpp \
 	PreprocessingRecord.cpp \
 	Preprocessor.cpp \

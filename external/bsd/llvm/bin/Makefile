@@ -34,6 +34,7 @@ SUBDIR+= \
 	llvm-cov \
 	llvm-cxxdump \
 	llvm-cxxfilt \
+	llvm-cxxmap \
 	llvm-diff \
 	llvm-dis \
 	llvm-dwarfdump \

@@ -9,12 +9,14 @@ LIB=	clangBasic
 SRCS+=	Attributes.cpp \
 	Builtins.cpp \
 	CharInfo.cpp \
+	CodeGenOptions.cpp \
 	Cuda.cpp \
 	Diagnostic.cpp \
 	DiagnosticIDs.cpp \
 	DiagnosticOptions.cpp \
 	FileManager.cpp \
 	FileSystemStatCache.cpp \
+	FixedPoint.cpp \
 	IdentifierTable.cpp \
 	LangOptions.cpp \
 	MemoryBufferCache.cpp \
@@ -31,7 +33,6 @@ SRCS+=	Attributes.cpp \
 	Targets.cpp \
 	TokenKinds.cpp \
 	Version.cpp \
-	VirtualFileSystem.cpp \
 	Warnings.cpp \
 	XRayInstr.cpp \
 	XRayLists.cpp
@@ -40,6 +41,7 @@ SRCS+=	Attributes.cpp \
 
 SRCS+=	AArch64.cpp \
 	AMDGPU.cpp \
+	ARC.cpp \
 	ARM.cpp \
 	AVR.cpp \
 	BPF.cpp \
@@ -49,7 +51,6 @@ SRCS+=	AArch64.cpp \
 	MSP430.cpp \
 	Mips.cpp \
 	NVPTX.cpp \
-	Nios2.cpp \
 	OSTargets.cpp \
 	PNaCl.cpp \
 	PPC.cpp \

@@ -8,6 +8,7 @@ LIB=	clangStaticAnalyzerFrontend
 
 SRCS+=	AnalysisConsumer.cpp \
 	CheckerRegistration.cpp \
+	CheckerRegistry.cpp \
 	FrontendActions.cpp \
 	ModelConsumer.cpp \
 	ModelInjector.cpp

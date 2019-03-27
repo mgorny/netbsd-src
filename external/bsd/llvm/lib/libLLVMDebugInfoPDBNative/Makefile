@@ -20,20 +20,29 @@ SRCS+=	DbiModuleDescriptorBuilder.cpp \
 	InfoStream.cpp \
 	ModuleDebugStream.cpp \
 	NamedStreamMap.cpp \
-	NativeBuiltinSymbol.cpp \
 	NativeCompilandSymbol.cpp \
+	NativeEnumGlobals.cpp \
 	NativeEnumModules.cpp \
-	NativeEnumSymbol.cpp \
 	NativeEnumTypes.cpp \
 	NativeExeSymbol.cpp \
 	NativeRawSymbol.cpp \
 	NativeSession.cpp \
+	NativeSymbolEnumerator.cpp \
+	NativeTypeArray.cpp \
+	NativeTypeBuiltin.cpp \
+	NativeTypeEnum.cpp \
+	NativeTypeFunctionSig.cpp \
+	NativeTypePointer.cpp \
+	NativeTypeTypedef.cpp \
+	NativeTypeUDT.cpp \
+	NativeTypeVTShape.cpp \
 	PDBFileBuilder.cpp \
 	PDBFile.cpp \
 	PDBStringTableBuilder.cpp \
 	PDBStringTable.cpp \
 	PublicsStream.cpp \
 	RawError.cpp \
+	SymbolCache.cpp \
 	SymbolStream.cpp \
 	TpiHashing.cpp \
 	TpiStreamBuilder.cpp \

@@ -14,7 +14,8 @@ SRCS+=	AsmLexer.cpp \
 	MCAsmLexer.cpp \
 	MCAsmParser.cpp \
 	MCAsmParserExtension.cpp \
-	MCTargetAsmParser.cpp
+	MCTargetAsmParser.cpp \
+	WasmAsmParser.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

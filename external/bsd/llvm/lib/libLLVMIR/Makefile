@@ -51,8 +51,10 @@ SRCS+=	AsmWriter.cpp \
 	Operator.cpp \
 	OptBisect.cpp \
 	Pass.cpp \
+	PassInstrumentation.cpp \
 	PassManager.cpp \
 	PassRegistry.cpp \
+	PassTimingInfo.cpp \
 	ProfileSummary.cpp \
 	SafepointIRVerifier.cpp \
 	Statepoint.cpp \

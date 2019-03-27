@@ -6,9 +6,11 @@ LIB=	LLVMDebugInfoPDBDIA
 
 .PATH: ${LLVM_SRCDIR}/lib/DebugInfo/PDB/DIA
 
-SRCS+=	DIAEnumInjectedSources.cpp \
+SRCS+=	DIAEnumFrameData.cpp \
+	DIAEnumInjectedSources.cpp \
 	DIAEnumSectionContribs.cpp \
 	DIAEnumTables.cpp \
+	DIAFrameData.cpp \
 	DIAInjectedSource.cpp \
 	DIASectionContrib.cpp \
 	DIATable.cpp

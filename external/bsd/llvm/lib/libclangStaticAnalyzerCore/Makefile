@@ -18,7 +18,6 @@ SRCS+=	APSIntType.cpp \
 	Checker.cpp \
 	CheckerHelpers.cpp \
 	CheckerManager.cpp \
-	CheckerRegistry.cpp \
 	CommonBugCategories.cpp \
 	ConstraintManager.cpp \
 	CoreEngine.cpp \
@@ -42,6 +41,8 @@ SRCS+=	APSIntType.cpp \
 	RangeConstraintManager.cpp \
 	RangedConstraintManager.cpp \
 	RegionStore.cpp \
+	RetainSummaryManager.cpp \
+	SarifDiagnostics.cpp \
 	SimpleConstraintManager.cpp \
 	SimpleSValBuilder.cpp \
 	Store.cpp \
@@ -49,6 +50,7 @@ SRCS+=	APSIntType.cpp \
 	SValBuilder.cpp \
 	SVals.cpp \
 	SymbolManager.cpp \
+	TaintManager.cpp \
 	WorkList.cpp \
 	Z3ConstraintManager.cpp
 

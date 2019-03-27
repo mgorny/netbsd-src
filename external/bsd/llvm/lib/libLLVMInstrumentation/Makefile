@@ -9,6 +9,7 @@ LIB=	LLVMInstrumentation
 SRCS+=	AddressSanitizer.cpp \
 	BoundsChecking.cpp \
 	CGProfile.cpp \
+	ControlHeightReduction.cpp \
 	DataFlowSanitizer.cpp \
 	EfficiencySanitizer.cpp \
 	GCOVProfiling.cpp \

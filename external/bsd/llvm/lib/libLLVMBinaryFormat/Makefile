@@ -6,8 +6,12 @@ LIB=	LLVMBinaryFormat
 
 .PATH: ${LLVM_SRCDIR}/lib/BinaryFormat
 
-SRCS+=	Dwarf.cpp \
+SRCS+=	AMDGPUMetadataVerifier.cpp \
+	Dwarf.cpp \
 	Magic.cpp \
+	MsgPackReader.cpp \
+	MsgPackTypes.cpp \
+	MsgPackWriter.cpp \
 	Wasm.cpp
 
 .if defined(HOSTLIB)

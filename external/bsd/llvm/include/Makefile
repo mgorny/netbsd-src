@@ -136,8 +136,9 @@ CLANG_TABLEGEN_SRC=	\
 CLANG_TABLEGEN_INCLUDES.Attr.td=	-I${CLANG_SRCDIR}/include
 CLANG_TABLEGEN_OUTPUT.Attr.td= \
 	clang/AST/Attrs.inc|-gen-clang-attr-classes \
-	clang/AST/AttrDump.inc|-gen-clang-attr-dump \
 	clang/AST/AttrImpl.inc|-gen-clang-attr-impl \
+	clang/AST/AttrNodeTraverse.inc|-gen-clang-attr-node-traverse \
+	clang/AST/AttrTextNodeDump.inc|-gen-clang-attr-text-node-dump \
 	clang/AST/AttrVisitor.inc|-gen-clang-attr-ast-visitor \
 	clang/Basic/AttrList.inc|-gen-clang-attr-list \
 	clang/Basic/AttrHasAttributeImpl.inc|-gen-clang-attr-has-attribute-impl \

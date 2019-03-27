@@ -947,6 +947,9 @@ esac
 AC_DEFINE_UNQUOTED([LLVM_ENABLE_THREADS],$LLVM_ENABLE_THREADS,
                    [Define if threads enabled])
 
+AC_DEFINE_UNQUOTED([LLVM_ENABLE_CRASH_DUMPS],1,
+                   [Define if crash dumps enabled])
+
 dnl Allow disablement of pthread.h
 AC_ARG_ENABLE(pthreads,
               AS_HELP_STRING([--enable-pthreads],

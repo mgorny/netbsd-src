@@ -13,6 +13,7 @@ SRCS=	func-id-helper.cpp \
 	xray-color-helper.cpp \
 	xray-converter.cpp \
 	xray-extract.cpp \
+	xray-fdr-dump.cpp \
 	xray-graph-diff.cpp \
 	xray-graph.cpp \
 	xray-registry.cpp \

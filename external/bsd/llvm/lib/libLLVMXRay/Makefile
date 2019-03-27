@@ -6,7 +6,19 @@ LIB=	LLVMXRay
 
 .PATH: ${LLVM_SRCDIR}/lib/XRay
 
-SRCS+=	InstrumentationMap.cpp \
+SRCS+=	BlockIndexer.cpp \
+	BlockPrinter.cpp \
+	BlockVerifier.cpp \
+	FDRRecordProducer.cpp \
+	FDRRecords.cpp \
+	FDRTraceExpander.cpp \
+	FDRTraceWriter.cpp \
+	FileHeaderReader.cpp \
+	InstrumentationMap.cpp \
+	LogBuilderConsumer.cpp \
+	Profile.cpp \
+	RecordInitializer.cpp \
+	RecordPrinter.cpp \
 	Trace.cpp
 
 .if defined(HOSTLIB)

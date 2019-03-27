@@ -12,9 +12,11 @@ SRCS+=	AArch64A53Fix835769.cpp \
 	AArch64A57FPLoadBalancing.cpp \
 	AArch64AdvSIMDScalarPass.cpp \
 	AArch64AsmPrinter.cpp \
+	AArch64BranchTargets.cpp \
 	AArch64CallLowering.cpp \
 	AArch64CleanupLocalDynamicTLSPass.cpp \
 	AArch64CollectLOH.cpp \
+	AArch64CompressJumpTables.cpp \
 	AArch64CondBrTuning.cpp \
 	AArch64ConditionalCompares.cpp \
 	AArch64ConditionOptimizer.cpp \
@@ -32,12 +34,14 @@ SRCS+=	AArch64A53Fix835769.cpp \
 	AArch64MacroFusion.cpp \
 	AArch64MCInstLower.cpp \
 	AArch64PBQPRegAlloc.cpp \
+	AArch64PreLegalizerCombiner.cpp \
 	AArch64PromoteConstant.cpp \
 	AArch64RedundantCopyElimination.cpp \
 	AArch64RegisterBankInfo.cpp \
 	AArch64RegisterInfo.cpp \
 	AArch64SelectionDAGInfo.cpp \
 	AArch64SIMDInstrOpt.cpp \
+	AArch64SpeculationHardening.cpp \
 	AArch64StorePairSuppress.cpp \
 	AArch64Subtarget.cpp \
 	AArch64TargetMachine.cpp \

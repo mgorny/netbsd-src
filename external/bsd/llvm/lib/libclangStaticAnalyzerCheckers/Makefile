@@ -7,8 +7,7 @@ LIB=	clangStaticAnalyzerCheckers
 .PATH: ${CLANG_SRCDIR}/lib/StaticAnalyzer/Checkers
 .PATH: ${CLANG_SRCDIR}/lib/StaticAnalyzer/Checkers/MPI-Checker
 
-SRCS+=	AllocationDiagnostics.cpp \
-	AnalysisOrderChecker.cpp \
+SRCS+=	AnalysisOrderChecker.cpp \
 	AnalyzerStatsChecker.cpp \
 	ArrayBoundChecker.cpp \
 	ArrayBoundCheckerV2.cpp \
@@ -25,13 +24,11 @@ SRCS+=	AllocationDiagnostics.cpp \
 	CheckSecuritySyntaxOnly.cpp \
 	CheckSizeofPointer.cpp \
 	ChrootChecker.cpp \
-	ClangCheckers.cpp \
 	CloneChecker.cpp \
 	ConversionChecker.cpp \
 	CStringChecker.cpp \
 	CStringSyntaxChecker.cpp \
 	CXXSelfAssignmentChecker.cpp \
-	DanglingInternalBufferChecker.cpp \
 	DeadStoresChecker.cpp \
 	DebugCheckers.cpp \
 	DeleteWithNonVirtualDtorChecker.cpp \
@@ -40,12 +37,14 @@ SRCS+=	AllocationDiagnostics.cpp \
 	DivZeroChecker.cpp \
 	DynamicTypeChecker.cpp \
 	DynamicTypePropagation.cpp \
+	EnumCastOutOfRangeChecker.cpp \
 	ExprInspectionChecker.cpp \
 	FixedAddressChecker.cpp \
 	GCDAntipatternChecker.cpp \
 	GenericTaintChecker.cpp \
 	GTestChecker.cpp \
 	IdenticalExprChecker.cpp \
+	InnerPointerChecker.cpp \
 	IteratorChecker.cpp \
 	IvarInvalidationChecker.cpp \
 	LLVMConventionsChecker.cpp \
@@ -55,8 +54,8 @@ SRCS+=	AllocationDiagnostics.cpp \
 	MallocChecker.cpp \
 	MallocOverflowSecurityChecker.cpp \
 	MallocSizeofChecker.cpp \
-	MisusedMovedObjectChecker.cpp \
 	MmapWriteExecChecker.cpp \
+	MoveChecker.cpp \
 	MPIBugReporter.cpp \
 	MPIChecker.cpp \
 	MPIFunctionClassifier.cpp \
@@ -80,7 +79,6 @@ SRCS+=	AllocationDiagnostics.cpp \
 	PointerArithChecker.cpp \
 	PointerSubChecker.cpp \
 	PthreadLockChecker.cpp \
-	RetainCountChecker.cpp \
 	ReturnPointerRangeChecker.cpp \
 	ReturnUndefChecker.cpp \
 	SimpleStreamChecker.cpp \
@@ -96,13 +94,23 @@ SRCS+=	AllocationDiagnostics.cpp \
 	UndefinedArraySubscriptChecker.cpp \
 	UndefinedAssignmentChecker.cpp \
 	UndefResultChecker.cpp \
-	UninitializedObjectChecker.cpp \
 	UnixAPIChecker.cpp \
 	UnreachableCodeChecker.cpp \
 	ValistChecker.cpp \
 	VforkChecker.cpp \
 	VirtualCallChecker.cpp \
 	VLASizeChecker.cpp
+
+.PATH: ${CLANG_SRCDIR}/lib/StaticAnalyzer/Checkers/RetainCountChecker
+
+SRCS+=	RetainCountChecker.cpp \
+	RetainCountDiagnostics.cpp \
+	RunLoopAutoreleaseLeakChecker.cpp
+
+.PATH: ${CLANG_SRCDIR}/lib/StaticAnalyzer/Checkers/UninitializedObject
+
+SRCS+=	UninitializedObjectChecker.cpp \
+	UninitializedPointee.cpp
 
 .include "${.PARSEDIR}/../../tablegen.mk"
 

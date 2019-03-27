@@ -13,6 +13,7 @@ SRCS+=	AddDiscriminators.cpp \
 	BuildLibCalls.cpp \
 	BypassSlowDivision.cpp \
 	CallPromotionUtils.cpp \
+	CanonicalizeAliases.cpp \
 	CloneFunction.cpp \
 	CloneModule.cpp \
 	CodeExtractor.cpp \
@@ -25,6 +26,7 @@ SRCS+=	AddDiscriminators.cpp \
 	FunctionComparator.cpp \
 	FunctionImportUtils.cpp \
 	GlobalStatus.cpp \
+	GuardUtils.cpp \
 	ImportedFunctionsInliningStatistics.cpp \
 	InlineFunction.cpp \
 	InstructionNamer.cpp \
@@ -47,7 +49,6 @@ SRCS+=	AddDiscriminators.cpp \
 	MetaRenamer.cpp \
 	ModuleUtils.cpp \
 	NameAnonGlobals.cpp \
-	OrderedInstructions.cpp \
 	PredicateInfo.cpp \
 	PromoteMemoryToRegister.cpp \
 	SanitizerStats.cpp \

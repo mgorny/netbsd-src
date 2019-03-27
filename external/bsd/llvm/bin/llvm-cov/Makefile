@@ -11,6 +11,7 @@ SRCS=	gcov.cpp \
 	llvm-cov.cpp \
 	CodeCoverage.cpp \
 	CoverageExporterJson.cpp \
+	CoverageExporterLcov.cpp \
 	CoverageFilters.cpp \
 	CoverageReport.cpp \
 	CoverageSummaryInfo.cpp \

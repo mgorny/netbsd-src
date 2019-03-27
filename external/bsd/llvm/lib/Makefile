@@ -22,11 +22,13 @@ SUBDIR=	\
 	libLLVMLTO \
 	libLLVMLinker \
 	libLLVMMC \
+	libLLVMMCA \
 	libLLVMMCDisassembler \
 	libLLVMMCParser \
 	libLLVMObjCARC \
 	libLLVMObject \
 	libLLVMOption \
+	libLLVMOptRemarks \
 	libLLVMPasses \
 	libLLVMProfileData \
 	libLLVMProfileDataCoverage \
@@ -35,6 +37,7 @@ SUBDIR=	\
 	libLLVMSupport \
 	libLLVMTableGen \
 	libLLVMTarget \
+	libLLVMTextAPI \
 	libLLVMTransformsAggressiveInstCombine \
 	libLLVMTransformsCoroutines \
 	libLLVMTransformsUtils \
@@ -113,6 +116,7 @@ SUBDIR+= \
 	libLLVMMCJIT \
 	libLLVMMIRParser \
 	libLLVMOrc \
+	libLLVMPerfJITEvents \
 	libLLVMRuntimeDyld
 .endif
 
