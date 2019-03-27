@@ -34,6 +34,7 @@ SRCS+=	MicroMipsSizeReduction.cpp \
 	MipsModuleISelDAGToDAG.cpp \
 	MipsOptimizePICCall.cpp \
 	MipsOs16.cpp \
+	MipsPreLegalizerCombiner.cpp \
 	MipsRegisterBankInfo.cpp \
 	MipsRegisterInfo.cpp \
 	MipsSEFrameLowering.cpp \

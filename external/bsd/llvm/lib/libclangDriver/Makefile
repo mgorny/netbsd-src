@@ -10,6 +10,7 @@ CPPFLAGS+=	-I${CLANG_SRCDIR}/lib/Driver
 
 SRCS+=	Action.cpp \
 	Compilation.cpp \
+	DarwinSDKInfo.cpp \
 	Distro.cpp \
 	Driver.cpp \
 	DriverOptions.cpp \
@@ -41,17 +42,20 @@ SRCS+=	AMDGPU.cpp \
 	Gnu.cpp \
 	Haiku.cpp \
 	HIP.cpp \
+	Hurd.cpp \
 	Hexagon.cpp \
 	Linux.cpp \
 	MinGW.cpp \
 	Minix.cpp \
 	MipsLinux.cpp \
+	MSP430.cpp \
 	MSVC.cpp \
 	Myriad.cpp \
 	NaCl.cpp \
 	NetBSD.cpp \
 	OpenBSD.cpp \
 	PS4CPU.cpp \
+	RISCVToolchain.cpp \
 	Solaris.cpp \
 	TCE.cpp \
 	WebAssembly.cpp \

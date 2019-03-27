@@ -6,7 +6,9 @@ LIB=	LLVMDemangle
 
 .PATH: ${LLVM_SRCDIR}/lib/Demangle
 
-SRCS+=	ItaniumDemangle.cpp
+SRCS+=	ItaniumDemangle.cpp \
+	MicrosoftDemangle.cpp \
+	MicrosoftDemangleNodes.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

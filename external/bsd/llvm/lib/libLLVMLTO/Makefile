@@ -11,6 +11,7 @@ SRCS+=	Caching.cpp \
 	LTOBackend.cpp \
 	LTOCodeGenerator.cpp \
 	LTOModule.cpp \
+	SummaryBasedOptimizations.cpp \
 	ThinLTOCodeGenerator.cpp \
 	UpdateCompilerUsed.cpp
 

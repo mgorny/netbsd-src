@@ -46,6 +46,7 @@ SRCS+=	AggressiveAntiDepBreaker.cpp \
 	InlineSpiller.cpp \
 	InterferenceCache.cpp \
 	InterleavedAccessPass.cpp \
+	InterleavedLoadCombinePass.cpp \
 	IntrinsicLowering.cpp \
 	LatencyPriorityQueue.cpp \
 	LazyMachineBlockFrequencyInfo.cpp \
@@ -90,7 +91,6 @@ SRCS+=	AggressiveAntiDepBreaker.cpp \
 	MachineOperand.cpp \
 	MachineOptimizationRemarkEmitter.cpp \
 	MachineOutliner.cpp \
-	MachinePassRegistry.cpp \
 	MachinePipeliner.cpp \
 	MachinePostDominators.cpp \
 	MachineRegionInfo.cpp \

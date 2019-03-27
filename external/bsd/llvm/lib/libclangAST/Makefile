@@ -12,6 +12,7 @@ SRCS+=	APValue.cpp \
 	ASTDiagnostic.cpp \
 	ASTDumper.cpp \
 	ASTImporter.cpp \
+	ASTImporterLookupTable.cpp \
 	ASTStructuralEquivalence.cpp \
 	ASTTypeTraits.cpp \
 	AttrImpl.cpp \
@@ -41,6 +42,7 @@ SRCS+=	APValue.cpp \
 	ExprObjC.cpp \
 	ExternalASTMerger.cpp \
 	ExternalASTSource.cpp \
+	FormatString.cpp \
 	InheritViz.cpp \
 	ItaniumCXXABI.cpp \
 	ItaniumMangle.cpp \
@@ -50,12 +52,15 @@ SRCS+=	APValue.cpp \
 	NSAPI.cpp \
 	NestedNameSpecifier.cpp \
 	ODRHash.cpp \
+	OSLog.cpp \
 	OpenMPClause.cpp \
 	ParentMap.cpp \
+	PrintfFormatString.cpp \
 	QualTypeNames.cpp \
 	RawCommentList.cpp \
 	RecordLayout.cpp \
 	RecordLayoutBuilder.cpp \
+	ScanfFormatString.cpp \
 	SelectorLocationsKind.cpp \
 	Stmt.cpp \
 	StmtCXX.cpp \
@@ -67,6 +72,7 @@ SRCS+=	APValue.cpp \
 	StmtViz.cpp \
 	TemplateBase.cpp \
 	TemplateName.cpp \
+	TextNodeDumper.cpp \
 	Type.cpp \
 	TypeLoc.cpp \
 	TypePrinter.cpp \

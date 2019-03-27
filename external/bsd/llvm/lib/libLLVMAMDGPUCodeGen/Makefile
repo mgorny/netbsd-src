@@ -14,8 +14,10 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	AMDGPUAnnotateUniformValues.cpp \
 	AMDGPUArgumentUsageInfo.cpp \
 	AMDGPUAsmPrinter.cpp \
+	AMDGPUAtomicOptimizer.cpp \
 	AMDGPUCallLowering.cpp \
 	AMDGPUCodeGenPrepare.cpp \
+	AMDGPUFixFunctionBitcasts.cpp \
 	AMDGPUFrameLowering.cpp \
 	AMDGPUHSAMetadataStreamer.cpp \
 	AMDGPUInstrInfo.cpp \
@@ -49,6 +51,7 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	AMDGPUInline.cpp \
 	AMDGPUPerfHintAnalysis.cpp \
 	AMDILCFGStructurizer.cpp \
+	GCNDPPCombine.cpp \
 	GCNHazardRecognizer.cpp \
 	GCNIterativeScheduler.cpp \
 	GCNMinRegStrategy.cpp \
@@ -68,11 +71,13 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	R600OptimizeVectorRegisters.cpp \
 	R600Packetizer.cpp \
 	R600RegisterInfo.cpp \
+	SIAddIMGInit.cpp \
 	SIAnnotateControlFlow.cpp \
 	SIDebuggerInsertNops.cpp \
 	SIFixSGPRCopies.cpp \
 	SIFixVGPRCopies.cpp \
 	SIFixWWMLiveness.cpp \
+	SIFixupVectorISel.cpp \
 	SIFoldOperands.cpp \
 	SIFormMemoryClauses.cpp \
 	SIFrameLowering.cpp \
@@ -86,6 +91,7 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	SIMachineFunctionInfo.cpp \
 	SIMachineScheduler.cpp \
 	SIMemoryLegalizer.cpp \
+	SIModeRegister.cpp \
 	SIOptimizeExecMasking.cpp \
 	SIOptimizeExecMaskingPreRA.cpp \
 	SIPeepholeSDWA.cpp \

@@ -7,12 +7,14 @@ LIB=	LLVMSupport
 .PATH: ${LLVM_SRCDIR}/lib/Support
 
 SRCS+=	Allocator.cpp \
+	AArch64TargetParser.cpp \
 	AMDGPUMetadata.cpp \
 	APFloat.cpp \
 	APInt.cpp \
 	APSInt.cpp \
 	ARMAttributeParser.cpp \
 	ARMBuildAttrs.cpp \
+	ARMTargetParser.cpp \
 	ARMWinEH.cpp \
 	BinaryStreamError.cpp \
 	BinaryStreamReader.cpp \
@@ -20,6 +22,7 @@ SRCS+=	Allocator.cpp \
 	BinaryStreamWriter.cpp \
 	BlockFrequency.cpp \
 	BranchProbability.cpp \
+	BuryPointer.cpp \
 	CachePruning.cpp \
 	Chrono.cpp \
 	circular_raw_ostream.cpp \
@@ -38,6 +41,7 @@ SRCS+=	Allocator.cpp \
 	DJB.cpp \
 	Error.cpp \
 	ErrorHandling.cpp \
+	FileCheck.cpp \
 	FileOutputBuffer.cpp \
 	FileUtilities.cpp \
 	FoldingSet.cpp \
@@ -48,6 +52,7 @@ SRCS+=	Allocator.cpp \
 	InitLLVM.cpp \
 	IntEqClasses.cpp \
 	IntervalMap.cpp \
+	ItaniumManglingCanonicalizer.cpp \
 	JamCRC.cpp \
 	JSON.cpp \
 	KnownBits.cpp \
@@ -85,6 +90,7 @@ SRCS+=	Allocator.cpp \
 	StringPool.cpp \
 	StringRef.cpp \
 	StringSaver.cpp \
+	SymbolRemappingReader.cpp \
 	SystemUtils.cpp \
 	TargetParser.cpp \
 	TargetRegistry.cpp \
@@ -97,6 +103,7 @@ SRCS+=	Allocator.cpp \
 	UnicodeCaseFold.cpp \
 	Unicode.cpp \
 	VersionTuple.cpp \
+	VirtualFileSystem.cpp \
 	Watchdog.cpp \
 	WithColor.cpp \
 	xxhash.cpp \

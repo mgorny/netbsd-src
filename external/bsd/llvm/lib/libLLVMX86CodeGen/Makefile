@@ -13,6 +13,8 @@ SRCS+=	ShadowCallStack.cpp \
 	X86CallingConv.cpp \
 	X86CallLowering.cpp \
 	X86CmovConversion.cpp \
+	X86CondBrFolding.cpp \
+	X86DiscriminateMemOps.cpp \
 	X86DomainReassignment.cpp \
 	X86EvexToVex.cpp\
 	X86ExpandPseudo.cpp \
@@ -24,6 +26,7 @@ SRCS+=	ShadowCallStack.cpp \
 	X86FloatingPoint.cpp \
 	X86FrameLowering.cpp \
 	X86IndirectBranchTracking.cpp \
+	X86InsertPrefetch.cpp \
 	X86InstrFMA3Info.cpp \
 	X86InstrFoldTables.cpp \
 	X86InstrInfo.cpp \

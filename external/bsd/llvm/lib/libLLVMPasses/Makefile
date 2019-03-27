@@ -7,7 +7,8 @@ LIB=	LLVMPasses
 .PATH: ${LLVM_SRCDIR}/lib/Passes
 
 SRCS+=	PassBuilder.cpp \
-	PassPlugin.cpp
+	PassPlugin.cpp \
+	StandardInstrumentations.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

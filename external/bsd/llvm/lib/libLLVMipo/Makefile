@@ -22,6 +22,7 @@ SRCS+=	AlwaysInliner.cpp \
 	GlobalDCE.cpp \
 	GlobalOpt.cpp \
 	GlobalSplit.cpp \
+	HotColdSplitting.cpp \
 	InferFunctionAttrs.cpp \
 	Inliner.cpp \
 	InlineSimple.cpp \

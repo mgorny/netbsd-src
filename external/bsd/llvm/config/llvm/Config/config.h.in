@@ -33,7 +33,7 @@
 #define CLANG_RESOURCE_DIR ""
 
 /* Directories clang will search for headers */
-#define C_INCLUDE_DIRS "/usr/include/clang-7.0:/usr/include"
+#define C_INCLUDE_DIRS "/usr/include/clang-8.0:/usr/include"
 
 /* Default <path> to all compiler invocations for --sysroot=<path>. */
 #define DEFAULT_SYSROOT ""
@@ -380,6 +380,9 @@
 
 /* Define to 1 to checks for ABI changes, and to 0 otherwise. */
 #define LLVM_ENABLE_ABI_BREAKING_CHECKS 0
+
+/* Define if crash dumps enabled */
+#define LLVM_ENABLE_CRASH_DUMPS 1
 
 /* Define if threads enabled */
 #define LLVM_ENABLE_THREADS 1

@@ -37,18 +37,22 @@ SRCS+=	AliasAnalysis.cpp \
 	DomPrinter.cpp \
 	EHPersonalities.cpp \
 	GlobalsModRef.cpp \
+	GuardUtils.cpp \
 	IndirectCallPromotionAnalysis.cpp \
 	InlineCost.cpp \
 	InstCount.cpp \
+	InstructionPrecedenceTracking.cpp \
 	InstructionSimplify.cpp \
 	Interval.cpp \
 	IntervalPartition.cpp \
 	IteratedDominanceFrontier.cpp \
+	IVDescriptors.cpp \
 	IVUsers.cpp \
 	LazyBlockFrequencyInfo.cpp \
 	LazyBranchProbabilityInfo.cpp \
 	LazyCallGraph.cpp \
 	LazyValueInfo.cpp \
+	LegacyDivergenceAnalysis.cpp \
 	Lint.cpp \
 	Loads.cpp \
 	LoopAccessAnalysis.cpp \
@@ -71,6 +75,7 @@ SRCS+=	AliasAnalysis.cpp \
 	ObjCARCInstKind.cpp \
 	OptimizationRemarkEmitter.cpp \
 	OrderedBasicBlock.cpp \
+	OrderedInstructions.cpp \
 	PHITransAddr.cpp \
 	PhiValues.cpp \
 	PostDominators.cpp \
@@ -84,6 +89,8 @@ SRCS+=	AliasAnalysis.cpp \
 	ScalarEvolutionExpander.cpp \
 	ScalarEvolutionNormalization.cpp \
 	ScopedNoAliasAA.cpp \
+	StackSafetyAnalysis.cpp \
+	SyncDependenceAnalysis.cpp \
 	SyntheticCountsUtils.cpp \
 	TargetLibraryInfo.cpp \
 	TargetTransformInfo.cpp \

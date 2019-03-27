@@ -24,6 +24,9 @@
 /* Define to enable checks that alter the LLVM C++ ABI */
 #define LLVM_ENABLE_ABI_BREAKING_CHECKS 0
 
+/* Define if crash dumps enabled */
+#define LLVM_ENABLE_CRASH_DUMPS 1
+
 /* Define if threads enabled */
 #define LLVM_ENABLE_THREADS 1
 

@@ -12,7 +12,9 @@ SRCS+=	CompileOnDemandLayer.cpp \
 	IndirectionUtils.cpp \
 	IRCompileLayer.cpp \
 	IRTransformLayer.cpp \
+	JITTargetMachineBuilder.cpp \
 	Layer.cpp \
+	LazyReexports.cpp \
 	Legacy.cpp \
 	LLJIT.cpp \
 	NullResolver.cpp \
@@ -22,6 +24,7 @@ SRCS+=	CompileOnDemandLayer.cpp \
 	OrcError.cpp \
 	OrcMCJITReplacement.cpp \
 	RPCUtils.cpp \
-	RTDyldObjectLinkingLayer.cpp
+	RTDyldObjectLinkingLayer.cpp \
+	ThreadSafeModule.cpp
 
 .include <bsd.lib.mk>

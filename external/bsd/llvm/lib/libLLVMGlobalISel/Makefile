@@ -9,6 +9,9 @@ LIB=	LLVMGlobalISel
 SRCS+=	CallLowering.cpp \
 	Combiner.cpp \
 	CombinerHelper.cpp \
+	CSEInfo.cpp \
+	CSEMIRBuilder.cpp \
+	GISelChangeObserver.cpp \
 	GlobalISel.cpp \
 	InstructionSelect.cpp \
 	InstructionSelector.cpp \

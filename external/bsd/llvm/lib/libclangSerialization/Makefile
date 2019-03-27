@@ -17,7 +17,8 @@ SRCS+=	ASTCommon.cpp \
 	GlobalModuleIndex.cpp \
 	Module.cpp \
 	ModuleFileExtension.cpp \
-	ModuleManager.cpp
+	ModuleManager.cpp \
+	PCHContainerOperations.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

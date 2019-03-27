@@ -13,6 +13,7 @@ SRCS+=	DWARFAbbreviationDeclaration.cpp \
 	DWARFContext.cpp \
 	DWARFDataExtractor.cpp \
 	DWARFDebugAbbrev.cpp \
+	DWARFDebugAddr.cpp \
 	DWARFDebugAranges.cpp \
 	DWARFDebugArangeSet.cpp \
 	DWARFDebugFrame.cpp \
@@ -27,6 +28,7 @@ SRCS+=	DWARFAbbreviationDeclaration.cpp \
 	DWARFExpression.cpp \
 	DWARFFormValue.cpp \
 	DWARFGdbIndex.cpp \
+	DWARFListTable.cpp \
 	DWARFTypeUnit.cpp \
 	DWARFUnit.cpp \
 	DWARFUnitIndex.cpp \

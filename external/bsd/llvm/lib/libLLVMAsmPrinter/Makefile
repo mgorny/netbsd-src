@@ -13,7 +13,7 @@ SRCS+=	AccelTable.cpp \
 	AsmPrinterDwarf.cpp \
 	AsmPrinterInlineAsm.cpp \
 	CodeViewDebug.cpp \
-	DbgValueHistoryCalculator.cpp \
+	DbgEntityHistoryCalculator.cpp \
 	DebugHandlerBase.cpp \
 	DebugLocStream.cpp \
 	DIE.cpp \
@@ -28,6 +28,7 @@ SRCS+=	AccelTable.cpp \
 	EHStreamer.cpp \
 	ErlangGCPrinter.cpp \
 	OcamlGCPrinter.cpp \
+	WasmException.cpp \
 	WinCFGuard.cpp \
 	WinException.cpp
 

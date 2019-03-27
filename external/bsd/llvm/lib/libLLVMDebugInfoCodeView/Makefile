@@ -34,12 +34,14 @@ SRCS+=	AppendingTypeTableBuilder.cpp \
 	SimpleTypeSerializer.cpp \
 	StringsAndChecksums.cpp \
 	SymbolDumper.cpp \
+	SymbolRecordHelpers.cpp \
 	SymbolRecordMapping.cpp \
 	SymbolSerializer.cpp \
 	TypeDumpVisitor.cpp \
 	TypeHashing.cpp \
 	TypeIndex.cpp \
 	TypeIndexDiscovery.cpp \
+	TypeRecordHelpers.cpp \
 	TypeRecordMapping.cpp \
 	TypeStreamMerger.cpp \
 	TypeTableCollection.cpp
