@@ -16,7 +16,7 @@ clean() {
 ### If you update these, please also update docs/GettingStarted.rst
 want_autoconf_version='2\.69'
 want_autoheader_version=$want_autoconf_version
-want_aclocal_version='1\.13\.4'
+want_aclocal_version='1\.15\.1'
 ### END NOTE #########################################################
 
 outfile=configure
