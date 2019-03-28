@@ -5253,6 +5253,12 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
+
+cat >>confdefs.h <<_ACEOF
+#define LLVM_ENABLE_CRASH_DUMPS 1
+_ACEOF
+
+
 # Check whether --enable-pthreads was given.
 if test "${enable_pthreads+set}" = set; then :
   enableval=$enable_pthreads;

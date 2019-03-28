@@ -380,6 +380,9 @@
 /* Define to 1 to checks for ABI changes, and to 0 otherwise. */
 #undef LLVM_ENABLE_ABI_BREAKING_CHECKS
 
+/* Define if crash dumps enabled */
+#undef LLVM_ENABLE_CRASH_DUMPS
+
 /* Define if threads enabled */
 #undef LLVM_ENABLE_THREADS
 
