@@ -11,4 +11,6 @@ DIST=	${NETBSDSRCDIR}/external/ibm-public/postfix/dist/src/${LIB}
 
 SRCS=	milter.c milter8.c milter_macros.c
 
+CWARNFLAGS.clang+=	-Wno-string-plus-int
+
 .include <bsd.lib.mk>

@@ -15,7 +15,8 @@ INCS=		lauxlib.h lua.h lua.hpp luaconf.h lualib.h
 INCSDIR=	/usr/include
 
 CPPFLAGS+=	-DLUA_USE_POSIX -DLUA_USE_DLOPEN -DLUA_C89_NUMBERS
-CWARNFLAGS.clang+=	-Wno-empty-body
+# clang-8.0 reports use of 'LUA_SIGNATURE + 1' in lundump.c
+CWARNFLAGS.clang+=	-Wno-empty-body -Wno-string-plus-int
 
 LIBDPLIBS+=	m		${NETBSDSRCDIR}/lib/libm
 

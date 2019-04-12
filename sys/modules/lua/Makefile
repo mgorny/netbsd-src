@@ -22,4 +22,7 @@ SRCS+=		lauxlib.c lbaselib.c lbitlib.c lcorolib.c ldblib.c \
 CPPFLAGS+=	-I${S}/../external/mit/lua/dist/src \
 		-I${S}/sys
 
+# clang-8.0 reports use of 'LUA_SIGNATURE + 1' in lundump.c
+CWARNFLAGS.clang+=	-Wno-string-plus-int
+
 .include <bsd.kmodule.mk>
