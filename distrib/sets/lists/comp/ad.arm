@@ -304,8 +304,8 @@
 ./usr/include/clang-4.0/arm_neon.h		comp-obsolete		obsolete
 ./usr/include/clang-5.0/arm_acle.h		comp-obsolete		obsolete
 ./usr/include/clang-5.0/arm_neon.h		comp-obsolete		obsolete
-./usr/include/clang-7.0/arm_acle.h		comp-c-include		llvm
-./usr/include/clang-7.0/arm_neon.h		comp-c-include		llvm
+./usr/include/clang-8.0/arm_acle.h		comp-c-include		llvm
+./usr/include/clang-8.0/arm_neon.h		comp-c-include		llvm
 ./usr/include/epoc32				comp-c-include
 ./usr/include/epoc32/ansi.h			comp-obsolete		obsolete
 ./usr/include/epoc32/aout_machdep.h		comp-obsolete		obsolete

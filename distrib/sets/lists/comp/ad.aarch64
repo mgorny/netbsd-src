@@ -117,9 +117,9 @@
 ./usr/include/arm/wchar_limits.h		comp-c-include
 ./usr/include/clang-5.0/arm_acle.h		comp-obsolete		obsolete
 ./usr/include/clang-5.0/arm_neon.h		comp-obsolete		obsolete
-./usr/include/clang-7.0/arm64intr.h		comp-c-include		llvm
-./usr/include/clang-7.0/arm_acle.h		comp-c-include		llvm
-./usr/include/clang-7.0/arm_neon.h		comp-c-include		llvm
+./usr/include/clang-8.0/arm64intr.h		comp-c-include		llvm
+./usr/include/clang-8.0/arm_acle.h		comp-c-include		llvm
+./usr/include/clang-8.0/arm_neon.h		comp-c-include		llvm
 ./usr/include/evbarm				comp-c-include
 ./usr/include/evbarm/disklabel.h		comp-c-include
 ./usr/include/evbarm/intr.h			comp-c-include
