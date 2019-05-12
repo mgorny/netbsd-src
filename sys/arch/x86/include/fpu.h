@@ -38,6 +38,10 @@ void process_write_fpregs_s87(struct lwp *, const struct save87 *);
 void process_read_fpregs_xmm(struct lwp *, struct fxsave *);
 void process_read_fpregs_s87(struct lwp *, struct save87 *);
 
+int process_read_xstate(struct lwp *, struct xstate *);
+int process_verify_xstate(const struct xstate *);
+int process_write_xstate(struct lwp *, const struct xstate *);
+
 #endif
 
 #endif /* _X86_FPU_H_ */

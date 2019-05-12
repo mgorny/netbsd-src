@@ -353,6 +353,8 @@ netbsd32_ptrace_translate_request(int req)
 	case PT32_SETDBREGS:		return PT_SETDBREGS;
 	case PT32_SETSTEP:		return PT_SETSTEP;
 	case PT32_CLEARSTEP:		return PT_CLEARSTEP;
+	case PT32_GETXSTATE:		return PT_GETXSTATE;
+	case PT32_SETXSTATE:		return PT_SETXSTATE;
 	default:			return -1;
 	}
 }
