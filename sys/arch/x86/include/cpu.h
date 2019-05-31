@@ -459,6 +459,8 @@ extern int x86_fpu_save;
 #define	FPU_SAVE_XSAVEOPT	3
 extern unsigned int x86_fpu_save_size;
 extern uint64_t x86_xsave_features;
+extern size_t x86_xsave_offsets[];
+extern size_t x86_xsave_sizes[];
 extern uint32_t x86_fpu_mxcsr_mask;
 extern bool x86_fpu_eager;
 
