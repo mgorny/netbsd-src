@@ -3686,6 +3686,310 @@ ATF_TC_BODY(x86_xstate_ymm_write, tc)
 	TWAIT_REQUIRE_FAILURE(ECHILD, wpid = TWAIT_GENERIC(child, &status, 0));
 }
 
+__attribute__((target("avx512f")))
+static __inline void set_zmm_regs(const void* zmm)
+{
+	__asm__ __volatile__(
+		"vmovaps  0x000(%0), %%zmm0\n\t"
+		"vmovaps  0x040(%0), %%zmm1\n\t"
+		"vmovaps  0x080(%0), %%zmm2\n\t"
+		"vmovaps  0x0C0(%0), %%zmm3\n\t"
+		"vmovaps  0x100(%0), %%zmm4\n\t"
+		"vmovaps  0x140(%0), %%zmm5\n\t"
+		"vmovaps  0x180(%0), %%zmm6\n\t"
+		"vmovaps  0x1C0(%0), %%zmm7\n\t"
+#if defined(__x86_64__) || defined(_M_X64)
+		"vmovaps  0x200(%0), %%zmm8\n\t"
+		"vmovaps  0x240(%0), %%zmm9\n\t"
+		"vmovaps  0x280(%0), %%zmm10\n\t"
+		"vmovaps  0x2C0(%0), %%zmm11\n\t"
+		"vmovaps  0x300(%0), %%zmm12\n\t"
+		"vmovaps  0x340(%0), %%zmm13\n\t"
+		"vmovaps  0x380(%0), %%zmm14\n\t"
+		"vmovaps  0x3C0(%0), %%zmm15\n\t"
+		"vmovaps  0x400(%0), %%zmm16\n\t"
+		"vmovaps  0x440(%0), %%zmm17\n\t"
+		"vmovaps  0x480(%0), %%zmm18\n\t"
+		"vmovaps  0x4C0(%0), %%zmm19\n\t"
+		"vmovaps  0x500(%0), %%zmm20\n\t"
+		"vmovaps  0x540(%0), %%zmm21\n\t"
+		"vmovaps  0x580(%0), %%zmm22\n\t"
+		"vmovaps  0x5C0(%0), %%zmm23\n\t"
+		"vmovaps  0x600(%0), %%zmm24\n\t"
+		"vmovaps  0x640(%0), %%zmm25\n\t"
+		"vmovaps  0x680(%0), %%zmm26\n\t"
+		"vmovaps  0x6C0(%0), %%zmm27\n\t"
+		"vmovaps  0x700(%0), %%zmm28\n\t"
+		"vmovaps  0x740(%0), %%zmm29\n\t"
+		"vmovaps  0x780(%0), %%zmm30\n\t"
+		"vmovaps  0x7C0(%0), %%zmm31\n\t"
+#endif
+		"\n\t"
+		"int3\n\t"
+		:
+		: "b"(zmm)
+		: "%zmm0", "%zmm1", "%zmm2", "%zmm3", "%zmm4", "%zmm5", "%zmm6", "%zmm7"
+#if defined(__x86_64__)
+		, "%zmm8", "%zmm9", "%zmm10", "%zmm11", "%zmm12", "%zmm13", "%zmm14",
+		  "%zmm15", "%zmm16", "%zmm17", "%zmm18", "%zmm19", "%zmm20", "%zmm21",
+		  "%zmm22", "%zmm23", "%zmm24", "%zmm25", "%zmm26", "%zmm27", "%zmm28",
+		  "%zmm29", "%zmm30", "%zmm31"
+#endif
+	);
+}
+
+ATF_TC(x86_xstate_zmm_read);
+ATF_TC_HEAD(x86_xstate_zmm_read, tc)
+{
+	atf_tc_set_md_var(tc, "descr",
+		"Set zmm0..zmm31 (..zmm7 on i386) reg values from debugged program "
+		"and read them via PT_GETXSTATE, comparing values against expected.");
+}
+
+ATF_TC_BODY(x86_xstate_zmm_read, tc)
+{
+	const int exitval = 5;
+	pid_t child, wpid;
+#if defined(TWAIT_HAVE_STATUS)
+	const int sigval = SIGTRAP;
+	int status;
+#endif
+	struct xstate xst;
+	struct iovec iov;
+
+	const struct {
+		uint64_t a, b, c, d, e, f, g, h;
+	} zmm[] __aligned(64) = {
+		{ 0x0706050403020100, 0x0F0E0D0C0B0A0908,
+		  0x1716151413121110, 0x1F1E1D1C1B1A1918,
+		  0x2726252423222120, 0x2F2E2D2C2B2A2928,
+		  0x3736353433323130, 0x3F3E3D3C3B3A3938, },
+		{ 0x0807060504030201, 0x100F0E0D0C0B0A09,
+		  0x1817161514131211, 0x201F1E1D1C1B1A19,
+		  0x2827262524232221, 0x302F2E2D2C2B2A29,
+		  0x3837363534333231, 0x403F3E3D3C3B3A39, },
+		{ 0x0908070605040302, 0x11100F0E0D0C0B0A,
+		  0x1918171615141312, 0x21201F1E1D1C1B1A,
+		  0x2928272625242322, 0x31302F2E2D2C2B2A,
+		  0x3938373635343332, 0x41403F3E3D3C3B3A, },
+		{ 0x0A09080706050403, 0x1211100F0E0D0C0B,
+		  0x1A19181716151413, 0x2221201F1E1D1C1B,
+		  0x2A29282726252423, 0x3231302F2E2D2C2B,
+		  0x3A39383736353433, 0x4241403F3E3D3C3B, },
+		{ 0x0B0A090807060504, 0x131211100F0E0D0C,
+		  0x1B1A191817161514, 0x232221201F1E1D1C,
+		  0x2B2A292827262524, 0x333231302F2E2D2C,
+		  0x3B3A393837363534, 0x434241403F3E3D3C, },
+		{ 0x0C0B0A0908070605, 0x14131211100F0E0D,
+		  0x1C1B1A1918171615, 0x24232221201F1E1D,
+		  0x2C2B2A2928272625, 0x34333231302F2E2D,
+		  0x3C3B3A3938373635, 0x44434241403F3E3D, },
+		{ 0x0D0C0B0A09080706, 0x1514131211100F0E,
+		  0x1D1C1B1A19181716, 0x2524232221201F1E,
+		  0x2D2C2B2A29282726, 0x3534333231302F2E,
+		  0x3D3C3B3A39383736, 0x4544434241403F3E, },
+		{ 0x0E0D0C0B0A090807, 0x161514131211100F,
+		  0x1E1D1C1B1A191817, 0x262524232221201F,
+		  0x2E2D2C2B2A292827, 0x363534333231302F,
+		  0x3E3D3C3B3A393837, 0x464544434241403F, },
+#if defined(__x86_64__) || defined(_M_X64)
+		{ 0x0F0E0D0C0B0A0908, 0x1716151413121110,
+		  0x1F1E1D1C1B1A1918, 0x2726252423222120,
+		  0x2F2E2D2C2B2A2928, 0x3736353433323130,
+		  0x3F3E3D3C3B3A3938, 0x4746454443424140, },
+		{ 0x100F0E0D0C0B0A09, 0x1817161514131211,
+		  0x201F1E1D1C1B1A19, 0x2827262524232221,
+		  0x302F2E2D2C2B2A29, 0x3837363534333231,
+		  0x403F3E3D3C3B3A39, 0x4847464544434241, },
+		{ 0x11100F0E0D0C0B0A, 0x1918171615141312,
+		  0x21201F1E1D1C1B1A, 0x2928272625242322,
+		  0x31302F2E2D2C2B2A, 0x3938373635343332,
+		  0x41403F3E3D3C3B3A, 0x4948474645444342, },
+		{ 0x1211100F0E0D0C0B, 0x1A19181716151413,
+		  0x2221201F1E1D1C1B, 0x2A29282726252423,
+		  0x3231302F2E2D2C2B, 0x3A39383736353433,
+		  0x4241403F3E3D3C3B, 0x4A49484746454443, },
+		{ 0x131211100F0E0D0C, 0x1B1A191817161514,
+		  0x232221201F1E1D1C, 0x2B2A292827262524,
+		  0x333231302F2E2D2C, 0x3B3A393837363534,
+		  0x434241403F3E3D3C, 0x4B4A494847464544, },
+		{ 0x14131211100F0E0D, 0x1C1B1A1918171615,
+		  0x24232221201F1E1D, 0x2C2B2A2928272625,
+		  0x34333231302F2E2D, 0x3C3B3A3938373635,
+		  0x44434241403F3E3D, 0x4C4B4A4948474645, },
+		{ 0x1514131211100F0E, 0x1D1C1B1A19181716,
+		  0x2524232221201F1E, 0x2D2C2B2A29282726,
+		  0x3534333231302F2E, 0x3D3C3B3A39383736,
+		  0x4544434241403F3E, 0x4D4C4B4A49484746, },
+		{ 0x161514131211100F, 0x1E1D1C1B1A191817,
+		  0x262524232221201F, 0x2E2D2C2B2A292827,
+		  0x363534333231302F, 0x3E3D3C3B3A393837,
+		  0x464544434241403F, 0x4E4D4C4B4A494847, },
+		{ 0x1716151413121110, 0x1F1E1D1C1B1A1918,
+		  0x2726252423222120, 0x2F2E2D2C2B2A2928,
+		  0x3736353433323130, 0x3F3E3D3C3B3A3938,
+		  0x4746454443424140, 0x4F4E4D4C4B4A4948, },
+		{ 0x1817161514131211, 0x201F1E1D1C1B1A19,
+		  0x2827262524232221, 0x302F2E2D2C2B2A29,
+		  0x3837363534333231, 0x403F3E3D3C3B3A39,
+		  0x4847464544434241, 0x504F4E4D4C4B4A49, },
+		{ 0x1918171615141312, 0x21201F1E1D1C1B1A,
+		  0x2928272625242322, 0x31302F2E2D2C2B2A,
+		  0x3938373635343332, 0x41403F3E3D3C3B3A,
+		  0x4948474645444342, 0x51504F4E4D4C4B4A, },
+		{ 0x1A19181716151413, 0x2221201F1E1D1C1B,
+		  0x2A29282726252423, 0x3231302F2E2D2C2B,
+		  0x3A39383736353433, 0x4241403F3E3D3C3B,
+		  0x4A49484746454443, 0x5251504F4E4D4C4B, },
+		{ 0x1B1A191817161514, 0x232221201F1E1D1C,
+		  0x2B2A292827262524, 0x333231302F2E2D2C,
+		  0x3B3A393837363534, 0x434241403F3E3D3C,
+		  0x4B4A494847464544, 0x535251504F4E4D4C, },
+		{ 0x1C1B1A1918171615, 0x24232221201F1E1D,
+		  0x2C2B2A2928272625, 0x34333231302F2E2D,
+		  0x3C3B3A3938373635, 0x44434241403F3E3D,
+		  0x4C4B4A4948474645, 0x54535251504F4E4D, },
+		{ 0x1D1C1B1A19181716, 0x2524232221201F1E,
+		  0x2D2C2B2A29282726, 0x3534333231302F2E,
+		  0x3D3C3B3A39383736, 0x4544434241403F3E,
+		  0x4D4C4B4A49484746, 0x5554535251504F4E, },
+		{ 0x1E1D1C1B1A191817, 0x262524232221201F,
+		  0x2E2D2C2B2A292827, 0x363534333231302F,
+		  0x3E3D3C3B3A393837, 0x464544434241403F,
+		  0x4E4D4C4B4A494847, 0x565554535251504F, },
+		{ 0x1F1E1D1C1B1A1918, 0x2726252423222120,
+		  0x2F2E2D2C2B2A2928, 0x3736353433323130,
+		  0x3F3E3D3C3B3A3938, 0x4746454443424140,
+		  0x4F4E4D4C4B4A4948, 0x5756555453525150, },
+		{ 0x201F1E1D1C1B1A19, 0x2827262524232221,
+		  0x302F2E2D2C2B2A29, 0x3837363534333231,
+		  0x403F3E3D3C3B3A39, 0x4847464544434241,
+		  0x504F4E4D4C4B4A49, 0x5857565554535251, },
+		{ 0x21201F1E1D1C1B1A, 0x2928272625242322,
+		  0x31302F2E2D2C2B2A, 0x3938373635343332,
+		  0x41403F3E3D3C3B3A, 0x4948474645444342,
+		  0x51504F4E4D4C4B4A, 0x5958575655545352, },
+		{ 0x2221201F1E1D1C1B, 0x2A29282726252423,
+		  0x3231302F2E2D2C2B, 0x3A39383736353433,
+		  0x4241403F3E3D3C3B, 0x4A49484746454443,
+		  0x5251504F4E4D4C4B, 0x5A59585756555453, },
+		{ 0x232221201F1E1D1C, 0x2B2A292827262524,
+		  0x333231302F2E2D2C, 0x3B3A393837363534,
+		  0x434241403F3E3D3C, 0x4B4A494847464544,
+		  0x535251504F4E4D4C, 0x5B5A595857565554, },
+		{ 0x24232221201F1E1D, 0x2C2B2A2928272625,
+		  0x34333231302F2E2D, 0x3C3B3A3938373635,
+		  0x44434241403F3E3D, 0x4C4B4A4948474645,
+		  0x54535251504F4E4D, 0x5C5B5A5958575655, },
+		{ 0x2524232221201F1E, 0x2D2C2B2A29282726,
+		  0x3534333231302F2E, 0x3D3C3B3A39383736,
+		  0x4544434241403F3E, 0x4D4C4B4A49484746,
+		  0x5554535251504F4E, 0x5D5C5B5A59585756, },
+		{ 0x262524232221201F, 0x2E2D2C2B2A292827,
+		  0x363534333231302F, 0x3E3D3C3B3A393837,
+		  0x464544434241403F, 0x4E4D4C4B4A494847,
+		  0x565554535251504F, 0x5E5D5C5B5A595857, },
+#endif
+	};
+
+	/* verify whether AVX-512F is supported here */
+	DPRINTF("Before invoking cpuid\n");
+	{
+		unsigned int eax, ebx, ecx, edx;
+		if (!__get_cpuid(7, &eax, &ebx, &ecx, &edx))
+			atf_tc_skip("CPUID is not supported by the CPU");
+
+		DPRINTF("cpuid: EBX = %08x\n", ebx);
+
+		if (!(ecx & CPUID_SEF_AVX512F))
+			atf_tc_skip("AVX-512F is not supported by the CPU");
+	}
+
+	DPRINTF("Before forking process PID=%d\n", getpid());
+	SYSCALL_REQUIRE((child = fork()) != -1);
+	if (child == 0) {
+		DPRINTF("Before calling PT_TRACE_ME from child %d\n", getpid());
+		FORKEE_ASSERT(ptrace(PT_TRACE_ME, 0, NULL, 0) != -1);
+
+		DPRINTF("Before running assembly from child\n");
+		set_zmm_regs(zmm);
+
+		DPRINTF("Before exiting of the child process\n");
+		_exit(exitval);
+	}
+	DPRINTF("Parent process PID=%d, child's PID=%d\n", getpid(), child);
+
+	DPRINTF("Before calling %s() for the child\n", TWAIT_FNAME);
+	TWAIT_REQUIRE_SUCCESS(wpid = TWAIT_GENERIC(child, &status, 0), child);
+
+	validate_status_stopped(status, sigval);
+
+	iov.iov_base = &xst;
+	iov.iov_len = sizeof(xst);
+
+	DPRINTF("Call GETXSTATE for the child process\n");
+	SYSCALL_REQUIRE(ptrace(PT_GETXSTATE, child, &iov, 0) != -1);
+
+	ATF_REQUIRE(xst.xs_rfbm & XCR0_SSE);
+	ATF_REQUIRE(xst.xs_rfbm & XCR0_YMM_Hi128);
+	ATF_REQUIRE(xst.xs_rfbm & XCR0_ZMM_Hi256);
+	ATF_REQUIRE(xst.xs_xstate_bv & XCR0_SSE);
+	ATF_REQUIRE(xst.xs_xstate_bv & XCR0_YMM_Hi128);
+	ATF_REQUIRE(xst.xs_xstate_bv & XCR0_ZMM_Hi256);
+#if defined(__x86_64__)
+	ATF_REQUIRE(xst.xs_rfbm & XCR0_Hi16_ZMM);
+	ATF_REQUIRE(xst.xs_xstate_bv & XCR0_Hi16_ZMM);
+#endif
+
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[0], &zmm[0].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[0], &zmm[0].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_zmm_hi256.xs_zmm[0], &zmm[0].e, sizeof(*zmm)/2));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[1], &zmm[1].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[1], &zmm[1].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[2], &zmm[2].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[2], &zmm[2].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[3], &zmm[3].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[3], &zmm[3].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[4], &zmm[4].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[4], &zmm[4].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[5], &zmm[5].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[5], &zmm[5].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[6], &zmm[6].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[6], &zmm[6].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[7], &zmm[7].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[7], &zmm[7].c, sizeof(*zmm)/4));
+#if defined(__x86_64__)
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[8], &zmm[8].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[8], &zmm[8].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[9], &zmm[9].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[9], &zmm[9].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[10], &zmm[10].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[10], &zmm[10].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[11], &zmm[11].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[11], &zmm[11].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[12], &zmm[12].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[12], &zmm[12].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[13], &zmm[13].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[13], &zmm[13].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[14], &zmm[14].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[14], &zmm[14].c, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_fxsave.fx_xmm[15], &zmm[15].a, sizeof(*zmm)/4));
+	ATF_CHECK(!memcmp(&xst.xs_ymm_hi128.xs_ymm[15], &zmm[15].c, sizeof(*zmm)/4));
+#endif
+
+	DPRINTF("Before resuming the child process where it left off and "
+	    "without signal to be sent\n");
+	SYSCALL_REQUIRE(ptrace(PT_CONTINUE, child, (void *)1, 0) != -1);
+
+	DPRINTF("Before calling %s() for the child\n", TWAIT_FNAME);
+	TWAIT_REQUIRE_SUCCESS(wpid = TWAIT_GENERIC(child, &status, 0), child);
+
+	validate_status_exited(status, exitval);
+
+	DPRINTF("Before calling %s() for the child\n", TWAIT_FNAME);
+	TWAIT_REQUIRE_FAILURE(ECHILD, wpid = TWAIT_GENERIC(child, &status, 0));
+}
+
 /// ----------------------------------------------------------------------------
 
 #define ATF_TP_ADD_TCS_PTRACE_WAIT_X86() \
@@ -3760,7 +4064,8 @@ ATF_TC_BODY(x86_xstate_ymm_write, tc)
 	ATF_TP_ADD_TC(tp, x86_xstate_xmm_read); \
 	ATF_TP_ADD_TC(tp, x86_xstate_xmm_write); \
 	ATF_TP_ADD_TC(tp, x86_xstate_ymm_read); \
-	ATF_TP_ADD_TC(tp, x86_xstate_ymm_write);
+	ATF_TP_ADD_TC(tp, x86_xstate_ymm_write); \
+	ATF_TP_ADD_TC(tp, x86_xstate_zmm_read);
 #else
 #define ATF_TP_ADD_TCS_PTRACE_WAIT_X86()
 #endif
