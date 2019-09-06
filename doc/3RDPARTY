@@ -749,8 +749,8 @@ Maintainer:	llvm-dev@lists.llvm.org
 Home Page:	https://llvm.org
 Date:		2019-01-09
 Responsible:	joerg
-License:	BSD/MIT
-Location:	external/bsd/llvm/dist
+License:	Apache-2
+Location:	external/apache2/llvm/dist
 Notes:
 A CVS ACL is in place for the location to prevent unintentioned commits.
 All changes should come via import from upstream SVN.

@@ -13,15 +13,15 @@ LIB=		gallium_dri
 DRIDIR=		${X11USRLIBDIR}/modules/dri
 DRIDEBUGDIR=	${DEBUGDIR}${X11USRLIBDIR}/modules/dri
 
-LLVM_INCLUDE_OBJDIR!=	cd ${NETBSDSRCDIR}/external/bsd/llvm/include && ${PRINTOBJDIR}
+LLVM_INCLUDE_OBJDIR!=	cd ${NETBSDSRCDIR}/external/apache2/llvm/include && ${PRINTOBJDIR}
 
 CWARNFLAGS.clang += -Wno-atomic-alignment -Wno-unknown-warning-option
 
 CXXFLAGS+=	-std=c++11
 CFLAGS+=	-std=gnu11
 CPPFLAGS+=	-I${DESTDIR}${X11INCDIR}/libdrm \
-		-I${NETBSDSRCDIR}/external/bsd/llvm/dist/llvm/include \
-		-I${LLVM_INCLUDE_OBJDIR} -I${NETBSDSRCDIR}/external/bsd/llvm/config
+		-I${NETBSDSRCDIR}/external/apache2/llvm/dist/llvm/include \
+		-I${LLVM_INCLUDE_OBJDIR} -I${NETBSDSRCDIR}/external/apache2/llvm/config
 
 GALLIUM_SUBDIRS= \
 	auxiliary \
@@ -1071,7 +1071,7 @@ LLVMRT_LIBS+=	\
 		TransformsUtils \
 		Support
 
-.include "${NETBSDSRCDIR}/external/bsd/llvm/link.mk"
+.include "${NETBSDSRCDIR}/external/apache2/llvm/link.mk"
 
 .endif  # ${BUILD_LLVM_PIPE} == 1 || ${BUILD_RADEON} == 1
 

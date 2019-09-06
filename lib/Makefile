@@ -171,7 +171,7 @@ SUBDIR+=	../external/gpl3/${EXTERNAL_GCC_SUBDIR}/lib/libsupc++
 .endif
 
 .if (${MKLLVMRT} != "no" && (!defined(MLIBDIR) || ${MKCOMPATX11} != "no"))
-SUBDIR+=	../external/bsd/llvm/include
+SUBDIR+=	../external/apache2/llvm/include
 .endif
 
 #==================== 2nd library dependency barrier ====================
@@ -186,7 +186,7 @@ SUBDIR+= ../external/gpl3/${EXTERNAL_GCC_SUBDIR}/lib/lib${sanitizer}
 .endif
 
 .if (${MKLLVMRT} != "no" && (!defined(MLIBDIR) || ${MKCOMPATX11} != "no"))
-SUBDIR+=	../external/bsd/llvm/librt
+SUBDIR+=	../external/apache2/llvm/librt
 .endif
 
 SUBDIR+=	../external/bsd/libarchive/lib	# depends on libxz
