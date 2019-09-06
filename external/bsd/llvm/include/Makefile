@@ -9,6 +9,7 @@
 INCS=	adxintrin.h \
 	ammintrin.h \
 	avx2intrin.h \
+	avx512bf16intrin.h \
 	avx512bitalgintrin.h \
 	avx512bwintrin.h \
 	avx512cdintrin.h \
@@ -21,6 +22,7 @@ INCS=	adxintrin.h \
 	avx512vbmi2intrin.h \
 	avx512vbmiintrin.h \
 	avx512vbmivlintrin.h \
+	avx512vlbf16intrin.h \
 	avx512vlbitalgintrin.h \
 	avx512vlbwintrin.h \
 	avx512vlcdintrin.h \
@@ -28,7 +30,9 @@ INCS=	adxintrin.h \
 	avx512vlintrin.h \
 	avx512vlvbmi2intrin.h \
 	avx512vlvnniintrin.h \
+	avx512vlvp2intersectintrin.h \
 	avx512vnniintrin.h \
+	avx512vp2intersectintrin.h \
 	avx512vpopcntdqintrin.h \
 	avx512vpopcntdqvlintrin.h \
 	avxintrin.h \
@@ -41,6 +45,7 @@ INCS=	adxintrin.h \
 	clzerointrin.h \
 	cpuid.h \
 	emmintrin.h \
+	enqcmdintrin.h \
 	f16cintrin.h \
 	fma4intrin.h \
 	fmaintrin.h \
@@ -57,6 +62,7 @@ INCS=	adxintrin.h \
 	movdirintrin.h \
 	mwaitxintrin.h \
 	nmmintrin.h \
+	opencl-c-base.h \
 	pconfigintrin.h \
 	pkuintrin.h \
 	pmmintrin.h \

@@ -11,6 +11,7 @@ CPPFLAGS+=	-I${SPARC_OBJDIR} -I${LLVM_SRCDIR}/lib/Target/Sparc
 
 SRCS+=	SparcAsmBackend.cpp \
 	SparcELFObjectWriter.cpp \
+	SparcInstPrinter.cpp \
 	SparcMCAsmInfo.cpp \
 	SparcMCCodeEmitter.cpp \
 	SparcMCExpr.cpp \

@@ -13,7 +13,8 @@ CPPFLAGS+=	-I${LLVM_SRCDIR}/lib/Target/AMDGPU
 
 SRCS+=	AMDGPUBaseInfo.cpp \
 	AMDKernelCodeTUtils.cpp \
-	AMDGPUAsmUtils.cpp
+	AMDGPUAsmUtils.cpp \
+	AMDGPUPALMetadata.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

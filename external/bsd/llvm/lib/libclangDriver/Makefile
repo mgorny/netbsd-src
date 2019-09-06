@@ -54,6 +54,7 @@ SRCS+=	AMDGPU.cpp \
 	NaCl.cpp \
 	NetBSD.cpp \
 	OpenBSD.cpp \
+	PPCLinux.cpp \
 	PS4CPU.cpp \
 	RISCVToolchain.cpp \
 	Solaris.cpp \

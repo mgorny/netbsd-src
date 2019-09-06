@@ -55,6 +55,7 @@ SRCS+=	AddDiscriminators.cpp \
 	SimplifyCFG.cpp \
 	SimplifyIndVar.cpp \
 	SimplifyLibCalls.cpp \
+	SizeOpts.cpp \
 	SplitModule.cpp \
 	SSAUpdaterBulk.cpp \
 	SSAUpdater.cpp \

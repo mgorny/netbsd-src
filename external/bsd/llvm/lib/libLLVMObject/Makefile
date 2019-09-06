@@ -20,14 +20,18 @@ SRCS+=	Archive.cpp \
 	IRSymtab.cpp \
 	MachOObjectFile.cpp \
 	MachOUniversal.cpp \
+	Minidump.cpp \
 	ModuleSymbolTable.cpp \
 	Object.cpp \
 	ObjectFile.cpp \
 	RecordStreamer.cpp \
+	RelocationResolver.cpp \
 	SymbolSize.cpp \
 	SymbolicFile.cpp \
 	WasmObjectFile.cpp \
-	WindowsResource.cpp
+	WindowsMachineFlag.cpp \
+	WindowsResource.cpp \
+	XCOFFObjectFile.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

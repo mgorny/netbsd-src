@@ -24,6 +24,7 @@ SRCS+=	ASTConsumers.cpp \
 	HeaderIncludeGen.cpp \
 	InitHeaderSearch.cpp \
 	InitPreprocessor.cpp \
+	InterfaceStubFunctionsConsumer.cpp \
 	LangStandards.cpp \
 	LayoutOverrideSource.cpp \
 	LogDiagnosticPrinter.cpp \

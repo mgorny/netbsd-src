@@ -7,6 +7,7 @@ LIB=	LLVMOrc
 .PATH: ${LLVM_SRCDIR}/lib/ExecutionEngine/Orc
 
 SRCS+=	CompileOnDemandLayer.cpp \
+	CompileUtils.cpp \
 	Core.cpp \
 	ExecutionUtils.cpp \
 	IndirectionUtils.cpp \
@@ -18,6 +19,7 @@ SRCS+=	CompileOnDemandLayer.cpp \
 	Legacy.cpp \
 	LLJIT.cpp \
 	NullResolver.cpp \
+	ObjectLinkingLayer.cpp \
 	ObjectTransformLayer.cpp \
 	OrcABISupport.cpp \
 	OrcCBindings.cpp \

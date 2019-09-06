@@ -33,6 +33,7 @@ SRCS+=	Allocator.cpp \
 	ConvertUTF.cpp \
 	ConvertUTFWrapper.cpp \
 	CrashRecoveryContext.cpp \
+	CRC.cpp \
 	DAGDeltaAlgorithm.cpp \
 	DataExtractor.cpp \
 	DebugCounter.cpp \
@@ -66,6 +67,7 @@ SRCS+=	Allocator.cpp \
 	MD5.cpp \
 	MemoryBuffer.cpp \
 	NativeFormatting.cpp \
+	Optional.cpp \
 	Options.cpp \
 	Parallel.cpp \
 	PluginLoader.cpp \
@@ -80,6 +82,7 @@ SRCS+=	Allocator.cpp \
 	regstrlcpy.c \
 	ScopedPrinter.cpp \
 	SHA1.cpp \
+	Signposts.cpp \
 	SmallPtrSet.cpp \
 	SmallVector.cpp \
 	SourceMgr.cpp \
@@ -95,6 +98,7 @@ SRCS+=	Allocator.cpp \
 	TargetParser.cpp \
 	TargetRegistry.cpp \
 	TarWriter.cpp \
+	TimeProfiler.cpp \
 	Timer.cpp \
 	ToolOutputFile.cpp \
 	TrigramIndex.cpp \
@@ -109,6 +113,7 @@ SRCS+=	Allocator.cpp \
 	xxhash.cpp \
 	YAMLParser.cpp \
 	YAMLTraits.cpp \
+	Z3Solver.cpp
 
 SRCS+=	Atomic.cpp \
 	DynamicLibrary.cpp \

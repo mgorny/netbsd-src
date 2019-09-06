@@ -8,6 +8,7 @@ LIB=	LLVMipo
 
 SRCS+=	AlwaysInliner.cpp \
 	ArgumentPromotion.cpp \
+	Attributor.cpp \
 	BarrierNoopPass.cpp \
 	BlockExtractor.cpp \
 	CalledValuePropagation.cpp \

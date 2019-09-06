@@ -9,7 +9,11 @@ LIB=	clangToolingRefactoring
 SRCS+=	ASTSelection.cpp \
 	ASTSelectionRequirements.cpp \
 	AtomicChange.cpp \
-	RefactoringActions.cpp
+	RangeSelector.cpp \
+	RefactoringActions.cpp \
+	SourceCode.cpp \
+	Stencil.cpp \
+	Transformer.cpp
 
 .PATH: ${CLANG_SRCDIR}/lib/Tooling/Refactoring/Extract
 

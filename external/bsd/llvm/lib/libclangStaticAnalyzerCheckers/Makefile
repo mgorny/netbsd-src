@@ -18,6 +18,7 @@ SRCS+=	AnalysisOrderChecker.cpp \
 	CallAndMessageChecker.cpp \
 	CastSizeChecker.cpp \
 	CastToStructChecker.cpp \
+	CastValueChecker.cpp \
 	CheckerDocumentation.cpp \
 	CheckObjCDealloc.cpp \
 	CheckObjCInstMethSignature.cpp \
@@ -54,6 +55,7 @@ SRCS+=	AnalysisOrderChecker.cpp \
 	MallocChecker.cpp \
 	MallocOverflowSecurityChecker.cpp \
 	MallocSizeofChecker.cpp \
+	MIGChecker.cpp \
 	MmapWriteExecChecker.cpp \
 	MoveChecker.cpp \
 	MPIBugReporter.cpp \
@@ -75,16 +77,22 @@ SRCS+=	AnalysisOrderChecker.cpp \
 	ObjCSelfInitChecker.cpp \
 	ObjCSuperDeallocChecker.cpp \
 	ObjCUnusedIVarsChecker.cpp \
+	OSObjectCStyleCast.cpp \
 	PaddingChecker.cpp \
 	PointerArithChecker.cpp \
+	PointerIterationChecker.cpp \
+	PointerSortingChecker.cpp \
 	PointerSubChecker.cpp \
 	PthreadLockChecker.cpp \
 	ReturnPointerRangeChecker.cpp \
 	ReturnUndefChecker.cpp \
+	ReturnValueChecker.cpp \
 	SimpleStreamChecker.cpp \
+	SmartPtrModeling.cpp \
 	StackAddrEscapeChecker.cpp \
 	StdLibraryFunctionsChecker.cpp \
 	StreamChecker.cpp \
+	Taint.cpp \
 	TaintTesterChecker.cpp \
 	TestAfterDivZeroChecker.cpp \
 	TraversalChecker.cpp \

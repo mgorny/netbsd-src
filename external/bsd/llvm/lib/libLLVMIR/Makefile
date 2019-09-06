@@ -12,7 +12,8 @@ TABLEGEN_OUTPUT= \
 
 .include "${.PARSEDIR}/../../tablegen.mk"
 
-SRCS+=	AsmWriter.cpp \
+SRCS+=	AbstractCallSite.cpp \
+	AsmWriter.cpp \
 	Attributes.cpp \
 	AutoUpgrade.cpp \
 	BasicBlock.cpp \
@@ -30,7 +31,6 @@ SRCS+=	AsmWriter.cpp \
 	DiagnosticPrinter.cpp \
 	DIBuilder.cpp \
 	Dominators.cpp \
-	DomTreeUpdater.cpp \
 	Function.cpp \
 	Globals.cpp \
 	GVMaterializer.cpp \
@@ -56,6 +56,7 @@ SRCS+=	AsmWriter.cpp \
 	PassRegistry.cpp \
 	PassTimingInfo.cpp \
 	ProfileSummary.cpp \
+	RemarkStreamer.cpp \
 	SafepointIRVerifier.cpp \
 	Statepoint.cpp \
 	Type.cpp \

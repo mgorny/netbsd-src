@@ -13,6 +13,7 @@ SRCS+=	ArgumentsAdjusters.cpp \
 	Execution.cpp \
 	FileMatchTrie.cpp \
 	FixIt.cpp \
+	GuessTargetAndModeCompilationDatabase.cpp \
 	InterpolatingCompilationDatabase.cpp \
 	JSONCompilationDatabase.cpp \
 	RefactoringCallbacks.cpp \

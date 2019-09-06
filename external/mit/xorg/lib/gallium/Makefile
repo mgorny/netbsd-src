@@ -988,7 +988,6 @@ LLVMRT_LIBS=	\
 LLVMRT_LIBS+=	\
 		AMDGPUCodeGen \
 		AMDGPUMCTargetDesc \
-		AMDGPUAsmPrinter \
 		AMDGPUTargetInfo \
 		AMDGPUAsmParser \
 		AMDGPUUtils
@@ -1002,7 +1001,6 @@ LLVMRT_LIBS+=	\
 		X86MCTargetDesc \
 		X86Disassembler \
 		X86MCTargetDesc \
-		X86AsmPrinter \
 		X86TargetInfo \
 		X86Utils
 .endif
@@ -1013,7 +1011,6 @@ LLVMRT_LIBS+=	\
 		AArch64CodeGen \
 		AArch64MCTargetDesc \
 		AArch64Utils \
-		AArch64AsmPrinter \
 		AArch64Disassembler \
 		AArch64TargetInfo
 .endif
@@ -1025,7 +1022,6 @@ LLVMRT_LIBS+=	\
 		ARMTargetInfo \
 		ARMMCTargetDesc \
 		ARMAsmParser \
-		ARMAsmPrinter \
 		ARMUtils
 .endif
 
@@ -1035,7 +1031,6 @@ LLVMRT_LIBS+=	\
 		MipsDisassembler \
 		MipsAsmParser \
 		MipsMCTargetDesc \
-		MipsAsmPrinter \
 		MipsTargetInfo
 .endif
 
@@ -1046,7 +1041,6 @@ LLVMRT_LIBS+=	\
 		PowerPCTargetInfo \
 		PowerPCMCTargetDesc \
 		PowerPCAsmParser \
-		PowerPCAsmPrinter
 .endif
 
 LLVMRT_LIBS+=	\

@@ -18,10 +18,12 @@ SRCS+=	DbiModuleDescriptorBuilder.cpp \
 	HashTable.cpp \
 	InfoStreamBuilder.cpp \
 	InfoStream.cpp \
+	InjectedSourceStream.cpp \
 	ModuleDebugStream.cpp \
 	NamedStreamMap.cpp \
 	NativeCompilandSymbol.cpp \
 	NativeEnumGlobals.cpp \
+	NativeEnumInjectedSources.cpp \
 	NativeEnumModules.cpp \
 	NativeEnumTypes.cpp \
 	NativeExeSymbol.cpp \

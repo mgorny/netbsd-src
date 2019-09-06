@@ -8,6 +8,7 @@ LIB=	clangIndex
 
 SRCS+=	CodegenNameGenerator.cpp \
 	CommentToXML.cpp \
+	FileIndexRecord.cpp \
 	IndexBody.cpp \
 	IndexDecl.cpp \
 	IndexingAction.cpp \

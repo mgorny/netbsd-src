@@ -11,15 +11,16 @@ SRCS+=	AddressSanitizer.cpp \
 	CGProfile.cpp \
 	ControlHeightReduction.cpp \
 	DataFlowSanitizer.cpp \
-	EfficiencySanitizer.cpp \
 	GCOVProfiling.cpp \
 	HWAddressSanitizer.cpp \
 	IndirectCallPromotion.cpp \
+	InstrOrderFile.cpp \
 	InstrProfiling.cpp \
 	Instrumentation.cpp \
 	MemorySanitizer.cpp \
 	PGOInstrumentation.cpp \
 	PGOMemOPSizeOpt.cpp \
+	PoisonChecking.cpp \
 	SanitizerCoverage.cpp \
 	ThreadSanitizer.cpp
 

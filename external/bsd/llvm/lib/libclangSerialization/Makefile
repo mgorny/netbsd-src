@@ -15,6 +15,7 @@ SRCS+=	ASTCommon.cpp \
 	ASTWriterStmt.cpp \
 	GeneratePCH.cpp \
 	GlobalModuleIndex.cpp \
+	InMemoryModuleCache.cpp \
 	Module.cpp \
 	ModuleFileExtension.cpp \
 	ModuleManager.cpp \

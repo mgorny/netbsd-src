@@ -60,7 +60,6 @@ LLVM_LIBS+= \
 	AMDGPUTargetInfo \
 	AMDGPUAsmParser \
 	AMDGPUMCTargetDesc \
-	AMDGPUAsmPrinter \
 	AMDGPUUtils
 .endif
 
@@ -69,39 +68,34 @@ LLVM_LIBS+= \
 	AArch64TargetInfo \
 	AArch64AsmParser \
 	AArch64MCTargetDesc \
-	AArch64AsmPrinter \
 	AArch64Utils \
 	ARMCodeGen \
 	ARMTargetInfo \
 	ARMMCTargetDesc \
 	ARMAsmParser \
-	ARMAsmPrinter \
 	ARMUtils \
 	MipsCodeGen \
 	MipsTargetInfo \
-	MipsAsmPrinter \
 	MipsAsmParser \
 	MipsMCTargetDesc \
 	PowerPCCodeGen \
 	PowerPCTargetInfo \
 	PowerPCMCTargetDesc \
 	PowerPCAsmParser \
-	PowerPCAsmPrinter \
 	SparcCodeGen \
 	SparcTargetInfo \
 	SparcMCTargetDesc \
 	SparcAsmParser \
-	SparcAsmPrinter \
 	X86CodeGen \
 	X86MCTargetDesc \
 	X86TargetInfo \
 	X86Utils \
 	X86AsmParser \
-	X86AsmPrinter \
 	GlobalISel \
 	SelectionDAG \
 	AsmPrinter \
 	DebugInfoCodeView \
+	DebugInfoDWARF \
 	DebugInfoMSF \
 	CodeGen \
 	Vectorize \
@@ -121,7 +115,9 @@ LLVM_LIBS+= \
 	Option \
 	BinaryFormat \
 	Support \
-	Demangle
+	Demangle \
+	BitstreamReader \
+	Remarks
 
 .include "${.PARSEDIR}/../../link.mk"
 

@@ -7,8 +7,8 @@ LIB=	LLVMBitReader
 .PATH: ${LLVM_SRCDIR}/lib/Bitcode/Reader
 
 SRCS+=	BitReader.cpp \
+	BitcodeAnalyzer.cpp \
 	BitcodeReader.cpp \
-	BitstreamReader.cpp \
 	MetadataLoader.cpp \
 	ValueList.cpp
 

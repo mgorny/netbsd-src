@@ -22,7 +22,6 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	AMDGPUHSAMetadataStreamer.cpp \
 	AMDGPUInstrInfo.cpp \
 	AMDGPUInstructionSelector.cpp \
-	AMDGPUIntrinsicInfo.cpp \
 	AMDGPUISelDAGToDAG.cpp \
 	AMDGPUISelLowering.cpp \
 	AMDGPULegalizerInfo.cpp \
@@ -38,7 +37,7 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	AMDGPUMCInstLower.cpp \
 	AMDGPUOpenCLEnqueuedBlockLowering.cpp \
 	AMDGPUPromoteAlloca.cpp \
-	AMDGPURegAsmNames.inc.cpp \
+	AMDGPUPropagateAttributes.cpp \
 	AMDGPURegisterBankInfo.cpp \
 	AMDGPURegisterInfo.cpp \
 	AMDGPURewriteOutArguments.cpp \
@@ -55,6 +54,8 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	GCNHazardRecognizer.cpp \
 	GCNIterativeScheduler.cpp \
 	GCNMinRegStrategy.cpp \
+	GCNNSAReassign.cpp \
+	GCNRegBankReassign.cpp \
 	GCNRegPressure.cpp \
 	GCNSchedStrategy.cpp \
 	R600AsmPrinter.cpp \
@@ -73,10 +74,8 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	R600RegisterInfo.cpp \
 	SIAddIMGInit.cpp \
 	SIAnnotateControlFlow.cpp \
-	SIDebuggerInsertNops.cpp \
 	SIFixSGPRCopies.cpp \
 	SIFixVGPRCopies.cpp \
-	SIFixWWMLiveness.cpp \
 	SIFixupVectorISel.cpp \
 	SIFoldOperands.cpp \
 	SIFormMemoryClauses.cpp \
@@ -88,6 +87,7 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	SILoadStoreOptimizer.cpp \
 	SILowerControlFlow.cpp \
 	SILowerI1Copies.cpp \
+	SILowerSGPRSpills.cpp \
 	SIMachineFunctionInfo.cpp \
 	SIMachineScheduler.cpp \
 	SIMemoryLegalizer.cpp \
@@ -95,6 +95,7 @@ SRCS+=	AMDGPUAliasAnalysis.cpp \
 	SIOptimizeExecMasking.cpp \
 	SIOptimizeExecMaskingPreRA.cpp \
 	SIPeepholeSDWA.cpp \
+	SIPreAllocateWWMRegs.cpp \
 	SIRegisterInfo.cpp \
 	SIShrinkInstructions.cpp \
 	SIWholeQuadMode.cpp \

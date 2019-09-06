@@ -14,7 +14,6 @@ LLVM_LIBS+= \
 	X86CodeGen \
 	X86TargetInfo \
 	X86MCTargetDesc \
-	X86AsmPrinter \
 	X86Utils \
 	AsmPrinter \
 	IRReader \

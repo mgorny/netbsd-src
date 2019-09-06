@@ -17,7 +17,8 @@ SRCS=	llvm-readobj.cpp \
 	ObjDumper.cpp \
 	WasmDumper.cpp \
 	Win64EHDumper.cpp \
-	WindowsResourceDumper.cpp
+	WindowsResourceDumper.cpp \
+	XCOFFDumper.cpp
 
 LLVM_LIBS+= \
 	DebugInfoDWARF \

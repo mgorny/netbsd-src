@@ -12,6 +12,7 @@ CPPFLAGS+=	-I${AMDGPU_OBJDIR} -I${LLVM_SRCDIR}/lib/Target/AMDGPU
 SRCS+=	AMDGPUAsmBackend.cpp \
 	AMDGPUELFObjectWriter.cpp \
 	AMDGPUELFStreamer.cpp \
+	AMDGPUInstPrinter.cpp \
 	AMDGPUMCAsmInfo.cpp \
 	AMDGPUMCCodeEmitter.cpp \
 	AMDGPUMCTargetDesc.cpp \

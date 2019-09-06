@@ -10,7 +10,11 @@ X86_OBJDIR!=	cd ${.CURDIR}/../libLLVMX86CodeGen && ${PRINTOBJDIR}
 CPPFLAGS+=	-I${X86_OBJDIR} -I${LLVM_SRCDIR}/lib/Target/X86
 
 SRCS+=	X86AsmBackend.cpp \
+	X86ATTInstPrinter.cpp \
 	X86ELFObjectWriter.cpp \
+	X86InstComments.cpp \
+	X86InstPrinterCommon.cpp \
+	X86IntelInstPrinter.cpp \
 	X86MachObjectWriter.cpp \
 	X86MCAsmInfo.cpp \
 	X86MCCodeEmitter.cpp \

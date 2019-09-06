@@ -34,6 +34,7 @@ SRCS+=	ADCE.cpp \
 	LoopDataPrefetch.cpp \
 	LoopDeletion.cpp \
 	LoopDistribute.cpp \
+	LoopFuse.cpp \
 	LoopIdiomRecognize.cpp \
 	LoopInstSimplify.cpp \
 	LoopInterchange.cpp \
@@ -52,6 +53,7 @@ SRCS+=	ADCE.cpp \
 	LowerAtomic.cpp \
 	LowerExpectIntrinsic.cpp \
 	LowerGuardIntrinsic.cpp \
+	LowerWidenableCondition.cpp \
 	MakeGuardsExplicit.cpp \
 	MemCpyOptimizer.cpp \
 	MergedLoadStoreMotion.cpp \

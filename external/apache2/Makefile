@@ -2,6 +2,9 @@
 
 .include <bsd.own.mk>
 
+.if (${MKLLVM} != "no" || ${MKLLVMRT} != "no")
+SUBDIR+= llvm
+.endif
 .if (${MKMDNS} != "no")
 SUBDIR+= mDNSResponder
 .endif

@@ -33,23 +33,16 @@ LLVM_LIBS+= \
 	AArch64TargetInfo \
 	AArch64AsmParser \
 	AArch64MCTargetDesc \
-	AArch64AsmPrinter \
 	AArch64Utils \
 	ARMCodeGen \
 	ARMTargetInfo \
 	ARMAsmParser \
 	ARMMCTargetDesc \
-	ARMAsmPrinter \
 	MipsCodeGen \
 	MipsTargetInfo \
 	MipsAsmParser \
 	MipsDisassembler \
 	MipsMCTargetDesc \
-	MipsAsmPrinter \
-	PowerPCCodeGen \
-	PowerPCTargetInfo \
-	PowerPCMCTargetDesc \
-	PowerPCAsmPrinter \
 	SparcCodeGen \
 	SparcTargetInfo \
 	SparcMCTargetDesc \
@@ -57,7 +50,6 @@ LLVM_LIBS+= \
 	X86TargetInfo \
 	X86MCTargetDesc \
 	X86AsmParser \
-	X86AsmPrinter \
 	X86Utils \
 	SelectionDAG \
 	CodeGen \

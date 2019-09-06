@@ -57,6 +57,7 @@ SRCS+=	BackendUtil.cpp \
 	MicrosoftCXXABI.cpp \
 	ModuleBuilder.cpp \
 	ObjectFilePCHContainerOperations.cpp \
+	PatternInit.cpp \
 	SanitizerMetadata.cpp \
 	SwiftCallingConv.cpp \
 	TargetInfo.cpp \

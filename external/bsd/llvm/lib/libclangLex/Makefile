@@ -6,7 +6,8 @@ LIB=	clangLex
 
 .PATH: ${CLANG_SRCDIR}/lib/Lex
 
-SRCS+=	HeaderMap.cpp \
+SRCS+=	DependencyDirectivesSourceMinimizer.cpp \
+	HeaderMap.cpp \
 	HeaderSearch.cpp \
 	Lexer.cpp \
 	LiteralSupport.cpp \

@@ -12,30 +12,24 @@ SRCS=	sancov.cc
 LLVM_LIBS+= \
 	AArch64Disassembler \
 	AArch64MCTargetDesc \
-	AArch64AsmPrinter \
 	AArch64TargetInfo \
 	AArch64Utils \
 	ARMDisassembler \
 	ARMMCTargetDesc \
-	ARMAsmPrinter \
 	ARMTargetInfo \
 	ARMUtils \
 	MipsDisassembler \
 	MipsMCTargetDesc \
-	MipsAsmPrinter \
 	MipsTargetInfo \
 	PowerPCDisassembler \
 	PowerPCMCTargetDesc \
-	PowerPCAsmPrinter \
 	PowerPCTargetInfo \
 	SparcDisassembler \
 	SparcMCTargetDesc \
-	SparcAsmPrinter \
 	SparcTargetInfo \
 	X86Disassembler \
 	X86CodeGen \
 	X86MCTargetDesc \
-	X86AsmPrinter \
 	X86TargetInfo \
 	X86Utils \
 	MCDisassembler \

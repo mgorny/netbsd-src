@@ -41,7 +41,7 @@ SRCS+=	APSIntType.cpp \
 	RangeConstraintManager.cpp \
 	RangedConstraintManager.cpp \
 	RegionStore.cpp \
-	RetainSummaryManager.cpp \
+	SMTConstraintManager.cpp \
 	SarifDiagnostics.cpp \
 	SimpleConstraintManager.cpp \
 	SimpleSValBuilder.cpp \
@@ -50,9 +50,7 @@ SRCS+=	APSIntType.cpp \
 	SValBuilder.cpp \
 	SVals.cpp \
 	SymbolManager.cpp \
-	TaintManager.cpp \
-	WorkList.cpp \
-	Z3ConstraintManager.cpp
+	WorkList.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

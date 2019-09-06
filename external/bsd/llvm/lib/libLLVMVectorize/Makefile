@@ -14,6 +14,7 @@ SRCS+=	LoadStoreVectorizer.cpp \
 	VPlan.cpp \
 	VPlanHCFGBuilder.cpp \
 	VPlanHCFGTransforms.cpp \
+	VPlanPredicator.cpp \
 	VPlanVerifier.cpp
 
 .if defined(HOSTLIB)

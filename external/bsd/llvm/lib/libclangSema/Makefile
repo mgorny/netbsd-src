@@ -39,6 +39,7 @@ SRCS+=	AnalysisBasedWarnings.cpp \
 	SemaInit.cpp \
 	SemaLambda.cpp \
 	SemaLookup.cpp \
+	SemaModule.cpp \
 	SemaObjCProperty.cpp \
 	SemaOpenMP.cpp \
 	SemaOverload.cpp \
@@ -53,6 +54,12 @@ SRCS+=	AnalysisBasedWarnings.cpp \
 	SemaTemplateVariadic.cpp \
 	SemaType.cpp \
 	TypeLocBuilder.cpp
+
+CLANG_TABLEGEN_SRC=	OpenCLBuiltins.td
+CLANG_TABLEGEN_OUTPUT=	\
+	OpenCLBuiltins.inc|-gen-clang-opencl-builtins
+
+.include "${.PARSEDIR}/../../tablegen.mk"
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

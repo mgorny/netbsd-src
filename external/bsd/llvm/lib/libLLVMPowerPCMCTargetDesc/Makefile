@@ -12,11 +12,13 @@ CPPFLAGS+=	-I${PPC_OBJDIR} -I${LLVM_SRCDIR}/lib/Target/PowerPC
 SRCS+=	PPCAsmBackend.cpp \
 	PPCMCAsmInfo.cpp \
 	PPCELFObjectWriter.cpp \
+	PPCInstPrinter.cpp \
 	PPCMCCodeEmitter.cpp \
 	PPCMCExpr.cpp \
 	PPCMCTargetDesc.cpp \
 	PPCMachObjectWriter.cpp \
-	PPCPredicates.cpp
+	PPCPredicates.cpp \
+	PPCXCOFFObjectWriter.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

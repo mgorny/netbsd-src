@@ -28,6 +28,7 @@ SRCS+=	DispatchStage.cpp \
 	EntryStage.cpp \
 	ExecuteStage.cpp \
 	InstructionTables.cpp \
+	MicroOpQueueStage.cpp \
 	RetireStage.cpp \
 	Stage.cpp
 

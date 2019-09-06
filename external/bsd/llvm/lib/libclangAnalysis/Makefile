@@ -18,11 +18,13 @@ SRCS+=	AnalysisDeclContext.cpp \
 	ConstructionContext.cpp \
 	Consumed.cpp \
 	Dominators.cpp \
+	ExprMutationAnalyzer.cpp \
 	LiveVariables.cpp \
 	ObjCNoReturn.cpp \
 	PostOrderCFGView.cpp \
 	ProgramPoint.cpp \
 	ReachableCode.cpp \
+	RetainSummaryManager.cpp \
 	ThreadSafety.cpp \
 	ThreadSafetyCommon.cpp \
 	ThreadSafetyLogical.cpp \

@@ -46,6 +46,7 @@ SRCS+=	APValue.cpp \
 	InheritViz.cpp \
 	ItaniumCXXABI.cpp \
 	ItaniumMangle.cpp \
+	JSONNodeDumper.cpp \
 	Mangle.cpp \
 	MicrosoftCXXABI.cpp \
 	MicrosoftMangle.cpp \

@@ -15,30 +15,24 @@ LLVM_LIBS+= \
 	AArch64CodeGen \
 	AArch64TargetInfo \
 	AArch64MCTargetDesc \
-	AArch64AsmPrinter \
 	AArch64Utils \
 	ARMCodeGen \
 	ARMTargetInfo \
 	ARMMCTargetDesc \
-	ARMAsmPrinter \
 	ARMUtils \
 	MipsCodeGen \
 	MipsTargetInfo \
 	MipsMCTargetDesc \
-	MipsAsmPrinter \
 	PowerPCCodeGen \
 	PowerPCTargetInfo \
 	PowerPCMCTargetDesc \
-	PowerPCAsmPrinter \
 	SparcCodeGen \
 	SparcTargetInfo \
 	SparcMCTargetDesc \
-	SparcAsmPrinter \
 	X86CodeGen \
 	X86MCTargetDesc \
 	X86TargetInfo \
 	X86Utils \
-	X86AsmPrinter \
 	MCDisassembler \
 	GlobalISel \
 	AsmPrinter \

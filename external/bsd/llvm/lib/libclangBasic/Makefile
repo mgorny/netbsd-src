@@ -19,7 +19,6 @@ SRCS+=	Attributes.cpp \
 	FixedPoint.cpp \
 	IdentifierTable.cpp \
 	LangOptions.cpp \
-	MemoryBufferCache.cpp \
 	Module.cpp \
 	ObjCRuntime.cpp \
 	OpenMPKinds.cpp \

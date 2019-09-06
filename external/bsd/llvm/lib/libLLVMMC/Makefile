@@ -15,6 +15,7 @@ SRCS+=	ConstantPools.cpp \
 	MCAsmInfoDarwin.cpp \
 	MCAsmInfoELF.cpp \
 	MCAsmInfoWasm.cpp \
+	MCAsmInfoXCOFF.cpp \
 	MCAsmMacro.cpp \
 	MCAsmStreamer.cpp \
 	MCAssembler.cpp \
@@ -46,6 +47,7 @@ SRCS+=	ConstantPools.cpp \
 	MCSectionELF.cpp \
 	MCSectionMachO.cpp \
 	MCSectionWasm.cpp \
+	MCSectionXCOFF.cpp \
 	MCStreamer.cpp \
 	MCSubtargetInfo.cpp \
 	MCSymbol.cpp \
@@ -57,10 +59,13 @@ SRCS+=	ConstantPools.cpp \
 	MCWin64EH.cpp \
 	MCWinCOFFStreamer.cpp \
 	MCWinEH.cpp \
+	MCXCOFFObjectTargetWriter.cpp \
+	MCXCOFFStreamer.cpp \
 	StringTableBuilder.cpp \
 	SubtargetFeature.cpp \
 	WasmObjectWriter.cpp \
-	WinCOFFObjectWriter.cpp
+	WinCOFFObjectWriter.cpp \
+	XCOFFObjectWriter.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

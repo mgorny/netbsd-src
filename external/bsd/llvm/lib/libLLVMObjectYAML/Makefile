@@ -16,8 +16,10 @@ SRCS+=	CodeViewYAMLDebugSections.cpp \
 	DWARFYAML.cpp \
 	ELFYAML.cpp \
 	MachOYAML.cpp \
+	MinidumpYAML.cpp \
 	ObjectYAML.cpp \
 	WasmYAML.cpp \
+	XCOFFYAML.cpp \
 	YAML.cpp
 
 .if defined(HOSTLIB)

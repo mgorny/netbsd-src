@@ -12,9 +12,10 @@ SRCS+=	ARMAsmPrinter.cpp \
 	A15SDOptimizer.cpp \
 	ARMBaseInstrInfo.cpp \
 	ARMBaseRegisterInfo.cpp \
+	ARMBasicBlockInfo.cpp \
+	ARMCallingConv.cpp \
 	ARMCallLowering.cpp \
 	ARMCodeGenPrepare.cpp \
-	ARMComputeBlockSize.cpp \
 	ARMConstantIslandPass.cpp \
 	ARMConstantPoolValue.cpp \
 	ARMExpandPseudoInsts.cpp \
@@ -27,6 +28,7 @@ SRCS+=	ARMAsmPrinter.cpp \
 	ARMISelLowering.cpp \
 	ARMLegalizerInfo.cpp \
 	ARMLoadStoreOptimizer.cpp \
+	ARMLowOverheadLoops.cpp \
 	ARMMachineFunctionInfo.cpp \
 	ARMMacroFusion.cpp \
 	ARMMCInstLower.cpp \

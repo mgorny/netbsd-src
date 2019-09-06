@@ -76,7 +76,6 @@ SUBDIR+= .WAIT
 .if ${BUILD_RADEON} == 1
 SUBDIR+= \
 	libLLVMAMDGPUMCTargetDesc \
-	libLLVMAMDGPUAsmPrinter \
 	libLLVMAMDGPUTargetInfo \
 	libLLVMAMDGPUAsmParser \
 	libLLVMAMDGPUUtils
@@ -85,7 +84,6 @@ SUBDIR+= \
 .if ${MACHINE_ARCH} == "aarch64" || ${MACHINE_ARCH} == "aarch64eb"
 SUBDIR+= \
 	libLLVMAArch64AsmParser \
-	libLLVMAArch64AsmPrinter \
 	libLLVMAArch64Disassembler \
 	libLLVMAArch64MCTargetDesc \
 	libLLVMAArch64TargetInfo \
@@ -95,7 +93,6 @@ SUBDIR+= \
 .if !empty(MACHINE_ARCH:Mearm*) || !empty(MACHINE_ARCH:Marm*)
 SUBDIR+= \
 	libLLVMARMAsmParser \
-	libLLVMARMAsmPrinter \
 	libLLVMARMDisassembler \
 	libLLVMARMMCTargetDesc \
 	libLLVMARMTargetInfo \
@@ -105,7 +102,6 @@ SUBDIR+= \
 .if !empty(MACHINE_ARCH:Mmips*)
 SUBDIR+= \
 	libLLVMMipsAsmParser \
-	libLLVMMipsAsmPrinter \
 	libLLVMMipsDisassembler \
 	libLLVMMipsMCTargetDesc \
 	libLLVMMipsTargetInfo
@@ -114,7 +110,6 @@ SUBDIR+= \
 .if ${MACHINE_ARCH} == "powerpc" || ${MACHINE_ARCH} == "powerpc64"
 SUBDIR+= \
 	libLLVMPowerPCAsmParser \
-	libLLVMPowerPCAsmPrinter \
 	libLLVMPowerPCDisassembler \
 	libLLVMPowerPCMCTargetDesc \
 	libLLVMPowerPCTargetInfo
@@ -123,7 +118,6 @@ SUBDIR+= \
 .if ${MACHINE_ARCH} == "sparc" || ${MACHINE_ARCH} == "sparc64"
 SUBDIR+= \
 	libLLVMSparcAsmParser \
-	libLLVMSparcAsmPrinter \
 	libLLVMSparcDisassembler \
 	libLLVMSparcMCTargetDesc \
 	libLLVMSparcTargetInfo
@@ -132,7 +126,6 @@ SUBDIR+= \
 .if ${MACHINE_ARCH} == "i386" || ${MACHINE_ARCH} == "x86_64"
 SUBDIR+= \
 	libLLVMX86AsmParser \
-	libLLVMX86AsmPrinter \
 	libLLVMX86Disassembler \
 	libLLVMX86MCTargetDesc \
 	libLLVMX86TargetInfo \

@@ -13,24 +13,18 @@ SRCS=	Statistics.cpp \
 LLVM_LIBS+= \
 	AArch64TargetInfo \
 	AArch64MCTargetDesc \
-	AArch64AsmPrinter \
 	AArch64Utils \
 	ARMTargetInfo \
 	ARMMCTargetDesc \
-	ARMAsmPrinter \
 	ARMUtils \
 	MipsTargetInfo \
 	MipsMCTargetDesc \
-	MipsAsmPrinter \
 	PowerPCTargetInfo \
 	PowerPCMCTargetDesc \
-	PowerPCAsmPrinter \
 	SparcTargetInfo \
 	SparcMCTargetDesc \
-	SparcAsmPrinter \
 	X86TargetInfo \
 	X86MCTargetDesc \
-	X86AsmPrinter \
 	X86Utils \
 	DebugInfoDWARF \
 	Object \

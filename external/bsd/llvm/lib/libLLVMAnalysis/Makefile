@@ -35,6 +35,7 @@ SRCS+=	AliasAnalysis.cpp \
 	DivergenceAnalysis.cpp \
 	DominanceFrontier.cpp \
 	DomPrinter.cpp \
+	DomTreeUpdater.cpp \
 	EHPersonalities.cpp \
 	GlobalsModRef.cpp \
 	GuardUtils.cpp \
@@ -45,7 +46,6 @@ SRCS+=	AliasAnalysis.cpp \
 	InstructionSimplify.cpp \
 	Interval.cpp \
 	IntervalPartition.cpp \
-	IteratedDominanceFrontier.cpp \
 	IVDescriptors.cpp \
 	IVUsers.cpp \
 	LazyBlockFrequencyInfo.cpp \

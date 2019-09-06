@@ -1,12 +1,12 @@
 #	$NetBSD$
 
-LIB=	LLVMOptRemarks
+LIB=	LLVMBitstreamReader
 
 .include <bsd.init.mk>
 
-.PATH: ${LLVM_SRCDIR}/lib/OptRemarks
+.PATH: ${LLVM_SRCDIR}/lib/Bitstream/Reader
 
-SRCS+=	OptRemarksParser.cpp
+SRCS+=	BitstreamReader.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

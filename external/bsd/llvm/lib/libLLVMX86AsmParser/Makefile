@@ -9,8 +9,7 @@ CPPFLAGS+=	-I${X86_OBJDIR} -I${LLVM_SRCDIR}/lib/Target/X86
 
 .PATH: ${LLVM_SRCDIR}/lib/Target/X86/AsmParser
 
-SRCS+=	X86AsmParser.cpp \
-	X86AsmInstrumentation.cpp
+SRCS+=	X86AsmParser.cpp
 
 .if defined(HOSTLIB)
 .include <bsd.hostlib.mk>

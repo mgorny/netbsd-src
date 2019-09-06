@@ -15,6 +15,7 @@ TABLEGEN_OUTPUT= \
 SRCS+=	InstructionCombining.cpp \
 	InstCombineAddSub.cpp \
 	InstCombineAndOrXor.cpp \
+	InstCombineAtomicRMW.cpp \
 	InstCombineCalls.cpp \
 	InstCombineCasts.cpp \
 	InstCombineCompares.cpp \

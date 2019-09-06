@@ -9,8 +9,10 @@ SUBDIR=	\
 	libLLVMBinaryFormat \
 	libLLVMBitReader \
 	libLLVMBitWriter \
+	libLLVMBitstreamReader \
 	libLLVMCodeGen \
 	libLLVMDebugInfoCodeView \
+	libLLVMDebugInfoDWARF \
 	libLLVMDebugInfoMSF \
 	libLLVMDemangle \
 	libLLVMGlobalISel \
@@ -28,10 +30,10 @@ SUBDIR=	\
 	libLLVMObjCARC \
 	libLLVMObject \
 	libLLVMOption \
-	libLLVMOptRemarks \
 	libLLVMPasses \
 	libLLVMProfileData \
 	libLLVMProfileDataCoverage \
+	libLLVMRemarks \
 	libLLVMScalarOpts \
 	libLLVMSelectionDAG \
 	libLLVMSupport \
@@ -59,7 +61,6 @@ SUBDIR+= .WAIT
 .if !defined(HOSTLIB) && !defined(_BSD_HOSTINIT_MK_)
 SUBDIR+= \
 	libLLVMAMDGPUMCTargetDesc \
-	libLLVMAMDGPUAsmPrinter \
 	libLLVMAMDGPUTargetInfo \
 	libLLVMAMDGPUAsmParser \
 	libLLVMAMDGPUUtils
@@ -67,7 +68,6 @@ SUBDIR+= \
 
 SUBDIR+= \
 	libLLVMAArch64AsmParser \
-	libLLVMAArch64AsmPrinter \
 	libLLVMAArch64Disassembler \
 	libLLVMAArch64MCTargetDesc \
 	libLLVMAArch64TargetInfo \
@@ -75,7 +75,6 @@ SUBDIR+= \
 
 SUBDIR+= \
 	libLLVMARMAsmParser \
-	libLLVMARMAsmPrinter \
 	libLLVMARMDisassembler \
 	libLLVMARMMCTargetDesc \
 	libLLVMARMTargetInfo \
@@ -83,28 +82,24 @@ SUBDIR+= \
 
 SUBDIR+= \
 	libLLVMMipsAsmParser \
-	libLLVMMipsAsmPrinter \
 	libLLVMMipsDisassembler \
 	libLLVMMipsMCTargetDesc \
 	libLLVMMipsTargetInfo
 
 SUBDIR+= \
 	libLLVMPowerPCAsmParser \
-	libLLVMPowerPCAsmPrinter \
 	libLLVMPowerPCDisassembler \
 	libLLVMPowerPCMCTargetDesc \
 	libLLVMPowerPCTargetInfo
 
 SUBDIR+= \
 	libLLVMSparcAsmParser \
-	libLLVMSparcAsmPrinter \
 	libLLVMSparcDisassembler \
 	libLLVMSparcMCTargetDesc \
 	libLLVMSparcTargetInfo
 
 SUBDIR+= \
 	libLLVMX86AsmParser \
-	libLLVMX86AsmPrinter \
 	libLLVMX86Disassembler \
 	libLLVMX86MCTargetDesc \
 	libLLVMX86TargetInfo \

@@ -10,6 +10,7 @@ SRCS+=	PPCAsmPrinter.cpp \
 	PPCBoolRetToInt.cpp \
 	PPCBranchCoalescing.cpp \
 	PPCBranchSelector.cpp \
+	PPCCallingConv.cpp \
 	PPCCCState.cpp \
 	PPCCTRLoops.cpp \
 	PPCEarlyReturn.cpp \
@@ -22,6 +23,7 @@ SRCS+=	PPCAsmPrinter.cpp \
 	PPCISelLowering.cpp \
 	PPCLoopPreIncPrep.cpp \
 	PPCMachineFunctionInfo.cpp \
+	PPCMachineScheduler.cpp \
 	PPCMCInstLower.cpp \
 	PPCMIPeephole.cpp \
 	PPCPreEmitPeephole.cpp \

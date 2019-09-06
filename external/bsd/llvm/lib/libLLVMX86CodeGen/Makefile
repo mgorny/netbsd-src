@@ -6,8 +6,7 @@ LIB=	LLVMX86CodeGen
 
 .PATH: ${LLVM_SRCDIR}/lib/Target/X86
 
-SRCS+=	ShadowCallStack.cpp \
-	X86AsmPrinter.cpp \
+SRCS+=	X86AsmPrinter.cpp \
 	X86AvoidStoreForwardingBlocks.cpp \
 	X86CallFrameOptimization.cpp \
 	X86CallingConv.cpp \

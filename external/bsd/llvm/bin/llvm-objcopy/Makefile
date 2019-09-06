@@ -30,6 +30,14 @@ SRCS+=	COFFObjcopy.cpp \
 
 SRCS+=	ELFObjcopy.cpp \
 	Object.cpp
+
+.PATH: ${LLVM_SRCDIR}/tools/llvm-objcopy/MachO
+
+SRCS+=	MachOObjcopy.cpp \
+	MachOReader.cpp \
+	MachOWriter.cpp \
+	Object.cpp
+
 LLVM_LIBS+= \
 
 LDADD+=	-lz
