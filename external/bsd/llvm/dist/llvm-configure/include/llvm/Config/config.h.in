@@ -25,6 +25,9 @@
 /* Default runtime library to use. */
 #undef CLANG_DEFAULT_RTLIB
 
+/* Default unwind library to use. */
+#undef CLANG_DEFAULT_UNWINDLIB
+
 /* Multilib suffix for libdir. */
 #undef CLANG_LIBDIR_SUFFIX
 

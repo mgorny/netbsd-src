@@ -18,6 +18,9 @@
    default) */
 #undef CLANG_DEFAULT_LINKER
 
+/* Default unwind library to use. */
+#undef CLANG_DEFAULT_UNWINDLIB
+
 /* Default OpenMP runtime used by -fopenmp. */
 #undef CLANG_DEFAULT_OPENMP_RUNTIME
 

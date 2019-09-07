@@ -5687,6 +5687,11 @@ _ACEOF
 
 
 cat >>confdefs.h <<_ACEOF
+#define CLANG_DEFAULT_UNWINDLIB ""
+_ACEOF
+
+
+cat >>confdefs.h <<_ACEOF
 #define CLANG_DEFAULT_OPENMP_RUNTIME "libomp"
 _ACEOF
 

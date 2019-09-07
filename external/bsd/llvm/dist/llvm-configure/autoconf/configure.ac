@@ -1278,6 +1278,8 @@ AC_DEFINE_UNQUOTED(CLANG_DEFAULT_LINKER, "",
                    [Default linker to use (linker name or absolute path, empty for platform default)])
 AC_DEFINE_UNQUOTED(CLANG_DEFAULT_RTLIB, "",
                    [Default runtime library to use.])
+AC_DEFINE_UNQUOTED(CLANG_DEFAULT_UNWINDLIB, "",
+                   [Default unwind library to use.])
 AC_DEFINE_UNQUOTED(CLANG_DEFAULT_OPENMP_RUNTIME, "libomp",
                    [Default OpenMP runtime used by -fopenmp.])
 AC_DEFINE_UNQUOTED(CLANG_LIBDIR_SUFFIX, "",
