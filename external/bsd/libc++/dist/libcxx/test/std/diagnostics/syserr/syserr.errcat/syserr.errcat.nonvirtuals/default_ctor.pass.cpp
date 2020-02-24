@@ -1,12 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
+// UNSUPPORTED: c++98, c++03, c++11
 // <system_error>
 
 // class error_category
@@ -18,7 +18,7 @@
 #include <string>
 #include <cassert>
 
-#if _LIBCPP_STD_VER > 11
+#include "test_macros.h"
 
 class test1
     : public std::error_category
@@ -26,15 +26,13 @@ class test1
 public:
     constexpr test1() = default;  // won't compile if error_category() is not constexpr
     virtual const char* name() const noexcept {return nullptr;}
-    virtual std::string message(int ev) const {return std::string();}
+    virtual std::string message(int) const {return std::string();}
 };
 
-#endif  // _LIBCPP_STD_VER > 11
-
-int main()
+int main(int, char**)
 {
-#if _LIBCPP_STD_VER > 11
     static_assert(std::is_nothrow_default_constructible<test1>::value,
                                  "error_category() must exist and be noexcept");
-#endif  // _LIBCPP_STD_VER > 11
+
+  return 0;
 }

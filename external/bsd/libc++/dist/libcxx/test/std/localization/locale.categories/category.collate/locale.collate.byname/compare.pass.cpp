@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// REQUIRES: locale.en_US.UTF-8
 
 // <locale>
 
@@ -29,29 +30,13 @@
 
 #include <stdio.h>
 
+#include "test_macros.h"
 #include "platform_support.h" // locale name macros
 
-int main()
+int main(int, char**)
 {
     {
         std::locale l(LOCALE_en_US_UTF_8);
-        {
-            const std::collate<char>& f = std::use_facet<std::collate<char> >(l);
-            std::string s2("aaaaaaA");
-            std::string s3("BaaaaaA");
-            assert(f.compare(s2.data(), s2.data() + s2.size(),
-                             s3.data(), s3.data() + s3.size()) == 1);
-        }
-        {
-            const std::collate<wchar_t>& f = std::use_facet<std::collate<wchar_t> >(l);
-            std::wstring s2(L"aaaaaaA");
-            std::wstring s3(L"BaaaaaA");
-            assert(f.compare(s2.data(), s2.data() + s2.size(),
-                             s3.data(), s3.data() + s3.size()) == 1);
-        }
-    }
-    {
-        std::locale l("");
         {
             const std::collate<char>& f = std::use_facet<std::collate<char> >(l);
             std::string s2("aaaaaaA");
@@ -84,4 +69,6 @@ int main()
                              s3.data(), s3.data() + s3.size()) == 1);
         }
     }
+
+  return 0;
 }

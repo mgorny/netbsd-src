@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,17 +11,24 @@
 // has_nothrow_move_assign
 
 #include <type_traits>
+#include "test_macros.h"
 
 template <class T>
 void test_has_nothrow_assign()
 {
     static_assert( std::is_nothrow_move_assignable<T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert( std::is_nothrow_move_assignable_v<T>, "");
+#endif
 }
 
 template <class T>
 void test_has_not_nothrow_assign()
 {
     static_assert(!std::is_nothrow_move_assignable<T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert(!std::is_nothrow_move_assignable_v<T>, "");
+#endif
 }
 
 class Empty
@@ -46,7 +52,7 @@ struct A
     A& operator=(const A&);
 };
 
-int main()
+int main(int, char**)
 {
     test_has_nothrow_assign<int&>();
     test_has_nothrow_assign<Union>();
@@ -60,4 +66,6 @@ int main()
 
     test_has_not_nothrow_assign<void>();
     test_has_not_nothrow_assign<A>();
+
+  return 0;
 }

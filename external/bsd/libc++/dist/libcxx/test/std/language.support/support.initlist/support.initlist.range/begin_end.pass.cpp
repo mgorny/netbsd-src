@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03
 
 // <initializer_list>
 
@@ -13,8 +14,9 @@
 
 #include <initializer_list>
 #include <cassert>
+#include <cstddef>
 
-#ifndef _LIBCPP_HAS_NO_GENERALIZED_INITIALIZERS
+#include "test_macros.h"
 
 struct A
 {
@@ -23,14 +25,14 @@ struct A
         const int* b = begin(il);
         const int* e = end(il);
         assert(il.size() == 3);
-        assert(e - b == il.size());
+        assert(static_cast<std::size_t>(e - b) == il.size());
         assert(*b++ == 3);
         assert(*b++ == 2);
         assert(*b++ == 1);
     }
 };
 
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
 struct B
 {
     constexpr B(std::initializer_list<int> il)
@@ -38,22 +40,22 @@ struct B
         const int* b = begin(il);
         const int* e = end(il);
         assert(il.size() == 3);
-        assert(e - b == il.size());
+        assert(static_cast<std::size_t>(e - b) == il.size());
         assert(*b++ == 3);
         assert(*b++ == 2);
         assert(*b++ == 1);
     }
 };
 
-#endif  // _LIBCPP_STD_VER > 11
-#endif  // _LIBCPP_HAS_NO_GENERALIZED_INITIALIZERS
+#endif  // TEST_STD_VER > 11
 
-int main()
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_GENERALIZED_INITIALIZERS
     A test1 = {3, 2, 1};
-#endif
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     constexpr B test2 = {3, 2, 1};
-#endif  // _LIBCPP_STD_VER > 11
+    (void)test2;
+#endif  // TEST_STD_VER > 11
+
+  return 0;
 }

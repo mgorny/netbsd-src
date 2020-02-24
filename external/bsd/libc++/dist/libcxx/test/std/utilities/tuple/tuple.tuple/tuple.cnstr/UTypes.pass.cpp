@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -20,9 +19,11 @@
 #include <cassert>
 #include <type_traits>
 
+#include "test_macros.h"
+#include "test_convertible.h"
 #include "MoveOnly.h"
 
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
 
 struct Empty {};
 struct A
@@ -82,6 +83,8 @@ void test_default_constructible_extension_sfinae()
             MoveOnly, Tuple, MoveOnly, MoveOnly
         >::value, "");
     }
+    // testing extensions
+#ifdef _LIBCPP_VERSION
     {
         typedef std::tuple<MoveOnly, int> Tuple;
         typedef std::tuple<MoveOnly, Tuple, MoveOnly, MoveOnly> NestedTuple;
@@ -96,9 +99,10 @@ void test_default_constructible_extension_sfinae()
             MoveOnly, Tuple, MoveOnly, MoveOnly
         >::value, "");
     }
+#endif
 }
 
-int main()
+int main(int, char**)
 {
     {
         std::tuple<MoveOnly> t(MoveOnly(0));
@@ -118,22 +122,31 @@ int main()
         assert(std::get<2>(t) == 2);
     }
     // extensions
+#ifdef _LIBCPP_VERSION
     {
-        std::tuple<MoveOnly, MoveOnly, MoveOnly> t(MoveOnly(0),
-                                                   MoveOnly(1));
+        using E = MoveOnly;
+        using Tup = std::tuple<E, E, E>;
+        // Test that the reduced arity initialization extension is only
+        // allowed on the explicit constructor.
+        static_assert(test_convertible<Tup, E, E, E>(), "");
+
+        Tup t(E(0), E(1));
+        static_assert(!test_convertible<Tup, E, E>(), "");
         assert(std::get<0>(t) == 0);
         assert(std::get<1>(t) == 1);
         assert(std::get<2>(t) == MoveOnly());
-    }
-    {
-        std::tuple<MoveOnly, MoveOnly, MoveOnly> t(MoveOnly(0));
+
+        Tup t2(E(0));
+        static_assert(!test_convertible<Tup, E>(), "");
         assert(std::get<0>(t) == 0);
-        assert(std::get<1>(t) == MoveOnly());
-        assert(std::get<2>(t) == MoveOnly());
+        assert(std::get<1>(t) == E());
+        assert(std::get<2>(t) == E());
     }
-#if _LIBCPP_STD_VER > 11
+#endif
+#if TEST_STD_VER > 11
     {
         constexpr std::tuple<Empty> t0{Empty()};
+        (void)t0;
     }
     {
         constexpr std::tuple<A, A> t(3, 2);
@@ -143,4 +156,6 @@ int main()
     // Check that SFINAE is properly applied with the default reduced arity
     // constructor extensions.
     test_default_constructible_extension_sfinae();
+
+  return 0;
 }

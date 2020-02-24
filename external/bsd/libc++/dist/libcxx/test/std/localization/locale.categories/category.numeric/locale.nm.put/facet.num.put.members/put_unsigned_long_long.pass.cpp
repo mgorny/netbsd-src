@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,6 +16,7 @@
 #include <ios>
 #include <cassert>
 #include <streambuf>
+#include "test_macros.h"
 #include "test_iterators.h"
 
 typedef std::num_put<char, output_iterator<char*> > F;
@@ -40,7 +40,7 @@ protected:
     virtual std::string do_grouping() const {return std::string("\1\2\3");}
 };
 
-int main()
+int main(int, char**)
 {
     const my_facet f(1);
     {
@@ -61,15 +61,15 @@ int main()
     }
     {
         std::ios ios(0);
-        unsigned long long v = -1;
+        unsigned long long v = static_cast<unsigned long long>(-1);
         char str[50];
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
-        assert(ex == (sizeof(unsigned long long) == 4 ? "4294967295" : "18446744073709551615"));
+        assert(ex == "18446744073709551615");
     }
     {
         std::ios ios(0);
-        unsigned long long v = -1000;
+        unsigned long long v = static_cast<unsigned long long>(-1000);
         char str[50];
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
@@ -307,7 +307,7 @@ int main()
     {
         std::ios ios(0);
         ios.imbue(std::locale(std::locale::classic(), new my_numpunct));
-        unsigned long long v = -1000;
+        unsigned long long v = static_cast<unsigned long long>(-1000);
         right(ios);
         showpos(ios);
         ios.width(10);
@@ -320,7 +320,7 @@ int main()
     {
         std::ios ios(0);
         ios.imbue(std::locale(std::locale::classic(), new my_numpunct));
-        unsigned long long v = -1000;
+        unsigned long long v = static_cast<unsigned long long>(-1000);
         left(ios);
         ios.width(10);
         char str[50];
@@ -332,7 +332,7 @@ int main()
     {
         std::ios ios(0);
         ios.imbue(std::locale(std::locale::classic(), new my_numpunct));
-        unsigned long long v = -1000;
+        unsigned long long v = static_cast<unsigned long long>(-1000);
         internal(ios);
         ios.width(10);
         char str[50];
@@ -341,4 +341,6 @@ int main()
         assert(ex == "18_446_744_073_709_550_61_6");
         assert(ios.width() == 0);
     }
+
+  return 0;
 }

@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// REQUIRES: locale.en_US.UTF-8
 
 // <locale>
 
@@ -25,25 +26,13 @@
 #include <type_traits>
 #include <cassert>
 
+#include "test_macros.h"
 #include "platform_support.h" // locale name macros
 
-int main()
+int main(int, char**)
 {
     {
         std::locale l(LOCALE_en_US_UTF_8);
-        {
-            assert(std::has_facet<std::ctype_byname<char> >(l));
-            assert(&std::use_facet<std::ctype<char> >(l)
-                == &std::use_facet<std::ctype_byname<char> >(l));
-        }
-        {
-            assert(std::has_facet<std::ctype_byname<wchar_t> >(l));
-            assert(&std::use_facet<std::ctype<wchar_t> >(l)
-                == &std::use_facet<std::ctype_byname<wchar_t> >(l));
-        }
-    }
-    {
-        std::locale l("");
         {
             assert(std::has_facet<std::ctype_byname<char> >(l));
             assert(&std::use_facet<std::ctype<char> >(l)
@@ -68,4 +57,6 @@ int main()
                 == &std::use_facet<std::ctype_byname<wchar_t> >(l));
         }
     }
+
+  return 0;
 }

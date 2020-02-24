@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,12 +18,13 @@
 #include <sstream>
 #include <cassert>
 
-#include "count_new.hpp"
+#include "test_macros.h"
+#include "count_new.h"
 
-int main()
+int main(int, char**)
 {
     typedef std::wbuffer_convert<std::codecvt_utf8<wchar_t> > B;
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     static_assert(!std::is_convertible<std::streambuf*, B>::value, "");
     static_assert( std::is_constructible<B, std::streambuf*>::value, "");
 #endif
@@ -55,4 +55,6 @@ int main()
         assert(globalMemCounter.checkOutstandingNewNotEq(0));
     }
     assert(globalMemCounter.checkOutstandingNewEq(0));
+
+  return 0;
 }

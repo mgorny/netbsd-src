@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,6 +15,8 @@
 #include <exception>
 #include <cassert>
 
+#include "test_macros.h"
+
 class A
 {
     int data_;
@@ -25,13 +26,14 @@ public:
     friend bool operator==(const A& x, const A& y) {return x.data_ == y.data_;}
 };
 
-int main()
+int main(int, char**)
 {
     {
         std::nested_exception e0;
         std::nested_exception e = e0;
         assert(e.nested_ptr() == nullptr);
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     {
         try
         {
@@ -54,4 +56,7 @@ int main()
             }
         }
     }
+#endif
+
+  return 0;
 }

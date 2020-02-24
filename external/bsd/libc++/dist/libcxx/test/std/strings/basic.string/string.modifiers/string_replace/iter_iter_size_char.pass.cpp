@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,12 +11,11 @@
 // basic_string<charT,traits,Allocator>&
 //   replace(const_iterator i1, const_iterator i2, size_type n, charT c);
 
-#include <stdio.h>
-
 #include <string>
 #include <algorithm>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class S>
@@ -30,7 +28,7 @@ test(S s, typename S::size_type pos1, typename S::size_type n1, typename S::size
     typename S::const_iterator last = s.begin() + pos1 + n1;
     typename S::size_type xlen = last - first;
     s.replace(first, last, n2, c);
-    assert(s.__invariants());
+    LIBCPP_ASSERT(s.__invariants());
     assert(s == expected);
     typename S::size_type rlen = n2;
     assert(s.size() == old_size - xlen + rlen);
@@ -267,7 +265,7 @@ void test2()
     test(S("abcdefghijklmnopqrst"), 20, 0, 20, '3', S("abcdefghijklmnopqrst33333333333333333333"));
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string S;
@@ -275,7 +273,7 @@ int main()
     test1<S>();
     test2<S>();
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> S;
     test0<S>();
@@ -283,4 +281,6 @@ int main()
     test2<S>();
     }
 #endif
+
+  return 0;
 }

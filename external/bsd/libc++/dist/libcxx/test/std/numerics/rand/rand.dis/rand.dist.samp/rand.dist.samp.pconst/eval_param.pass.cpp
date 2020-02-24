@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -17,10 +16,14 @@
 // template<class _URNG> result_type operator()(_URNG& g, const param_type& parm);
 
 #include <random>
+#include <algorithm>
 #include <vector>
 #include <iterator>
 #include <numeric>
 #include <cassert>
+#include <cstddef>
+
+#include "test_macros.h"
 
 template <class T>
 inline
@@ -30,7 +33,7 @@ sqr(T x)
     return x*x;
 }
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::piecewise_constant_distribution<> D;
@@ -52,10 +55,10 @@ int main()
         }
         std::vector<double> prob(std::begin(p), std::end(p));
         double s = std::accumulate(prob.begin(), prob.end(), 0.0);
-        for (int i = 0; i < prob.size(); ++i)
+        for (std::size_t i = 0; i < prob.size(); ++i)
             prob[i] /= s;
         std::sort(u.begin(), u.end());
-        for (int i = 0; i < Np; ++i)
+        for (std::size_t i = 0; i < Np; ++i)
         {
             typedef std::vector<D::result_type>::iterator I;
             I lb = std::lower_bound(u.begin(), u.end(), b[i]);
@@ -72,10 +75,10 @@ int main()
                 double kurtosis = 0;
                 for (I j = lb; j != ub; ++j)
                 {
-                    double d = (*j - mean);
-                    double d2 = sqr(d);
+                    double dbl = (*j - mean);
+                    double d2 = sqr(dbl);
                     var += d2;
-                    skew += d * d2;
+                    skew += dbl * d2;
                     kurtosis += d2 * d2;
                 }
                 var /= Ni;
@@ -94,4 +97,6 @@ int main()
             }
         }
     }
+
+  return 0;
 }

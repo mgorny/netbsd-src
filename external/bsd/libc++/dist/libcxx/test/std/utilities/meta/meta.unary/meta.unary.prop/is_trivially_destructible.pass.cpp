@@ -1,18 +1,22 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+// UNSUPPORTED: apple-clang-9
 
 // type_traits
 
 // is_trivially_destructible
 
-#include <type_traits>
+// Prevent warning when testing the Abstract test type.
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wdelete-non-virtual-dtor"
+#endif
 
+#include <type_traits>
 #include "test_macros.h"
 
 template <class T>
@@ -22,6 +26,12 @@ void test_is_trivially_destructible()
     static_assert( std::is_trivially_destructible<const T>::value, "");
     static_assert( std::is_trivially_destructible<volatile T>::value, "");
     static_assert( std::is_trivially_destructible<const volatile T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert( std::is_trivially_destructible_v<T>, "");
+    static_assert( std::is_trivially_destructible_v<const T>, "");
+    static_assert( std::is_trivially_destructible_v<volatile T>, "");
+    static_assert( std::is_trivially_destructible_v<const volatile T>, "");
+#endif
 }
 
 template <class T>
@@ -31,6 +41,12 @@ void test_is_not_trivially_destructible()
     static_assert(!std::is_trivially_destructible<const T>::value, "");
     static_assert(!std::is_trivially_destructible<volatile T>::value, "");
     static_assert(!std::is_trivially_destructible<const volatile T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert(!std::is_trivially_destructible_v<T>, "");
+    static_assert(!std::is_trivially_destructible_v<const T>, "");
+    static_assert(!std::is_trivially_destructible_v<volatile T>, "");
+    static_assert(!std::is_trivially_destructible_v<const volatile T>, "");
+#endif
 }
 
 struct PublicDestructor           { public:     ~PublicDestructor() {}};
@@ -72,7 +88,7 @@ struct A
     ~A();
 };
 
-int main()
+int main(int, char**)
 {
     test_is_not_trivially_destructible<void>();
     test_is_not_trivially_destructible<A>();
@@ -100,4 +116,12 @@ int main()
     test_is_not_trivially_destructible<PureProtectedDestructor>();
     test_is_not_trivially_destructible<PurePrivateDestructor>();
 #endif
+
+#if TEST_HAS_BUILTIN_IDENTIFIER(_Atomic)
+    test_is_trivially_destructible<_Atomic int>();
+    test_is_trivially_destructible<_Atomic float>();
+    test_is_trivially_destructible<_Atomic int*>();
+#endif
+
+  return 0;
 }

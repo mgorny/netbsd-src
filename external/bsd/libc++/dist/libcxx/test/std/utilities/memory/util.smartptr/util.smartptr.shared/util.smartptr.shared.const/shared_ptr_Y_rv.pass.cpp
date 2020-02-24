@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03
 
 // <memory>
 
@@ -16,6 +17,8 @@
 #include <memory>
 #include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
 
 struct B
 {
@@ -51,7 +54,7 @@ struct C
 
 int C::count = 0;
 
-int main()
+int main(int, char**)
 {
     static_assert(( std::is_convertible<std::shared_ptr<A>, std::shared_ptr<B> >::value), "");
     static_assert((!std::is_convertible<std::shared_ptr<B>, std::shared_ptr<A> >::value), "");
@@ -66,24 +69,24 @@ int main()
             std::shared_ptr<B> pB(std::move(pA));
             assert(B::count == 1);
             assert(A::count == 1);
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
             assert(pB.use_count() == 1);
             assert(pA.use_count() == 0);
-#else  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#else
             assert(pB.use_count() == 2);
             assert(pA.use_count() == 2);
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#endif
             assert(p == pB.get());
         }
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
         assert(pA.use_count() == 0);
         assert(B::count == 0);
         assert(A::count == 0);
-#else  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#else
         assert(pA.use_count() == 1);
         assert(B::count == 1);
         assert(A::count == 1);
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#endif
     }
     assert(B::count == 0);
     assert(A::count == 0);
@@ -106,4 +109,6 @@ int main()
     }
     assert(B::count == 0);
     assert(A::count == 0);
+
+  return 0;
 }

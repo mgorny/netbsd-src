@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,6 +16,7 @@
 #include <ios>
 #include <cassert>
 #include <streambuf>
+#include "test_macros.h"
 #include "test_iterators.h"
 
 typedef std::num_put<char, output_iterator<char*> > F;
@@ -29,7 +29,7 @@ public:
         : F(refs) {}
 };
 
-int main()
+int main(int, char**)
 {
     const my_facet f(1);
     {
@@ -38,6 +38,14 @@ int main()
         char str[50];
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
-        assert(ex == "0x0" || ex == "(nil)");
+        char expected_str[32] = {};
+        // num_put::put uses %p for pointer types, but the exact format of %p is
+        // implementation defined behavior for the C library. Compare output to
+        // snprintf for portability.
+        int rc = snprintf(expected_str, sizeof(expected_str), "%p", v);
+        assert(rc > 0);
+        assert(ex == expected_str);
     }
+
+  return 0;
 }

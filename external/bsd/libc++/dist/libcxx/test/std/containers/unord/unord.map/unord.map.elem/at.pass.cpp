@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,14 +15,16 @@
 // mapped_type&       at(const key_type& k);
 // const mapped_type& at(const key_type& k) const;
 
-#include <unordered_map>
-#include <string>
 #include <cassert>
+#include <stdexcept>
+#include <string>
+#include <unordered_map>
 
 #include "MoveOnly.h"
 #include "min_allocator.h"
+#include "test_macros.h"
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::unordered_map<int, std::string> C;
@@ -41,6 +42,7 @@ int main()
         assert(c.size() == 4);
         c.at(1) = "ONE";
         assert(c.at(1) == "ONE");
+#ifndef TEST_HAS_NO_EXCEPTIONS
         try
         {
             c.at(11) = "eleven";
@@ -50,6 +52,7 @@ int main()
         {
         }
         assert(c.size() == 4);
+#endif
     }
     {
         typedef std::unordered_map<int, std::string> C;
@@ -66,17 +69,19 @@ int main()
         const C c(a, a + sizeof(a)/sizeof(a[0]));
         assert(c.size() == 4);
         assert(c.at(1) == "one");
+#ifndef TEST_HAS_NO_EXCEPTIONS
         try
         {
-            c.at(11);
+            TEST_IGNORE_NODISCARD c.at(11);
             assert(false);
         }
         catch (std::out_of_range&)
         {
         }
         assert(c.size() == 4);
+#endif
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef std::unordered_map<int, std::string, std::hash<int>, std::equal_to<int>,
                             min_allocator<std::pair<const int, std::string>>> C;
@@ -94,6 +99,7 @@ int main()
         assert(c.size() == 4);
         c.at(1) = "ONE";
         assert(c.at(1) == "ONE");
+#ifndef TEST_HAS_NO_EXCEPTIONS
         try
         {
             c.at(11) = "eleven";
@@ -103,6 +109,7 @@ int main()
         {
         }
         assert(c.size() == 4);
+#endif
     }
     {
         typedef std::unordered_map<int, std::string, std::hash<int>, std::equal_to<int>,
@@ -120,15 +127,19 @@ int main()
         const C c(a, a + sizeof(a)/sizeof(a[0]));
         assert(c.size() == 4);
         assert(c.at(1) == "one");
+#ifndef TEST_HAS_NO_EXCEPTIONS
         try
         {
-            c.at(11);
+            TEST_IGNORE_NODISCARD c.at(11);
             assert(false);
         }
         catch (std::out_of_range&)
         {
         }
         assert(c.size() == 4);
+#endif
     }
 #endif
+
+  return 0;
 }

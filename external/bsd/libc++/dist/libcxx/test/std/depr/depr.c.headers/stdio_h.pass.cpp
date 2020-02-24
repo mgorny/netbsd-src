@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,6 +11,26 @@
 #include <stdio.h>
 #include <type_traits>
 #include "test_macros.h"
+
+#ifdef getc
+#error getc is defined
+#endif
+
+#ifdef putc
+#error putc is defined
+#endif
+
+#ifdef clearerr
+#error clearerr is defined
+#endif
+
+#ifdef feof
+#error feof is defined
+#endif
+
+#ifdef ferror
+#error ferror is defined
+#endif
 
 #ifndef BUFSIZ
 #error BUFSIZ not defined
@@ -79,17 +98,25 @@
 
 #include <cstdarg>
 
+#if defined(__GNUC__) || defined(__clang__)
 #pragma GCC diagnostic ignored "-Wformat-zero-length"
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations" // for tmpnam
+#endif
 
-int main()
+int main(int, char**)
 {
     FILE* fp = 0;
-    fpos_t fpos = {0};
-    size_t s = 0; ((void)s);
+    fpos_t fpos = fpos_t();
+    size_t s = 0;
     char* cp = 0;
     char arr[] = {'a', 'b'};
     va_list va;
+    ((void)fp); // Prevent unused warning
+    ((void)fpos); // Prevent unused warning
+    ((void)s); // Prevent unused warning
+    ((void)cp); // Prevent unused warning
+    ((void)arr); // Prevent unused warning
+    ((void)va); // Prevent unused warning
     static_assert((std::is_same<decltype(remove("")), int>::value), "");
     static_assert((std::is_same<decltype(rename("","")), int>::value), "");
     static_assert((std::is_same<decltype(tmpfile()), FILE*>::value), "");
@@ -138,4 +165,6 @@ int main()
     static_assert((std::is_same<decltype(feof(fp)), int>::value), "");
     static_assert((std::is_same<decltype(ferror(fp)), int>::value), "");
     static_assert((std::is_same<decltype(perror("")), void>::value), "");
+
+  return 0;
 }

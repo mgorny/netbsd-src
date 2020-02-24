@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,20 +18,20 @@
 #include <array>
 #include <cassert>
 
-#include "test_macros.h"
-#include "../suppress_array_warnings.h"
 
-int main()
+// std::array is explicitly allowed to be initialized with A a = { init-list };.
+// Disable the missing braces warning for this reason.
+#include "disable_missing_braces_warning.h"
+
+int main(int, char**)
 {
     {
         typedef double T;
         typedef std::array<T, 3> C;
         C c = {1, 2, 3.5};
         std::get<3>(c) = 5.5; // expected-note {{requested here}}
-#if TEST_STD_VER >= 11
-        // expected-error@array:* {{static_assert failed "Index out of bounds in std::get<> (std::array)"}}
-#else
-        // expected-error@array:* {{implicit instantiation of undefined template '__static_assert_test<false>'}}
-#endif
+        // expected-error-re@array:* {{static_assert failed{{( due to requirement '3U[L]{0,2} < 3U[L]{0,2}')?}} "Index out of bounds in std::get<> (std::array)"}}
     }
+
+  return 0;
 }

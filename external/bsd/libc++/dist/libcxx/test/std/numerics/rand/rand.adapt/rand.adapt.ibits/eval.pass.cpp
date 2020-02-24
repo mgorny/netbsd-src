@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,6 +15,8 @@
 
 #include <random>
 #include <cassert>
+
+#include "test_macros.h"
 
 template <class UIntType, UIntType Min, UIntType Max>
 class rand1
@@ -30,14 +31,14 @@ private:
     static_assert(Min < Max, "rand1 invalid parameters");
 public:
 
-#ifdef _LIBCPP_HAS_NO_CONSTEXPR
+#if TEST_STD_VER < 11 && defined(_LIBCPP_VERSION)
     // Workaround for lack of constexpr in C++03
     static const result_type _Min = Min;
     static const result_type _Max = Max;
 #endif
 
-    static _LIBCPP_CONSTEXPR result_type min() {return Min;}
-    static _LIBCPP_CONSTEXPR result_type max() {return Max;}
+    static TEST_CONSTEXPR result_type min() {return Min;}
+    static TEST_CONSTEXPR result_type max() {return Max;}
 
     explicit rand1(result_type sd = Min) : x_(sd)
     {
@@ -128,7 +129,7 @@ test8()
     assert(e() == 16470362623952407241ull);
 }
 
-int main()
+int main(int, char**)
 {
     test1();
     test2();
@@ -138,4 +139,6 @@ int main()
     test6();
     test7();
     test8();
+
+  return 0;
 }

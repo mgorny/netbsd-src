@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,22 +14,25 @@
 #include <vector>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 #include "test_allocator.h"
 
 template <class C>
 void
-test2(typename C::size_type n, typename C::allocator_type const& a = typename C::allocator_type ())
+test2(typename C::size_type n,
+      typename C::allocator_type const& a = typename C::allocator_type ())
 {
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER >= 14
     C c(n, a);
-    assert(c.__invariants());
+    LIBCPP_ASSERT(c.__invariants());
     assert(c.size() == n);
     assert(c.get_allocator() == a);
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
     for (typename C::const_iterator i = c.cbegin(), e = c.cend(); i != e; ++i)
         assert(*i == typename C::value_type());
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#else
+  ((void)n);
+  ((void)a);
 #endif
 }
 
@@ -39,7 +41,7 @@ void
 test1(typename C::size_type n)
 {
     C c(n);
-    assert(c.__invariants());
+    LIBCPP_ASSERT(c.__invariants());
     assert(c.size() == n);
     assert(c.get_allocator() == typename C::allocator_type());
     for (typename C::const_iterator i = c.cbegin(), e = c.cend(); i != e; ++i)
@@ -54,11 +56,13 @@ test(typename C::size_type n)
     test2<C> ( n );
 }
 
-int main()
+int main(int, char**)
 {
     test<std::vector<bool> >(50);
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     test<std::vector<bool, min_allocator<bool>> >(50);
     test2<std::vector<bool, test_allocator<bool>> >( 100, test_allocator<bool>(23));
 #endif
+
+  return 0;
 }

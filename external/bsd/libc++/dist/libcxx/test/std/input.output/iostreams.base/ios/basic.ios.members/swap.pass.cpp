@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -20,6 +19,7 @@
 #include <streambuf>
 #include <cassert>
 
+#include "test_macros.h"
 #include "platform_support.h" // locale name macros
 
 struct testbuf
@@ -41,37 +41,37 @@ bool g1_called = false;
 bool g2_called = false;
 bool g3_called = false;
 
-void f1(std::ios_base::event ev, std::ios_base& stream, int index)
+void f1(std::ios_base::event, std::ios_base&, int index)
 {
     assert(index == 4);
     f1_called = true;
 }
 
-void f2(std::ios_base::event ev, std::ios_base& stream, int index)
+void f2(std::ios_base::event, std::ios_base&, int index)
 {
     assert(index == 5);
     f2_called = true;
 }
 
-void g1(std::ios_base::event ev, std::ios_base& stream, int index)
+void g1(std::ios_base::event, std::ios_base&, int index)
 {
     assert(index == 7);
     g1_called = true;
 }
 
-void g2(std::ios_base::event ev, std::ios_base& stream, int index)
+void g2(std::ios_base::event, std::ios_base&, int index)
 {
     assert(index == 8);
     g2_called = true;
 }
 
-void g3(std::ios_base::event ev, std::ios_base& stream, int index)
+void g3(std::ios_base::event, std::ios_base&, int index)
 {
     assert(index == 9);
     g3_called = true;
 }
 
-int main()
+int main(int, char**)
 {
     testbuf sb1;
     testios ios1(&sb1);
@@ -165,4 +165,6 @@ int main()
     ios2.imbue(std::locale("C"));
     assert(f1_called);
     assert(f2_called);
+
+  return 0;
 }

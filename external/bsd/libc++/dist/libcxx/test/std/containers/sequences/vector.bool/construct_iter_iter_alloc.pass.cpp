@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,7 +14,9 @@
 
 #include <vector>
 #include <cassert>
+#include <cstddef>
 
+#include "test_macros.h"
 #include "test_iterators.h"
 #include "min_allocator.h"
 
@@ -24,13 +25,13 @@ void
 test(Iterator first, Iterator last, const typename C::allocator_type& a)
 {
     C c(first, last, a);
-    assert(c.__invariants());
-    assert(c.size() == std::distance(first, last));
+    LIBCPP_ASSERT(c.__invariants());
+    assert(c.size() == static_cast<std::size_t>(std::distance(first, last)));
     for (typename C::const_iterator i = c.cbegin(), e = c.cend(); i != e; ++i, ++first)
         assert(*i == *first);
 }
 
-int main()
+int main(int, char**)
 {
     bool a[] = {0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0};
     bool* an = a + sizeof(a)/sizeof(a[0]);
@@ -42,7 +43,7 @@ int main()
     test<std::vector<bool> >(random_access_iterator<const bool*>(a), random_access_iterator<const bool*>(an), alloc);
     test<std::vector<bool> >(a, an, alloc);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     min_allocator<bool> alloc;
     test<std::vector<bool, min_allocator<bool>> >(input_iterator<const bool*>(a), input_iterator<const bool*>(an), alloc);
@@ -52,4 +53,6 @@ int main()
     test<std::vector<bool, min_allocator<bool>> >(a, an, alloc);
     }
 #endif
+
+  return 0;
 }

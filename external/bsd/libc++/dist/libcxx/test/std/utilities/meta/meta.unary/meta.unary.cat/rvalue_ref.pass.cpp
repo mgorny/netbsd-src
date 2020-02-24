@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,12 +11,13 @@
 // rvalue_ref
 
 #include <type_traits>
+#include "test_macros.h"
 
 template <class T>
 void test_rvalue_ref()
 {
     static_assert(!std::is_void<T>::value, "");
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     static_assert(!std::is_null_pointer<T>::value, "");
 #endif
     static_assert(!std::is_integral<T>::value, "");
@@ -34,10 +34,15 @@ void test_rvalue_ref()
     static_assert(!std::is_function<T>::value, "");
 }
 
-int main()
+struct incomplete_type;
+
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
     test_rvalue_ref<int&&>();
     test_rvalue_ref<const int&&>();
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+
+//  LWG#2582
+    static_assert(!std::is_rvalue_reference<incomplete_type>::value, "");
+
+  return 0;
 }

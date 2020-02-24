@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -22,7 +21,9 @@
 #include <chrono>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     typedef std::chrono::system_clock Clock;
     typedef std::chrono::milliseconds Duration1;
@@ -34,7 +35,7 @@ int main()
     t2 = Duration2(6) + t1;
     assert(t2.time_since_epoch() == Duration2(3006));
     }
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     {
     constexpr std::chrono::time_point<Clock, Duration1> t1(Duration1(3));
     constexpr std::chrono::time_point<Clock, Duration2> t2 = t1 + Duration2(5);
@@ -43,4 +44,6 @@ int main()
     static_assert(t3.time_since_epoch() == Duration2(3006), "");
     }
 #endif
+
+  return 0;
 }

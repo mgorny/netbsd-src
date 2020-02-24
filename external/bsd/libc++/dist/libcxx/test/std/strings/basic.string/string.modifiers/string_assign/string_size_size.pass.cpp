@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,47 +12,71 @@
 //   assign(const basic_string<charT,traits>& str, size_type pos, size_type n=npos);
 // the =npos was added for C++14
 
+// When back-deploying to macosx10.7, the RTTI for exception classes
+// incorrectly provided by libc++.dylib is mixed with the one in
+// libc++abi.dylib and exceptions are not caught properly.
+// XFAIL: with_system_cxx_lib=macosx10.7
+
 #include <string>
 #include <stdexcept>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class S>
 void
 test(S s, S str, typename S::size_type pos, typename S::size_type n, S expected)
 {
-    try
+    if (pos <= str.size())
     {
         s.assign(str, pos, n);
-        assert(s.__invariants());
-        assert(pos <= str.size());
+        LIBCPP_ASSERT(s.__invariants());
         assert(s == expected);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos > str.size());
+        try
+        {
+            s.assign(str, pos, n);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos > str.size());
+        }
     }
+#endif
 }
 
 template <class S>
 void
 test_npos(S s, S str, typename S::size_type pos, S expected)
 {
-    try
+    if (pos <= str.size())
     {
         s.assign(str, pos);
-        assert(s.__invariants());
-        assert(pos <= str.size());
+        LIBCPP_ASSERT(s.__invariants());
         assert(s == expected);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos > str.size());
+        try
+        {
+            s.assign(str, pos);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos > str.size());
+        }
     }
+#endif
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string S;
@@ -79,7 +102,7 @@ int main()
     test(S("12345678901234567890"), S("12345678901234567890"), 5, 10,
          S("6789012345"));
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> S;
     test(S(), S(), 0, 0, S());
@@ -115,4 +138,6 @@ int main()
     test_npos(S(), S("12345"), 5, S(""));
     test_npos(S(), S("12345"), 6, S("not happening"));
     }
+
+  return 0;
 }

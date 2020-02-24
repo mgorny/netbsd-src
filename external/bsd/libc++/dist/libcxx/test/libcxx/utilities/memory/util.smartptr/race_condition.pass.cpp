@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -20,6 +19,8 @@
 #include <atomic>
 #include <thread>
 #include <cassert>
+
+#include "test_macros.h"
 
 typedef std::shared_ptr<int> Ptr;
 typedef std::weak_ptr<int> WeakPtr;
@@ -78,7 +79,7 @@ void run_test(Ptr p) {
     assert(p.use_count() == 3);
 }
 
-int main() {
+int main(int, char**) {
   {
     // Test with out-of-place shared_count.
     Ptr p(new int(42));
@@ -87,8 +88,11 @@ int main() {
   }
   {
     // Test with in-place shared_count.
-    Ptr p = std::make_shared<int>(42);
+    int val = 42;
+    Ptr p = std::make_shared<int>(val);
     run_test(p);
     assert(p.use_count() == 1);
   }
+
+  return 0;
 }

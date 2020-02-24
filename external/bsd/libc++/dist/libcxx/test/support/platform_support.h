@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,22 +14,22 @@
 #ifndef PLATFORM_SUPPORT_H
 #define PLATFORM_SUPPORT_H
 
-#include <__config>
-
 // locale names
 #ifdef _WIN32
 // WARNING: Windows does not support UTF-8 codepages.
-// Locales are "converted" using http://docs.moodle.org/dev/Table_of_locales
-#define LOCALE_en_US_UTF_8     "English_United States.1252"
-#define LOCALE_cs_CZ_ISO8859_2 "Czech_Czech Republic.1250"
-#define LOCALE_fr_FR_UTF_8     "French_France.1252"
-#define LOCALE_fr_CA_ISO8859_1 "French_Canada.1252"
-#define LOCALE_ru_RU_UTF_8     "Russian_Russia.1251"
-#define LOCALE_zh_CN_UTF_8     "Chinese_China.936"
+// Locales are "converted" using https://docs.moodle.org/dev/Table_of_locales
+#define LOCALE_en_US           "en-US"
+#define LOCALE_en_US_UTF_8     "en-US"
+#define LOCALE_cs_CZ_ISO8859_2 "cs-CZ"
+#define LOCALE_fr_FR_UTF_8     "fr-FR"
+#define LOCALE_fr_CA_ISO8859_1 "fr-CA"
+#define LOCALE_ru_RU_UTF_8     "ru-RU"
+#define LOCALE_zh_CN_UTF_8     "zh-CN"
 #elif defined(__CloudABI__)
 // Timezones are integrated into locales through LC_TIMEZONE_MASK on
 // CloudABI. LC_ALL_MASK can only be used if a timezone has also been
 // provided. UTC should be all right.
+#define LOCALE_en_US           "en_US"
 #define LOCALE_en_US_UTF_8     "en_US.UTF-8@UTC"
 #define LOCALE_fr_FR_UTF_8     "fr_FR.UTF-8@UTC"
 #define LOCALE_fr_CA_ISO8859_1 "fr_CA.ISO-8859-1@UTC"
@@ -38,6 +37,7 @@
 #define LOCALE_ru_RU_UTF_8     "ru_RU.UTF-8@UTC"
 #define LOCALE_zh_CN_UTF_8     "zh_CN.UTF-8@UTC"
 #else
+#define LOCALE_en_US           "en_US"
 #define LOCALE_en_US_UTF_8     "en_US.UTF-8"
 #define LOCALE_fr_FR_UTF_8     "fr_FR.UTF-8"
 #ifdef __linux__
@@ -53,31 +53,36 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <codecvt>
+#include <locale>
 #include <string>
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
-#include <io.h> // _mktemp
+#if defined(_WIN32) || defined(__MINGW32__)
+#include <io.h> // _mktemp_s
 #else
 #include <unistd.h> // close
 #endif
 
 #if defined(_NEWLIB_VERSION) && defined(__STRICT_ANSI__)
-// Newlib provies this, but in the header it's under __STRICT_ANSI__
+// Newlib provides this, but in the header it's under __STRICT_ANSI__
 extern "C" {
   int mkstemp(char*);
 }
 #endif
 
-#ifndef _LIBCPP_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE
+#ifndef __CloudABI__
 inline
-std::string
-get_temp_file_name()
+std::string get_temp_file_name()
 {
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
-    char Path[MAX_PATH+1];
-    char FN[MAX_PATH+1];
+#if defined(__MINGW32__)
+    char Path[MAX_PATH + 1];
+    char FN[MAX_PATH + 1];
     do { } while (0 == GetTempPath(MAX_PATH+1, Path));
     do { } while (0 == GetTempFileName(Path, "libcxx", 0, FN));
     return FN;
+#elif defined(_WIN32)
+    char Name[] = "libcxx.XXXXXX";
+    if (_mktemp_s(Name, sizeof(Name)) != 0) abort();
+    return Name;
 #else
     std::string Name;
     int FD = -1;
@@ -93,6 +98,16 @@ get_temp_file_name()
     return Name;
 #endif
 }
-#endif // _LIBCPP_HAS_NO_GLOBAL_FILESYSTEM_NAMESPACE
+
+#ifdef _LIBCPP_HAS_OPEN_WITH_WCHAR
+inline
+std::wstring get_wide_temp_file_name()
+{
+    return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t> >().from_bytes(
+        get_temp_file_name());
+}
+#endif // _LIBCPP_HAS_OPEN_WITH_WCHAR
+
+#endif // __CloudABI__
 
 #endif // PLATFORM_SUPPORT_H

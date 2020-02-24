@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -11,7 +10,9 @@
 
 // reverse_iterator
 
-// pointer operator->() const;
+// constexpr pointer operator->() const;
+//
+// constexpr in C++17
 
 // Be sure to respect LWG 198:
 //    http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#198
@@ -22,6 +23,8 @@
 #include <iterator>
 #include <list>
 #include <cassert>
+
+#include "test_macros.h"
 
 class A
 {
@@ -59,17 +62,31 @@ public:
     B       *operator&()       { return nullptr; }
 };
 
-int main()
+class C
+{
+    int data_;
+public:
+    TEST_CONSTEXPR C() : data_(1) {}
+
+    TEST_CONSTEXPR int get() const {return data_;}
+
+    friend TEST_CONSTEXPR bool operator==(const C& x, const C& y)
+        {return x.data_ == y.data_;}
+};
+
+TEST_CONSTEXPR  C gC;
+
+int main(int, char**)
 {
     A a;
     test(&a+1, A());
-    
+
     {
     std::list<B> l;
     l.push_back(B(0));
     l.push_back(B(1));
     l.push_back(B(2));
-    
+
     {
     std::list<B>::const_iterator i = l.begin();
     assert ( i->get() == 0 );  ++i;
@@ -77,7 +94,7 @@ int main()
     assert ( i->get() == 2 );  ++i;
     assert ( i == l.end ());
     }
-    
+
     {
     std::list<B>::const_reverse_iterator ri = l.rbegin();
     assert ( ri->get() == 2 );  ++ri;
@@ -86,4 +103,18 @@ int main()
     assert ( ri == l.rend ());
     }
     }
+
+#if TEST_STD_VER > 14
+    {
+        typedef std::reverse_iterator<const C *> RI;
+        constexpr RI it1 = std::make_reverse_iterator(&gC+1);
+
+        static_assert(it1->get() == gC.get(), "");
+    }
+#endif
+    {
+        ((void)gC);
+    }
+
+  return 0;
 }

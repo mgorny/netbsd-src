@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,9 +11,12 @@
 // template <class Facet> locale combine(const locale& other) const;
 
 #include <locale>
+#include <stdexcept>
 #include <cassert>
 
-#include "count_new.hpp"
+#include "count_new.h"
+
+#include "test_macros.h"
 
 void check(const std::locale& loc)
 {
@@ -61,7 +63,7 @@ struct my_facet
 
 std::locale::id my_facet::id;
 
-int main()
+int main(int, char**)
 {
 {
     {
@@ -76,6 +78,7 @@ int main()
     }
     assert(globalMemCounter.checkOutstandingNewEq(0));
 }
+#ifndef TEST_HAS_NO_EXCEPTIONS
 {
     {
         std::locale loc;
@@ -91,4 +94,7 @@ int main()
     }
     assert(globalMemCounter.checkOutstandingNewEq(0));
 }
+#endif
+
+  return 0;
 }

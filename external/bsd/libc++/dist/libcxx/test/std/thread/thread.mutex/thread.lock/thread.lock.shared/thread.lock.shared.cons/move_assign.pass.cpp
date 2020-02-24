@@ -1,13 +1,14 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: libcpp-has-no-threads
+// UNSUPPORTED: c++98, c++03, c++11
+// XFAIL: dylib-has-no-shared_mutex
 
 // <shared_mutex>
 
@@ -17,23 +18,37 @@
 
 #include <shared_mutex>
 #include <cassert>
+#include "nasty_containers.h"
 
-#if _LIBCPP_STD_VER > 11
+#include "test_macros.h"
 
-std::shared_timed_mutex m0;
-std::shared_timed_mutex m1;
 
-#endif  // _LIBCPP_STD_VER > 11
-
-int main()
+int main(int, char**)
 {
-#if _LIBCPP_STD_VER > 11
-    std::shared_lock<std::shared_timed_mutex> lk0(m0);
-    std::shared_lock<std::shared_timed_mutex> lk1(m1);
+    {
+    typedef std::shared_timed_mutex M;
+    M m0;
+    M m1;
+    std::shared_lock<M> lk0(m0);
+    std::shared_lock<M> lk1(m1);
     lk1 = std::move(lk0);
-    assert(lk1.mutex() == &m0);
+    assert(lk1.mutex() == std::addressof(m0));
     assert(lk1.owns_lock() == true);
     assert(lk0.mutex() == nullptr);
     assert(lk0.owns_lock() == false);
-#endif  // _LIBCPP_STD_VER > 11
+    }
+    {
+    typedef nasty_mutex M;
+    M m0;
+    M m1;
+    std::shared_lock<M> lk0(m0);
+    std::shared_lock<M> lk1(m1);
+    lk1 = std::move(lk0);
+    assert(lk1.mutex() == std::addressof(m0));
+    assert(lk1.owns_lock() == true);
+    assert(lk0.mutex() == nullptr);
+    assert(lk0.owns_lock() == false);
+    }
+
+  return 0;
 }

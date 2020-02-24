@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,9 +13,12 @@
 
 // This tests a conforming extension
 
+// UNSUPPORTED: c++98, c++03
+
 #include <vector>
 #include <cassert>
 
+#include "test_macros.h"
 #include "MoveOnly.h"
 #include "test_allocator.h"
 
@@ -27,9 +29,8 @@ struct some_alloc
     some_alloc(const some_alloc&);
 };
 
-int main()
+int main(int, char**)
 {
-#if __has_feature(cxx_noexcept)
     {
         typedef std::vector<MoveOnly> C;
         static_assert(std::is_nothrow_move_constructible<C>::value, "");
@@ -51,5 +52,6 @@ int main()
         static_assert(!std::is_nothrow_move_constructible<C>::value, "");
 #endif
     }
-#endif
+
+  return 0;
 }

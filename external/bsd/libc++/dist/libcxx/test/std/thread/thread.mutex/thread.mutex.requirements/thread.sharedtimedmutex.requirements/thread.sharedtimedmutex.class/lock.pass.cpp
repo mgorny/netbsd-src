@@ -1,14 +1,15 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: libcpp-has-no-threads
-// UNSUPPORTED: c++03, c++98, c++11
+// UNSUPPORTED: c++98, c++03, c++11
+
+// FLAKY_TEST.
 
 // <shared_mutex>
 
@@ -21,6 +22,8 @@
 #include <cstdlib>
 #include <cassert>
 
+#include "test_macros.h"
+
 std::shared_timed_mutex m;
 
 typedef std::chrono::system_clock Clock;
@@ -28,6 +31,19 @@ typedef Clock::time_point time_point;
 typedef Clock::duration duration;
 typedef std::chrono::milliseconds ms;
 typedef std::chrono::nanoseconds ns;
+
+
+ms WaitTime = ms(250);
+
+// Thread sanitizer causes more overhead and will sometimes cause this test
+// to fail. To prevent this we give Thread sanitizer more time to complete the
+// test.
+#if !TEST_HAS_FEATURE(thread_sanitizer)
+ms Tolerance = ms(50);
+#else
+ms Tolerance = ms(100);
+#endif
+
 
 void f()
 {
@@ -39,11 +55,13 @@ void f()
     assert(d < ms(50));  // within 50ms
 }
 
-int main()
+int main(int, char**)
 {
     m.lock();
     std::thread t(f);
     std::this_thread::sleep_for(ms(250));
     m.unlock();
     t.join();
+
+  return 0;
 }

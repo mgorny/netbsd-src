@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -20,9 +19,10 @@
 #include <cassert>
 #include <iterator>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         typedef bool T;
@@ -58,7 +58,7 @@ int main()
         C::iterator i;
         C::const_iterator j;
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef bool T;
         typedef std::vector<T, min_allocator<T>> C;
@@ -94,7 +94,7 @@ int main()
         C::const_iterator j;
     }
 #endif
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     { // N3644 testing
         std::vector<bool>::iterator ii1{}, ii2{};
         std::vector<bool>::iterator ii4 = ii1;
@@ -120,4 +120,6 @@ int main()
         assert (ii1 - cii == 0);
     }
 #endif
+
+  return 0;
 }

@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03
 
 // <unordered_set>
 
@@ -18,15 +19,18 @@
 #include <unordered_set>
 #include <cassert>
 #include <cfloat>
+#include <cmath>
+#include <cstddef>
 
+#include "test_macros.h"
+#include "../../../check_consecutive.h"
 #include "../../../test_compare.h"
 #include "../../../test_hash.h"
 #include "test_allocator.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
     {
         typedef test_allocator<int> A;
         typedef std::unordered_multiset<int,
@@ -57,26 +61,18 @@ int main()
             A(4)
            );
         c = std::move(c0);
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 6);
-        C::const_iterator i = c.cbegin();
-        assert(*i == 1);
-        ++i;
-        assert(*i == 1);
-        ++i;
-        assert(*i == 2);
-        ++i;
-        assert(*i == 2);
-        ++i;
-        assert(*i == 3);
-        ++i;
-        assert(*i == 4);
+        CheckConsecutiveValues<C::const_iterator>(c.find(1), c.end(), 1, 2);
+        CheckConsecutiveValues<C::const_iterator>(c.find(2), c.end(), 2, 2);
+        CheckConsecutiveValues<C::const_iterator>(c.find(3), c.end(), 3, 1);
+        CheckConsecutiveValues<C::const_iterator>(c.find(4), c.end(), 4, 1);
         assert(c.hash_function() == test_hash<std::hash<int> >(8));
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A(4));
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
     }
@@ -110,7 +106,7 @@ int main()
             A(10)
            );
         c = std::move(c0);
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 6);
         assert(c.count(1) == 2);
         assert(c.count(2) == 2);
@@ -120,8 +116,8 @@ int main()
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A(10));
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
     }
@@ -155,7 +151,7 @@ int main()
             A(4)
            );
         c = std::move(c0);
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 6);
         assert(c.count(1) == 2);
         assert(c.count(2) == 2);
@@ -165,12 +161,11 @@ int main()
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A(10));
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
     }
-#if __cplusplus >= 201103L
     {
         typedef test_allocator<int> A;
         typedef std::unordered_multiset<int,
@@ -201,26 +196,18 @@ int main()
             A()
            );
         c = std::move(c0);
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 6);
-        C::const_iterator i = c.cbegin();
-        assert(*i == 4);
-        ++i;
-        assert(*i == 3);
-        ++i;
-        assert(*i == 2);
-        ++i;
-        assert(*i == 2);
-        ++i;
-        assert(*i == 1);
-        ++i;
-        assert(*i == 1);
+        assert(c.count(1) == 2);
+        assert(c.count(2) == 2);
+        assert(c.count(3) == 1);
+        assert(c.count(4) == 1);
         assert(c.hash_function() == test_hash<std::hash<int> >(8));
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A());
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
     }
@@ -254,7 +241,7 @@ int main()
             A()
            );
         c = std::move(c0);
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 6);
         assert(c.count(1) == 2);
         assert(c.count(2) == 2);
@@ -264,23 +251,11 @@ int main()
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A());
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
     }
-#endif
-#if _LIBCPP_DEBUG >= 1
-    {
-        std::unordered_multiset<int> s1 = {1, 2, 3};
-        std::unordered_multiset<int>::iterator i = s1.begin();
-        int k = *i;
-        std::unordered_multiset<int> s2;
-        s2 = std::move(s1);
-        assert(*i == k);
-        s2.erase(i);
-        assert(s2.size() == 2);
-    }
-#endif
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+
+  return 0;
 }

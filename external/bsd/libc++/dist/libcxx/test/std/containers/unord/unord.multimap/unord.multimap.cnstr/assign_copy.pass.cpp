@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,15 +16,21 @@
 
 #include <unordered_map>
 #include <string>
+#include <set>
 #include <cassert>
 #include <cfloat>
+#include <cmath>
+#include <algorithm>
+#include <cstddef>
 
+#include "test_macros.h"
+#include "../../../check_consecutive.h"
 #include "../../../test_compare.h"
 #include "../../../test_hash.h"
 #include "test_allocator.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         typedef test_allocator<std::pair<const int, std::string> > A;
@@ -57,32 +62,25 @@ int main()
             A(4)
            );
         c = c0;
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 6);
-        C::const_iterator i = c.cbegin();
-        assert(i->first == 1);
-        assert(i->second == "one");
-        ++i;
-        assert(i->first == 1);
-        assert(i->second == "four");
-        ++i;
-        assert(i->first == 2);
-        assert(i->second == "two");
-        ++i;
-        assert(i->first == 2);
-        assert(i->second == "four");
-        ++i;
-        assert(i->first == 3);
-        assert(i->second == "three");
-        ++i;
-        assert(i->first == 4);
-        assert(i->second == "four");
+        std::multiset<std::string> s;
+        s.insert("one");
+        s.insert("four");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(1), c.end(), 1, s);
+        s.insert("two");
+        s.insert("four");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(2), c.end(), 2, s);
+        s.insert("three");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(3), c.end(), 3, s);
+        s.insert("four");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(4), c.end(), 4, s);
         assert(c.hash_function() == test_hash<std::hash<int> >(8));
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A(4));
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
     }
@@ -136,34 +134,27 @@ int main()
         c = c0;
         assert(c.bucket_count() >= 7);
         assert(c.size() == 6);
-        C::const_iterator i = c.cbegin();
-        assert(i->first == 1);
-        assert(i->second == "one");
-        ++i;
-        assert(i->first == 1);
-        assert(i->second == "four");
-        ++i;
-        assert(i->first == 2);
-        assert(i->second == "two");
-        ++i;
-        assert(i->first == 2);
-        assert(i->second == "four");
-        ++i;
-        assert(i->first == 3);
-        assert(i->second == "three");
-        ++i;
-        assert(i->first == 4);
-        assert(i->second == "four");
+        std::multiset<std::string> s;
+        s.insert("one");
+        s.insert("four");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(1), c.end(), 1, s);
+        s.insert("two");
+        s.insert("four");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(2), c.end(), 2, s);
+        s.insert("three");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(3), c.end(), 3, s);
+        s.insert("four");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(4), c.end(), 4, s);
         assert(c.hash_function() == test_hash<std::hash<int> >(8));
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A(10));
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef min_allocator<std::pair<const int, std::string> > A;
         typedef std::unordered_multimap<int, std::string,
@@ -194,34 +185,29 @@ int main()
             A()
            );
         c = c0;
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 6);
-        C::const_iterator i = c.cbegin();
-        assert(i->first == 1);
-        assert(i->second == "one");
-        ++i;
-        assert(i->first == 1);
-        assert(i->second == "four");
-        ++i;
-        assert(i->first == 2);
-        assert(i->second == "two");
-        ++i;
-        assert(i->first == 2);
-        assert(i->second == "four");
-        ++i;
-        assert(i->first == 3);
-        assert(i->second == "three");
-        ++i;
-        assert(i->first == 4);
-        assert(i->second == "four");
+        std::multiset<std::string> s;
+        s.insert("one");
+        s.insert("four");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(1), c.end(), 1, s);
+        s.insert("two");
+        s.insert("four");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(2), c.end(), 2, s);
+        s.insert("three");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(3), c.end(), 3, s);
+        s.insert("four");
+        CheckConsecutiveKeys<C::const_iterator>(c.find(4), c.end(), 4, s);
         assert(c.hash_function() == test_hash<std::hash<int> >(8));
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A());
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
     }
 #endif
+
+  return 0;
 }

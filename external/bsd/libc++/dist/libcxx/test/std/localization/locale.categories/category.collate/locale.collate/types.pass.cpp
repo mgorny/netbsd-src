@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -23,12 +22,15 @@
 #include <type_traits>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     std::locale l = std::locale::classic();
     {
         assert(std::has_facet<std::collate<char> >(l));
         const std::collate<char>& f = std::use_facet<std::collate<char> >(l);
+        ((void)f); // Prevent unused warning
         {
             (void)std::collate<char>::id;
         }
@@ -39,6 +41,7 @@ int main()
     {
         assert(std::has_facet<std::collate<wchar_t> >(l));
         const std::collate<wchar_t>& f = std::use_facet<std::collate<wchar_t> >(l);
+        ((void)f); // Prevent unused warning
         {
             (void)std::collate<wchar_t>::id;
         }
@@ -46,4 +49,6 @@ int main()
         static_assert((std::is_same<std::collate<wchar_t>::string_type, std::wstring>::value), "");
         static_assert((std::is_base_of<std::locale::facet, std::collate<wchar_t> >::value), "");
     }
+
+  return 0;
 }

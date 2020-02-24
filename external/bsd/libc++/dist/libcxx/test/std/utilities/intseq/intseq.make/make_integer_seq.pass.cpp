@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,14 +11,16 @@
 // template<class T, T N>
 //   using make_integer_sequence = integer_sequence<T, 0, 1, ..., N-1>;
 
+// UNSUPPORTED: c++98, c++03, c++11
+
 #include <utility>
 #include <type_traits>
 #include <cassert>
 
-int main()
-{
-#if _LIBCPP_STD_VER > 11
+#include "test_macros.h"
 
+int main(int, char**)
+{
     static_assert(std::is_same<std::make_integer_sequence<int, 0>, std::integer_sequence<int>>::value, "");
     static_assert(std::is_same<std::make_integer_sequence<int, 1>, std::integer_sequence<int, 0>>::value, "");
     static_assert(std::is_same<std::make_integer_sequence<int, 2>, std::integer_sequence<int, 0, 1>>::value, "");
@@ -30,5 +31,5 @@ int main()
     static_assert(std::is_same<std::make_integer_sequence<unsigned long long, 2>, std::integer_sequence<unsigned long long, 0, 1>>::value, "");
     static_assert(std::is_same<std::make_integer_sequence<unsigned long long, 3>, std::integer_sequence<unsigned long long, 0, 1, 2>>::value, "");
 
-#endif  // _LIBCPP_STD_VER > 11
+  return 0;
 }

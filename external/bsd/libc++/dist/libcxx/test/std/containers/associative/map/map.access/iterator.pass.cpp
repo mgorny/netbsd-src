@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -28,10 +27,12 @@
 
 #include <map>
 #include <cassert>
+#include <cstddef>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::pair<const int, double> V;
@@ -63,13 +64,13 @@ int main()
             V(8, 2)
         };
         std::map<int, double> m(ar, ar+sizeof(ar)/sizeof(ar[0]));
-        assert(std::distance(m.begin(), m.end()) == m.size());
-        assert(std::distance(m.rbegin(), m.rend()) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.begin(), m.end())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.rbegin(), m.rend())) == m.size());
         std::map<int, double>::iterator i;
         i = m.begin();
         std::map<int, double>::const_iterator k = i;
         assert(i == k);
-        for (int j = 1; j <= m.size(); ++j, ++i)
+        for (int j = 1; static_cast<std::size_t>(j) <= m.size(); ++j, ++i)
         {
             assert(i->first == j);
             assert(i->second == 1);
@@ -107,19 +108,19 @@ int main()
             V(8, 2)
         };
         const std::map<int, double> m(ar, ar+sizeof(ar)/sizeof(ar[0]));
-        assert(std::distance(m.begin(), m.end()) == m.size());
-        assert(std::distance(m.cbegin(), m.cend()) == m.size());
-        assert(std::distance(m.rbegin(), m.rend()) == m.size());
-        assert(std::distance(m.crbegin(), m.crend()) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.begin(), m.end())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.cbegin(), m.cend())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.rbegin(), m.rend())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.crbegin(), m.crend())) == m.size());
         std::map<int, double>::const_iterator i;
         i = m.begin();
-        for (int j = 1; j <= m.size(); ++j, ++i)
+        for (int j = 1; static_cast<std::size_t>(j) <= m.size(); ++j, ++i)
         {
             assert(i->first == j);
             assert(i->second == 1);
         }
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef std::pair<const int, double> V;
         V ar[] =
@@ -150,13 +151,13 @@ int main()
             V(8, 2)
         };
         std::map<int, double, std::less<int>, min_allocator<V>> m(ar, ar+sizeof(ar)/sizeof(ar[0]));
-        assert(std::distance(m.begin(), m.end()) == m.size());
-        assert(std::distance(m.rbegin(), m.rend()) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.begin(), m.end())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.rbegin(), m.rend())) == m.size());
         std::map<int, double, std::less<int>, min_allocator<V>>::iterator i;
         i = m.begin();
         std::map<int, double, std::less<int>, min_allocator<V>>::const_iterator k = i;
         assert(i == k);
-        for (int j = 1; j <= m.size(); ++j, ++i)
+        for (int j = 1; static_cast<std::size_t>(j) <= m.size(); ++j, ++i)
         {
             assert(i->first == j);
             assert(i->second == 1);
@@ -194,20 +195,20 @@ int main()
             V(8, 2)
         };
         const std::map<int, double, std::less<int>, min_allocator<V>> m(ar, ar+sizeof(ar)/sizeof(ar[0]));
-        assert(std::distance(m.begin(), m.end()) == m.size());
-        assert(std::distance(m.cbegin(), m.cend()) == m.size());
-        assert(std::distance(m.rbegin(), m.rend()) == m.size());
-        assert(std::distance(m.crbegin(), m.crend()) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.begin(), m.end())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.cbegin(), m.cend())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.rbegin(), m.rend())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.crbegin(), m.crend())) == m.size());
         std::map<int, double, std::less<int>, min_allocator<V>>::const_iterator i;
         i = m.begin();
-        for (int j = 1; j <= m.size(); ++j, ++i)
+        for (int j = 1; static_cast<std::size_t>(j) <= m.size(); ++j, ++i)
         {
             assert(i->first == j);
             assert(i->second == 1);
         }
     }
 #endif
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     { // N3644 testing
         typedef std::map<int, double> C;
         C::iterator ii1{}, ii2{};
@@ -224,4 +225,6 @@ int main()
         assert (!(cii != ii1 ));
     }
 #endif
+
+  return 0;
 }

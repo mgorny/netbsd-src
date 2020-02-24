@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,17 +11,24 @@
 // is_move_assignable
 
 #include <type_traits>
+#include "test_macros.h"
 
 template <class T>
 void test_is_move_assignable()
 {
-    static_assert( std::is_move_assignable<T>::value, "");
+    static_assert(( std::is_move_assignable<T>::value), "");
+#if TEST_STD_VER > 14
+    static_assert(( std::is_move_assignable_v<T>), "");
+#endif
 }
 
 template <class T>
 void test_is_not_move_assignable()
 {
-    static_assert(!std::is_move_assignable<T>::value, "");
+    static_assert((!std::is_move_assignable<T>::value), "");
+#if TEST_STD_VER > 14
+    static_assert((!std::is_move_assignable_v<T>), "");
+#endif
 }
 
 class Empty
@@ -47,7 +53,7 @@ struct A
     A();
 };
 
-int main()
+int main(int, char**)
 {
     test_is_move_assignable<int> ();
     test_is_move_assignable<A> ();
@@ -56,10 +62,11 @@ int main()
     test_is_move_assignable<NotEmpty> ();
     test_is_move_assignable<Empty> ();
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
     test_is_not_move_assignable<const int> ();
     test_is_not_move_assignable<int[]> ();
     test_is_not_move_assignable<int[3]> ();
-#endif
+
     test_is_not_move_assignable<void> ();
+
+  return 0;
 }

@@ -1,13 +1,29 @@
-
+//===----------------------------------------------------------------------===//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
+//
 // TODO: Make this test pass for all standards.
 // XFAIL: c++98, c++03
+
+// <type_traits>
+
+// __convert_to_integral(Tp)
+
+// Test that the __convert_to_integral functions properly converts Tp to the
+// correct type and value for integral, enum and user defined types.
 
 #include <limits>
 #include <type_traits>
 #include <cstdint>
 #include <cassert>
 
-#include "user_defined_integral.hpp"
+#include "user_defined_integral.h"
+
+#include "test_macros.h"
 
 template <class T>
 struct EnumType
@@ -61,11 +77,11 @@ void check_enum_types()
 
 
 enum enum1 { zero = 0, one = 1 };
-enum enum2 {
+enum enum2 : unsigned long {
   value = std::numeric_limits<unsigned long>::max()
 };
 
-int main()
+int main(int, char**)
 {
   check_integral_types<bool, int>();
   check_integral_types<char, int>();
@@ -73,7 +89,14 @@ int main()
   check_integral_types<unsigned char, int>();
   check_integral_types<wchar_t, decltype(((wchar_t)1) + 1)>();
   check_integral_types<char16_t, int>();
-  check_integral_types<char32_t, uint32_t>();
+  // On some platforms, unsigned int and long are the same size.  These
+  // platforms have a choice of making uint32_t an int or a long.  However
+  // char32_t must promote to an unsigned int on these platforms [conv.prom].
+  // Use the following logic to make the test work on such platforms.
+  // (sizeof(uint32_t) == sizeof(unsigned int)) ? unsigned int : uint32_t;
+  typedef std::conditional<sizeof(uint32_t) == sizeof(unsigned int),
+                           unsigned int, uint32_t>::type char_integral;
+  check_integral_types<char32_t, char_integral>();
   check_integral_types<short, int>();
   check_integral_types<unsigned short, int>();
   check_integral_types<int, int>();
@@ -91,4 +114,6 @@ int main()
   check_enum_types<enum1, decltype(((Enum1UT)1) + 1)>();
   typedef std::underlying_type<enum2>::type Enum2UT;
   check_enum_types<enum2, decltype(((Enum2UT)1) + 1)>();
+
+  return 0;
 }

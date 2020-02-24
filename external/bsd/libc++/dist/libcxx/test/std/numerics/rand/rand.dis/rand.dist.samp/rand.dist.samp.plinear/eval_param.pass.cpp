@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -20,7 +19,11 @@
 #include <vector>
 #include <iterator>
 #include <numeric>
+#include <algorithm>   // for sort
 #include <cassert>
+#include <limits>
+
+#include "test_macros.h"
 
 template <class T>
 inline
@@ -36,7 +39,7 @@ f(double x, double a, double m, double b, double c)
     return a + m*(sqr(x) - sqr(b))/2 + c*(x-b);
 }
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::piecewise_linear_distribution<> D;
@@ -48,9 +51,9 @@ int main()
         const size_t Np = sizeof(p) / sizeof(p[0]) - 1;
         D d;
         P pa(b, b+Np+1, p);
-        const int N = 1000000;
+        const size_t N = 1000000;
         std::vector<D::result_type> u;
-        for (int i = 0; i < N; ++i)
+        for (size_t i = 0; i < N; ++i)
         {
             D::result_type v = d(g, pa);
             assert(10 <= v && v < 17);
@@ -58,22 +61,22 @@ int main()
         }
         std::sort(u.begin(), u.end());
         int kp = -1;
-        double a;
-        double m;
-        double bk;
-        double c;
+        double a = std::numeric_limits<double>::quiet_NaN();
+        double m = std::numeric_limits<double>::quiet_NaN();
+        double bk = std::numeric_limits<double>::quiet_NaN();
+        double c = std::numeric_limits<double>::quiet_NaN();
         std::vector<double> areas(Np);
         double S = 0;
-        for (int i = 0; i < areas.size(); ++i)
+        for (size_t i = 0; i < areas.size(); ++i)
         {
             areas[i] = (p[i]+p[i+1])*(b[i+1]-b[i])/2;
             S += areas[i];
         }
-        for (int i = 0; i < areas.size(); ++i)
+        for (size_t i = 0; i < areas.size(); ++i)
             areas[i] /= S;
-        for (int i = 0; i < Np+1; ++i)
+        for (size_t i = 0; i < Np+1; ++i)
             p[i] /= S;
-        for (int i = 0; i < N; ++i)
+        for (size_t i = 0; i < N; ++i)
         {
             int k = std::lower_bound(b, b+Np+1, u[i]) - b - 1;
             if (k != kp)
@@ -89,4 +92,6 @@ int main()
             assert(std::abs(f(u[i], a, m, bk, c) - double(i)/N) < .001);
         }
     }
+
+  return 0;
 }

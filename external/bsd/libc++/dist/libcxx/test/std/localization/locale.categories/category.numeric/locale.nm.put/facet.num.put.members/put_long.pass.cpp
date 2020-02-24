@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,6 +16,7 @@
 #include <ios>
 #include <cassert>
 #include <streambuf>
+#include "test_macros.h"
 #include "test_iterators.h"
 
 typedef std::num_put<char, output_iterator<char*> > F;
@@ -40,14 +40,13 @@ protected:
     virtual std::string do_grouping() const {return std::string("\1\2\3");}
 };
 
-int main()
+int main(int, char**)
 {
     const my_facet f(1);
     {
         std::ios ios(0);
         long v = 0;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "0");
@@ -56,7 +55,6 @@ int main()
         std::ios ios(0);
         long v = 1;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "1");
@@ -65,7 +63,6 @@ int main()
         std::ios ios(0);
         long v = -1;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "-1");
@@ -74,7 +71,6 @@ int main()
         std::ios ios(0);
         long v = -1000;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "-1000");
@@ -83,7 +79,6 @@ int main()
         std::ios ios(0);
         long v = 1000;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "1000");
@@ -93,7 +88,6 @@ int main()
         showpos(ios);
         long v = 1000;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "+1000");
@@ -103,7 +97,6 @@ int main()
         oct(ios);
         long v = 1000;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "1750");
@@ -114,7 +107,6 @@ int main()
         showbase(ios);
         long v = 1000;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "01750");
@@ -124,7 +116,6 @@ int main()
         hex(ios);
         long v = 1000;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "3e8");
@@ -135,7 +126,6 @@ int main()
         showbase(ios);
         long v = 1000;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "0x3e8");
@@ -147,7 +137,6 @@ int main()
         uppercase(ios);
         long v = 1000;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "0X3E8");
@@ -160,7 +149,6 @@ int main()
         uppercase(ios);
         long v = 1000;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "0X3E_8");
@@ -172,7 +160,6 @@ int main()
         showbase(ios);
         long v = 2147483647;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "0x7f_fff_ff_f");
@@ -183,7 +170,6 @@ int main()
         oct(ios);
         long v = 0123467;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "123_46_7");
@@ -195,7 +181,6 @@ int main()
         showbase(ios);
         long v = 0123467;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "0_123_46_7");
@@ -209,7 +194,6 @@ int main()
         ios.width(15);
         long v = 0123467;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "*****0_123_46_7");
@@ -223,7 +207,6 @@ int main()
         ios.width(15);
         long v = 0123467;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "0_123_46_7*****");
@@ -237,7 +220,6 @@ int main()
         ios.width(15);
         long v = 0123467;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "*****0_123_46_7");
@@ -252,7 +234,6 @@ int main()
         ios.width(15);
         long v = 2147483647;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "**0x7f_fff_ff_f");
@@ -266,7 +247,6 @@ int main()
         ios.width(15);
         long v = 2147483647;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "0x7f_fff_ff_f**");
@@ -280,7 +260,6 @@ int main()
         ios.width(15);
         long v = 2147483647;
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "0x**7f_fff_ff_f");
@@ -294,7 +273,6 @@ int main()
         right(ios);
         ios.width(10);
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "***+1_00_0");
@@ -308,7 +286,6 @@ int main()
         left(ios);
         ios.width(10);
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "+1_00_0***");
@@ -322,7 +299,6 @@ int main()
         internal(ios);
         ios.width(10);
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "+***1_00_0");
@@ -336,7 +312,6 @@ int main()
         showpos(ios);
         ios.width(10);
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "***-1_00_0");
@@ -349,7 +324,6 @@ int main()
         left(ios);
         ios.width(10);
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "-1_00_0***");
@@ -362,10 +336,11 @@ int main()
         internal(ios);
         ios.width(10);
         char str[50];
-        std::ios_base::iostate err = ios.goodbit;
         output_iterator<char*> iter = f.put(output_iterator<char*>(str), ios, '*', v);
         std::string ex(str, iter.base());
         assert(ex == "-***1_00_0");
         assert(ios.width() == 0);
     }
+
+  return 0;
 }

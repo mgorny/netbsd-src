@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,9 +12,15 @@
 // when sized deallocation is not supported, e.g., prior to C++14.
 
 // UNSUPPORTED: sanitizer-new-delete
+// XFAIL: availability=macosx10.11
+// XFAIL: availability=macosx10.10
+// XFAIL: availability=macosx10.9
+// XFAIL: availability=macosx10.8
+// XFAIL: availability=macosx10.7
+
 
 // NOTE: Only clang-3.7 and GCC 5.1 and greater support -fsized-deallocation.
-// REQUIRES: fsized-deallocation
+// REQUIRES: -fsized-deallocation
 
 // RUN: %build -fsized-deallocation
 // RUN: %run
@@ -33,23 +38,25 @@
 #include <cstdlib>
 #include <cassert>
 
+#include "test_macros.h"
+
 int unsized_delete_called = 0;
 int unsized_delete_nothrow_called = 0;
 int sized_delete_called = 0;
 
-void operator delete[](void* p) throw()
+void operator delete[](void* p) TEST_NOEXCEPT
 {
     ++unsized_delete_called;
     std::free(p);
 }
 
-void operator delete[](void* p, const std::nothrow_t&) throw()
+void operator delete[](void* p, const std::nothrow_t&) TEST_NOEXCEPT
 {
     ++unsized_delete_nothrow_called;
     std::free(p);
 }
 
-void operator delete[](void* p, std::size_t) throw()
+void operator delete[](void* p, std::size_t) TEST_NOEXCEPT
 {
     ++sized_delete_called;
     std::free(p);
@@ -66,7 +73,7 @@ void operator delete[](void* p, std::size_t) throw()
 //   selected.
 struct A { ~A() {} };
 
-int main()
+int main(int, char**)
 {
     A* x = new A[3];
     assert(0 == unsized_delete_called);
@@ -77,4 +84,6 @@ int main()
     assert(0 == unsized_delete_called);
     assert(0 == unsized_delete_nothrow_called);
     assert(1 == sized_delete_called);
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -19,6 +18,9 @@
 #include <new>
 #include <cstdlib>
 #include <cassert>
+#include <system_error>
+
+#include "test_macros.h"
 
 class G
 {
@@ -42,7 +44,9 @@ public:
 int G::n_alive = 0;
 bool G::op_run = false;
 
-int main()
+void foo() {}
+
+int main(int, char**)
 {
     {
         G g;
@@ -50,5 +54,25 @@ int main()
         assert(t0.joinable());
         t0.join();
         assert(!t0.joinable());
+#ifndef TEST_HAS_NO_EXCEPTIONS
+        try {
+            t0.join();
+            assert(false);
+        } catch (std::system_error const&) {
+        }
+#endif
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    {
+        std::thread t0(foo);
+        t0.detach();
+        try {
+            t0.join();
+            assert(false);
+        } catch (std::system_error const&) {
+        }
+    }
+#endif
+
+  return 0;
 }

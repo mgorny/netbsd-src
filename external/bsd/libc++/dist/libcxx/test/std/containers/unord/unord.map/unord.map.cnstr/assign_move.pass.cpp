@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03
 
 // <unordered_map>
 
@@ -19,15 +20,17 @@
 #include <string>
 #include <cassert>
 #include <cfloat>
+#include <cmath>
+#include <cstddef>
 
+#include "test_macros.h"
 #include "../../../test_compare.h"
 #include "../../../test_hash.h"
 #include "test_allocator.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
     {
         typedef test_allocator<std::pair<const int, std::string> > A;
         typedef std::unordered_map<int, std::string,
@@ -58,7 +61,7 @@ int main()
             A(4)
            );
         c = std::move(c0);
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 4);
         assert(c.at(1) == "one");
         assert(c.at(2) == "two");
@@ -68,8 +71,8 @@ int main()
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A(4));
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
     }
@@ -103,7 +106,7 @@ int main()
             A(10)
            );
         c = std::move(c0);
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 4);
         assert(c.at(1) == "one");
         assert(c.at(2) == "two");
@@ -113,8 +116,8 @@ int main()
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A(10));
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
         assert(c0.size() == 0);
@@ -149,7 +152,7 @@ int main()
             A(4)
            );
         c = std::move(c0);
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 4);
         assert(c.at(1) == "one");
         assert(c.at(2) == "two");
@@ -159,13 +162,12 @@ int main()
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A(10));
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
         assert(c0.size() == 0);
     }
-#if __cplusplus >= 201103L
     {
         typedef min_allocator<std::pair<const int, std::string> > A;
         typedef std::unordered_map<int, std::string,
@@ -196,7 +198,7 @@ int main()
             A()
            );
         c = std::move(c0);
-        assert(c.bucket_count() == 7);
+        LIBCPP_ASSERT(c.bucket_count() == 7);
         assert(c.size() == 4);
         assert(c.at(1) == "one");
         assert(c.at(2) == "two");
@@ -206,24 +208,12 @@ int main()
         assert(c.key_eq() == test_compare<std::equal_to<int> >(9));
         assert(c.get_allocator() == A());
         assert(!c.empty());
-        assert(std::distance(c.begin(), c.end()) == c.size());
-        assert(std::distance(c.cbegin(), c.cend()) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.begin(), c.end())) == c.size());
+        assert(static_cast<std::size_t>(std::distance(c.cbegin(), c.cend())) == c.size());
         assert(fabs(c.load_factor() - (float)c.size()/c.bucket_count()) < FLT_EPSILON);
         assert(c.max_load_factor() == 1);
         assert(c0.size() == 0);
     }
-#endif
-#if _LIBCPP_DEBUG >= 1
-    {
-        std::unordered_map<int, int> s1 = {{1, 1}, {2, 2}, {3, 3}};
-        std::unordered_map<int, int>::iterator i = s1.begin();
-        std::pair<const int, int> k = *i;
-        std::unordered_map<int, int> s2;
-        s2 = std::move(s1);
-        assert(*i == k);
-        s2.erase(i);
-        assert(s2.size() == 2);
-    }
-#endif
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+
+  return 0;
 }

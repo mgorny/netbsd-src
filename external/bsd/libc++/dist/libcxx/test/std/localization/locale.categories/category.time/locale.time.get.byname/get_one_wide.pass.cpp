@@ -1,11 +1,13 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+//
+// NetBSD does not support LC_TIME at the moment
+// XFAIL: netbsd
 
 // REQUIRES: locale.en_US.UTF-8
 // REQUIRES: locale.fr_FR.UTF-8
@@ -24,6 +26,7 @@
 
 #include <locale>
 #include <cassert>
+#include "test_macros.h"
 #include "test_iterators.h"
 
 #include "platform_support.h" // locale name macros
@@ -40,7 +43,7 @@ public:
         : F(nm, refs) {}
 };
 
-int main()
+int main(int, char**)
 {
     std::ios ios(0);
     std::ios_base::iostate err;
@@ -75,7 +78,7 @@ int main()
     }
     {
         const my_facet f(LOCALE_fr_FR_UTF_8, 1);
-        const wchar_t in[] = L"Sam 31 d""\xE9""c 23:55:59 2061";
+        const wchar_t in[] = L"Sam 31 d" L"\xE9" L"c 23:55:59 2061";
         err = std::ios_base::goodbit;
         t = std::tm();
         I i = f.get(I(in), I(in+sizeof(in)/sizeof(in[0])-1), ios, err, &t, 'c');
@@ -105,11 +108,11 @@ int main()
     {
         const my_facet f("ru_RU", 1);
         const wchar_t in[] = L"\x441\x443\x431\x431\x43E\x442\x430"
-                          ", 31 "
-                          "\x434\x435\x43A\x430\x431\x440\x44F"
-                          " 2061 "
-                          "\x433"
-                          ". 23:55:59";
+                          L", 31 "
+                          L"\x434\x435\x43A\x430\x431\x440\x44F"
+                          L" 2061 "
+                          L"\x433"
+                          L". 23:55:59";
         err = std::ios_base::goodbit;
         t = std::tm();
         I i = f.get(I(in), I(in+sizeof(in)/sizeof(in[0])-1), ios, err, &t, 'c');
@@ -140,7 +143,7 @@ int main()
     {
         const my_facet f("zh_CN", 1);
         const wchar_t in[] = L"\x516D"
-                          " 12/31 23:55:59 2061";
+                          L" 12/31 23:55:59 2061";
         err = std::ios_base::goodbit;
         t = std::tm();
         I i = f.get(I(in), I(in+sizeof(in)/sizeof(in[0])-1), ios, err, &t, 'c');
@@ -157,7 +160,7 @@ int main()
 #endif
     {
         const my_facet f(LOCALE_zh_CN_UTF_8, 1);
-        const wchar_t in[] = L"23""\x65F6""55""\x5206""59""\x79D2";
+        const wchar_t in[] = L"23" L"\x65F6" L"55" L"\x5206" L"59" L"\x79D2";
         err = std::ios_base::goodbit;
         t = std::tm();
         I i = f.get(I(in), I(in+sizeof(in)/sizeof(in[0])-1), ios, err, &t, 'X');
@@ -167,4 +170,6 @@ int main()
         assert(t.tm_hour == 23);
         assert(err == std::ios_base::eofbit);
     }
+
+  return 0;
 }

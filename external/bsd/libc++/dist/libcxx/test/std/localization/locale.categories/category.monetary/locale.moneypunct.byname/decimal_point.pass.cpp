@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -11,9 +10,6 @@
 // REQUIRES: locale.fr_FR.UTF-8
 // REQUIRES: locale.ru_RU.UTF-8
 // REQUIRES: locale.zh_CN.UTF-8
-
-// Russia uses ',' for the decimal separator. GLIBC returns '.'
-// XFAIL: linux
 
 // <locale>
 
@@ -25,6 +21,7 @@
 #include <limits>
 #include <cassert>
 
+#include "test_macros.h"
 #include "platform_support.h" // locale name macros
 
 class Fnf
@@ -59,7 +56,7 @@ public:
         : std::moneypunct_byname<wchar_t, true>(nm, refs) {}
 };
 
-int main()
+int main(int, char**)
 {
     {
         Fnf f("C", 1);
@@ -111,22 +108,33 @@ int main()
         Fwt f(LOCALE_fr_FR_UTF_8, 1);
         assert(f.decimal_point() == L',');
     }
-
+// GLIBC 2.23 uses '.' as the decimal point while other C libraries use ','
+// GLIBC 2.27 corrects this
+#ifndef TEST_GLIBC_PREREQ
+#define TEST_GLIBC_PREREQ(x, y) 0
+#endif
+#if !defined(TEST_HAS_GLIBC) || TEST_GLIBC_PREREQ(2, 27)
+    const char sep = ',';
+    const wchar_t wsep = L',';
+#else
+    const char sep = '.';
+    const wchar_t wsep = L'.';
+#endif
     {
         Fnf f(LOCALE_ru_RU_UTF_8, 1);
-        assert(f.decimal_point() == ',');
+        assert(f.decimal_point() == sep);
     }
     {
         Fnt f(LOCALE_ru_RU_UTF_8, 1);
-        assert(f.decimal_point() == ',');
+        assert(f.decimal_point() == sep);
     }
     {
         Fwf f(LOCALE_ru_RU_UTF_8, 1);
-        assert(f.decimal_point() == L',');
+        assert(f.decimal_point() == wsep);
     }
     {
         Fwt f(LOCALE_ru_RU_UTF_8, 1);
-        assert(f.decimal_point() == L',');
+        assert(f.decimal_point() == wsep);
     }
 
     {
@@ -145,4 +153,6 @@ int main()
         Fwt f(LOCALE_zh_CN_UTF_8, 1);
         assert(f.decimal_point() == L'.');
     }
+
+  return 0;
 }

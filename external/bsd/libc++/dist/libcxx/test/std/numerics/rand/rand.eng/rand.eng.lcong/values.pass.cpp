@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -25,8 +24,10 @@
 #include <type_traits>
 #include <cassert>
 
-template <class _Tp>
-void where(const _Tp &) {}
+#include "test_macros.h"
+
+template <class T>
+void where(const T &) {}
 
 template <class T, T a, T c, T m>
 void
@@ -37,8 +38,27 @@ test1()
     static_assert((LCE::multiplier == a), "");
     static_assert((LCE::increment == c), "");
     static_assert((LCE::modulus == m), "");
-    /*static_*/assert((LCE::min() == (c == 0u ? 1u: 0u))/*, ""*/);
-    /*static_*/assert((LCE::max() == result_type(m - 1u))/*, ""*/);
+#if TEST_STD_VER >= 11
+    static_assert((LCE::min() == (c == 0u ? 1u: 0u)), "");
+#else
+    assert((LCE::min() == (c == 0u ? 1u: 0u)));
+#endif
+
+#ifdef TEST_COMPILER_C1XX
+    #pragma warning(push)
+    #pragma warning(disable: 4310) // cast truncates constant value
+#endif // TEST_COMPILER_C1XX
+
+#if TEST_STD_VER >= 11
+    static_assert((LCE::max() == result_type(m - 1u)), "");
+#else
+    assert((LCE::max() == result_type(m - 1u)));
+#endif
+
+#ifdef TEST_COMPILER_C1XX
+    #pragma warning(pop)
+#endif // TEST_COMPILER_C1XX
+
     static_assert((LCE::default_seed == 1), "");
     where(LCE::multiplier);
     where(LCE::increment);
@@ -53,7 +73,7 @@ test()
     test1<T, 0, 0, 0>();
     test1<T, 0, 1, 2>();
     test1<T, 1, 1, 2>();
-    const T M(~0);
+    const T M(static_cast<T>(-1));
     test1<T, 0, 0, M>();
     test1<T, 0, M-2, M>();
     test1<T, 0, M-1, M>();
@@ -65,10 +85,12 @@ test()
     test1<T, M-1, M-1, M>();
 }
 
-int main()
+int main(int, char**)
 {
     test<unsigned short>();
     test<unsigned int>();
     test<unsigned long>();
     test<unsigned long long>();
+
+  return 0;
 }

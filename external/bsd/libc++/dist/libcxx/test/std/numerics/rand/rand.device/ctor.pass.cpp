@@ -1,11 +1,18 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// See bugs.llvm.org/PR20183
+//
+// XFAIL: with_system_cxx_lib=macosx10.11
+// XFAIL: with_system_cxx_lib=macosx10.10
+// XFAIL: with_system_cxx_lib=macosx10.9
+// XFAIL: with_system_cxx_lib=macosx10.8
+// XFAIL: with_system_cxx_lib=macosx10.7
 
 // <random>
 
@@ -19,8 +26,15 @@
 // throw.
 
 #include <random>
+#include <system_error>
 #include <cassert>
+
+#if !defined(_WIN32)
 #include <unistd.h>
+#endif
+
+#include "test_macros.h"
+
 
 bool is_valid_random_device(const std::string &token) {
 #if defined(_LIBCPP_USING_DEV_RANDOM)
@@ -36,16 +50,44 @@ void check_random_device_valid(const std::string &token) {
 }
 
 void check_random_device_invalid(const std::string &token) {
+#ifndef TEST_HAS_NO_EXCEPTIONS
   try {
     std::random_device r(token);
-    assert(false);
-  } catch (const std::system_error &e) {
+    LIBCPP_ASSERT(false);
+  } catch (const std::system_error&) {
   }
+#else
+  ((void)token);
+#endif
 }
 
-int main() {
-  { std::random_device r; }
 
+int main(int, char**) {
+  {
+    std::random_device r;
+  }
+  {
+    std::string token = "wrong file";
+    check_random_device_invalid(token);
+  }
+  {
+    std::string token = "/dev/urandom";
+    if (is_valid_random_device(token))
+      check_random_device_valid(token);
+    else
+      check_random_device_invalid(token);
+  }
+  {
+    std::string token = "/dev/random";
+    if (is_valid_random_device(token))
+      check_random_device_valid(token);
+    else
+      check_random_device_invalid(token);
+  }
+#if !defined(_WIN32)
+// Test that random_device(const string&) properly handles getting
+// a file descriptor with the value '0'. Do this by closing the standard
+// streams so that the descriptor '0' is available.
   {
     int ec;
     ec = close(STDIN_FILENO);
@@ -56,28 +98,7 @@ int main() {
     assert(!ec);
     std::random_device r;
   }
+#endif // !defined(_WIN32)
 
-  {
-    std::string token = "wrong file";
-    if (is_valid_random_device(token))
-      check_random_device_valid(token);
-    else
-      check_random_device_invalid(token);
-  }
-
-  {
-    std::string token = "/dev/urandom";
-    if (is_valid_random_device(token))
-      check_random_device_valid(token);
-    else
-      check_random_device_invalid(token);
-  }
-
-  {
-    std::string token = "/dev/random";
-    if (is_valid_random_device(token))
-      check_random_device_valid(token);
-    else
-      check_random_device_invalid(token);
-  }
+  return 0;
 }

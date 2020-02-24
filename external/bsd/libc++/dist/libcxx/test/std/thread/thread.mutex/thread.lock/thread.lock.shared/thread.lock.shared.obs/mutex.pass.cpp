@@ -1,13 +1,14 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: libcpp-has-no-threads
+// UNSUPPORTED: c++98, c++03, c++11
+// XFAIL: dylib-has-no-shared_mutex
 
 // <shared_mutex>
 
@@ -18,15 +19,12 @@
 #include <shared_mutex>
 #include <cassert>
 
-#if _LIBCPP_STD_VER > 11
+#include "test_macros.h"
 
 std::shared_timed_mutex m;
 
-#endif  // _LIBCPP_STD_VER > 11
-
-int main()
+int main(int, char**)
 {
-#if _LIBCPP_STD_VER > 11
     std::shared_lock<std::shared_timed_mutex> lk0;
     assert(lk0.mutex() == nullptr);
     std::shared_lock<std::shared_timed_mutex> lk1(m);
@@ -34,5 +32,6 @@ int main()
     lk1.unlock();
     assert(lk1.mutex() == &m);
     static_assert(noexcept(lk0.mutex()), "mutex() must be noexcept");
-#endif  // _LIBCPP_STD_VER > 11
+
+  return 0;
 }

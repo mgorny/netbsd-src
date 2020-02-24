@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,6 +15,8 @@
 #include <algorithm>
 #include <cassert>
 
+#include "test_macros.h"
+
 template <class T>
 void
 test(const T& a, const T& b, const T& x, const T& y)
@@ -25,7 +26,7 @@ test(const T& a, const T& b, const T& x, const T& y)
     assert(&p.second == &y);
 }
 
-int main()
+int main(int, char**)
 {
     {
     int x = 0;
@@ -45,9 +46,9 @@ int main()
     test(x, y, y, x);
     test(y, x, y, x);
     }
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER >= 14
     {
-//  Note that you can't take a reference to a local var, since 
+//  Note that you can't take a reference to a local var, since
 //  its address is not a compile-time constant.
     constexpr static int x = 1;
     constexpr static int y = 0;
@@ -59,4 +60,6 @@ int main()
     static_assert(p2.second == x, "");
     }
 #endif
+
+  return 0;
 }

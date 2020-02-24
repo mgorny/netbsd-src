@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -20,15 +19,19 @@
 #include <utility>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
-        typedef std::pair<double, char> T0;
-        typedef std::tuple<int, short> T1;
-        T0 t0(2.5, 'a');
+        typedef std::pair<long, char> T0;
+        typedef std::tuple<long long, short> T1;
+        T0 t0(2, 'a');
         T1 t1;
         t1 = t0;
         assert(std::get<0>(t1) == 2);
         assert(std::get<1>(t1) == short('a'));
     }
+
+  return 0;
 }

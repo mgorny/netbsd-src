@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,11 +11,13 @@
 #include <string.h>
 #include <type_traits>
 
+#include "test_macros.h"
+
 #ifndef NULL
 #error NULL not defined
 #endif
 
-int main()
+int main(int, char**)
 {
     size_t s = 0;
     void* vp = 0;
@@ -47,4 +48,17 @@ int main()
     static_assert((std::is_same<decltype(memset(vp, 0, s)), void*>::value), "");
     static_assert((std::is_same<decltype(strerror(0)), char*>::value), "");
     static_assert((std::is_same<decltype(strlen(cpc)), size_t>::value), "");
+
+    // These tests fail on systems whose C library doesn't provide a correct overload
+    // set for strchr, strpbrk, strrchr, strstr, and memchr, unless the compiler is
+    // a suitably recent version of Clang.
+#if !defined(__APPLE__) || defined(_LIBCPP_PREFERRED_OVERLOAD)
+    static_assert((std::is_same<decltype(strchr(cpc, 0)), const char*>::value), "");
+    static_assert((std::is_same<decltype(strpbrk(cpc, cpc)), const char*>::value), "");
+    static_assert((std::is_same<decltype(strrchr(cpc, 0)), const char*>::value), "");
+    static_assert((std::is_same<decltype(strstr(cpc, cpc)), const char*>::value), "");
+    static_assert((std::is_same<decltype(memchr(vpc, 0, s)), const void*>::value), "");
+#endif
+
+  return 0;
 }

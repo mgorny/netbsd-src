@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -20,15 +19,17 @@
 #include <vector>
 #include <cassert>
 
+#include "test_macros.h"
+
 typedef std::codecvt<char16_t, char, std::mbstate_t> F;
 
-int main()
+int main(int, char**)
 {
     std::locale l = std::locale::classic();
     const char from[] = "some text";
     F::intern_type to[9];
     const F& f = std::use_facet<F>(l);
-    std::mbstate_t mbs = {0};
+    std::mbstate_t mbs = {};
     const char* from_next = 0;
     F::intern_type* to_next = 0;
     assert(f.in(mbs, from, from + 9, from_next,
@@ -37,4 +38,6 @@ int main()
     assert(to_next - to == 9);
     for (unsigned i = 0; i < 9; ++i)
         assert(to[i] == from[i]);
+
+  return 0;
 }

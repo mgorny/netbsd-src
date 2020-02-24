@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -28,10 +27,12 @@
 
 #include <set>
 #include <cassert>
+#include <cstddef>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         typedef int V;
@@ -63,13 +64,13 @@ int main()
             8
         };
         std::set<int> m(ar, ar+sizeof(ar)/sizeof(ar[0]));
-        assert(std::distance(m.begin(), m.end()) == m.size());
-        assert(std::distance(m.rbegin(), m.rend()) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.begin(), m.end())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.rbegin(), m.rend())) == m.size());
         std::set<int>::iterator i;
         i = m.begin();
         std::set<int>::const_iterator k = i;
         assert(i == k);
-        for (int j = 1; j <= m.size(); ++j, ++i)
+        for (int j = 1; static_cast<std::size_t>(j) <= m.size(); ++j, ++i)
             assert(*i == j);
     }
     {
@@ -102,16 +103,16 @@ int main()
             8
         };
         const std::set<int> m(ar, ar+sizeof(ar)/sizeof(ar[0]));
-        assert(std::distance(m.begin(), m.end()) == m.size());
-        assert(std::distance(m.cbegin(), m.cend()) == m.size());
-        assert(std::distance(m.rbegin(), m.rend()) == m.size());
-        assert(std::distance(m.crbegin(), m.crend()) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.begin(), m.end())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.cbegin(), m.cend())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.rbegin(), m.rend())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.crbegin(), m.crend())) == m.size());
         std::set<int>::const_iterator i;
         i = m.begin();
-        for (int j = 1; j <= m.size(); ++j, ++i)
+        for (int j = 1; static_cast<std::size_t>(j) <= m.size(); ++j, ++i)
             assert(*i == j);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef int V;
         V ar[] =
@@ -142,13 +143,13 @@ int main()
             8
         };
         std::set<int, std::less<int>, min_allocator<int>> m(ar, ar+sizeof(ar)/sizeof(ar[0]));
-        assert(std::distance(m.begin(), m.end()) == m.size());
-        assert(std::distance(m.rbegin(), m.rend()) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.begin(), m.end())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.rbegin(), m.rend())) == m.size());
         std::set<int, std::less<int>, min_allocator<int>>::iterator i;
         i = m.begin();
         std::set<int, std::less<int>, min_allocator<int>>::const_iterator k = i;
         assert(i == k);
-        for (int j = 1; j <= m.size(); ++j, ++i)
+        for (int j = 1; static_cast<std::size_t>(j) <= m.size(); ++j, ++i)
             assert(*i == j);
     }
     {
@@ -181,17 +182,17 @@ int main()
             8
         };
         const std::set<int, std::less<int>, min_allocator<int>> m(ar, ar+sizeof(ar)/sizeof(ar[0]));
-        assert(std::distance(m.begin(), m.end()) == m.size());
-        assert(std::distance(m.cbegin(), m.cend()) == m.size());
-        assert(std::distance(m.rbegin(), m.rend()) == m.size());
-        assert(std::distance(m.crbegin(), m.crend()) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.begin(), m.end())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.cbegin(), m.cend())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.rbegin(), m.rend())) == m.size());
+        assert(static_cast<std::size_t>(std::distance(m.crbegin(), m.crend())) == m.size());
         std::set<int, std::less<int>, min_allocator<int>>::const_iterator i;
         i = m.begin();
-        for (int j = 1; j <= m.size(); ++j, ++i)
+        for (int j = 1; static_cast<std::size_t>(j) <= m.size(); ++j, ++i)
             assert(*i == j);
     }
 #endif
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     { // N3644 testing
         typedef std::set<int> C;
         C::iterator ii1{}, ii2{};
@@ -208,4 +209,6 @@ int main()
         assert (!(cii != ii1 ));
     }
 #endif
+
+  return 0;
 }

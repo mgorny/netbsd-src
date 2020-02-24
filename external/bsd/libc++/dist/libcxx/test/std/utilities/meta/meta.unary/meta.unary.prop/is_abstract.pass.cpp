@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,6 +11,7 @@
 // is_abstract
 
 #include <type_traits>
+#include "test_macros.h"
 
 template <class T>
 void test_is_abstract()
@@ -20,6 +20,12 @@ void test_is_abstract()
     static_assert( std::is_abstract<const T>::value, "");
     static_assert( std::is_abstract<volatile T>::value, "");
     static_assert( std::is_abstract<const volatile T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert( std::is_abstract_v<T>, "");
+    static_assert( std::is_abstract_v<const T>, "");
+    static_assert( std::is_abstract_v<volatile T>, "");
+    static_assert( std::is_abstract_v<const volatile T>, "");
+#endif
 }
 
 template <class T>
@@ -29,6 +35,12 @@ void test_is_not_abstract()
     static_assert(!std::is_abstract<const T>::value, "");
     static_assert(!std::is_abstract<volatile T>::value, "");
     static_assert(!std::is_abstract<const volatile T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert(!std::is_abstract_v<T>, "");
+    static_assert(!std::is_abstract_v<const T>, "");
+    static_assert(!std::is_abstract_v<volatile T>, "");
+    static_assert(!std::is_abstract_v<const volatile T>, "");
+#endif
 }
 
 class Empty
@@ -52,7 +64,15 @@ class Abstract
     virtual ~Abstract() = 0;
 };
 
-int main()
+template <class>
+struct AbstractTemplate {
+  virtual void test() = 0;
+};
+
+template <>
+struct AbstractTemplate<double> {};
+
+int main(int, char**)
 {
     test_is_not_abstract<void>();
     test_is_not_abstract<int&>();
@@ -68,4 +88,8 @@ int main()
     test_is_not_abstract<NotEmpty>();
 
     test_is_abstract<Abstract>();
+    test_is_abstract<AbstractTemplate<int> >();
+    test_is_not_abstract<AbstractTemplate<double> >();
+
+  return 0;
 }

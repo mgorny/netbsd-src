@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -29,7 +28,7 @@ void do_exit() {
   exit(0);
 }
 
-int main()
+int main(int, char**)
 {
 #if TEST_STD_VER >= 11
     {
@@ -38,7 +37,8 @@ int main()
         const T t[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
         C c(std::begin(t), std::end(t));
         c.reserve(2*c.size());
-        T foo = c[c.size()];    // bad, but not caught by ASAN
+        volatile T foo = c[c.size()];    // bad, but not caught by ASAN
+        ((void)foo);
     }
 #endif
 
@@ -61,11 +61,12 @@ int main()
         C c(std::begin(t), std::end(t));
         c.reserve(2*c.size());
         assert(is_contiguous_container_asan_correct(c));
-        assert(!__sanitizer_verify_contiguous_container ( c.data(), c.data() + 1, c.data() + c.capacity()));
-        T foo = c[c.size()];    // should trigger ASAN
+        assert(!__sanitizer_verify_contiguous_container( c.data(), c.data() + 1, c.data() + c.capacity()));
+        volatile T foo = c[c.size()]; // should trigger ASAN. Use volatile to prevent being optimized away.
         assert(false);          // if we got here, ASAN didn't trigger
+        ((void)foo);
     }
 }
 #else
-int main () { return 0; }
+int main(int, char**) { return 0; }
 #endif

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -19,7 +18,7 @@
 // typedef atomic<uint_least32_t> atomic_uint_least32_t;
 // typedef atomic<int_least64_t>  atomic_int_least64_t;
 // typedef atomic<uint_least64_t> atomic_uint_least64_t;
-// 
+//
 // typedef atomic<int_fast8_t>   atomic_int_fast8_t;
 // typedef atomic<uint_fast8_t>  atomic_uint_fast8_t;
 // typedef atomic<int_fast16_t>  atomic_int_fast16_t;
@@ -28,7 +27,7 @@
 // typedef atomic<uint_fast32_t> atomic_uint_fast32_t;
 // typedef atomic<int_fast64_t>  atomic_int_fast64_t;
 // typedef atomic<uint_fast64_t> atomic_uint_fast64_t;
-// 
+//
 // typedef atomic<intptr_t>  atomic_intptr_t;
 // typedef atomic<uintptr_t> atomic_uintptr_t;
 // typedef atomic<size_t>    atomic_size_t;
@@ -40,7 +39,9 @@
 #include <type_traits>
 #include <cstdint>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     static_assert((std::is_same<std::atomic<  std::int_least8_t>,   std::atomic_int_least8_t>::value), "");
     static_assert((std::is_same<std::atomic< std::uint_least8_t>,  std::atomic_uint_least8_t>::value), "");
@@ -66,4 +67,6 @@ int main()
     static_assert((std::is_same<std::atomic<std::ptrdiff_t>, std::atomic_ptrdiff_t>::value), "");
     static_assert((std::is_same<std::atomic< std::intmax_t>,  std::atomic_intmax_t>::value), "");
     static_assert((std::is_same<std::atomic<std::uintmax_t>, std::atomic_uintmax_t>::value), "");
+
+  return 0;
 }

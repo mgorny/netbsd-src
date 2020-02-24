@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,6 +16,8 @@
 #include <memory>
 #include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
 
 struct B
 {
@@ -55,12 +56,12 @@ int C::count = 0;
 template <class T>
 std::weak_ptr<T> source (std::shared_ptr<T> p) { return std::weak_ptr<T>(p); }
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
 template <class T>
 void sink (std::weak_ptr<T> &&) {}
 #endif
 
-int main()
+int main(int, char**)
 {
     {
         const std::shared_ptr<A> ps(new A);
@@ -100,7 +101,7 @@ int main()
     assert(B::count == 0);
     assert(A::count == 0);
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
     {
         std::shared_ptr<A> ps(new A);
         std::weak_ptr<A> pA = source(ps);
@@ -111,4 +112,6 @@ int main()
     assert(B::count == 0);
     assert(A::count == 0);
 #endif
+
+  return 0;
 }

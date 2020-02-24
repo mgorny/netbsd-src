@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,8 +16,11 @@
 
 #include <valarray>
 #include <cassert>
+#include <cstddef>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
         typedef int T;
@@ -26,6 +28,8 @@ int main()
         const unsigned N = sizeof(a)/sizeof(a[0]);
         const std::valarray<T> v(a, N);
         assert(v[v.size()-1] == 5);
-        assert(end(v) - begin(v) == v.size());
+        assert(static_cast<std::size_t>(end(v) - begin(v)) == v.size());
     }
+
+  return 0;
 }

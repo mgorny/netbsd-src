@@ -1,21 +1,22 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
+// UNSUPPORTED: c++98, c++03, c++11
 // <chrono>
 
 #include <chrono>
 #include <type_traits>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
-#if _LIBCPP_STD_VER > 11 
     using namespace std::literals::chrono_literals;
 
 //    Make sure the types are right
@@ -25,12 +26,12 @@ int main()
     static_assert ( std::is_same<decltype( 3ms  ), std::chrono::milliseconds>::value, "" );
     static_assert ( std::is_same<decltype( 3us  ), std::chrono::microseconds>::value, "" );
     static_assert ( std::is_same<decltype( 3ns  ), std::chrono::nanoseconds>::value, "" );
-    
+
     std::chrono::hours h = 4h;
     assert ( h == std::chrono::hours(4));
     auto h2 = 4.0h;
     assert ( h == h2 );
-    
+
     std::chrono::minutes min = 36min;
     assert ( min == std::chrono::minutes(36));
     auto min2 = 36.0min;
@@ -55,5 +56,7 @@ int main()
     assert ( ns == std::chrono::nanoseconds(645));
     auto ns2 = 645.ns;
     assert ( ns == ns2 );
-#endif
+
+
+  return 0;
 }

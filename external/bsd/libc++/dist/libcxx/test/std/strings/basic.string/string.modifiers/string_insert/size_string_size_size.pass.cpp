@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,10 +13,16 @@
 //          size_type pos2, size_type n=npos);
 // the "=npos" was added in C++14
 
+// When back-deploying to macosx10.7, the RTTI for exception classes
+// incorrectly provided by libc++.dylib is mixed with the one in
+// libc++abi.dylib and exceptions are not caught properly.
+// XFAIL: with_system_cxx_lib=macosx10.7
+
 #include <string>
 #include <stdexcept>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class S>
@@ -25,40 +30,58 @@ void
 test(S s, typename S::size_type pos1, S str, typename S::size_type pos2,
      typename S::size_type n, S expected)
 {
-    typename S::size_type old_size = s.size();
+    const typename S::size_type old_size = s.size();
     S s0 = s;
-    try
+    if (pos1 <= old_size && pos2 <= str.size())
     {
         s.insert(pos1, str, pos2, n);
-        assert(s.__invariants());
-        assert(pos1 <= old_size && pos2 <= str.size());
+        LIBCPP_ASSERT(s.__invariants());
         assert(s == expected);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos1 > old_size || pos2 > str.size());
-        assert(s == s0);
+        try
+        {
+            s.insert(pos1, str, pos2, n);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos1 > old_size || pos2 > str.size());
+            assert(s == s0);
+        }
     }
+#endif
 }
 
 template <class S>
 void
 test_npos(S s, typename S::size_type pos1, S str, typename S::size_type pos2, S expected)
 {
-    typename S::size_type old_size = s.size();
+    const typename S::size_type old_size = s.size();
     S s0 = s;
-    try
+    if (pos1 <= old_size && pos2 <= str.size())
     {
         s.insert(pos1, str, pos2);
-        assert(s.__invariants());
-        assert(pos1 <= old_size && pos2 <= str.size());
+        LIBCPP_ASSERT(s.__invariants());
         assert(s == expected);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos1 > old_size || pos2 > str.size());
-        assert(s == s0);
+        try
+        {
+            s.insert(pos1, str, pos2);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos1 > old_size || pos2 > str.size());
+            assert(s == s0);
+        }
     }
+#endif
 }
 
 
@@ -1709,7 +1732,7 @@ void test30()
     test_npos(S("abcdefghijklmnopqrst"), 10, S("12345"), 6, S("can't happen"));
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string S;
@@ -1745,7 +1768,7 @@ int main()
     test29<S>();
     test30<S>();
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> S;
     test0<S>();
@@ -1781,4 +1804,6 @@ int main()
     test30<S>();
     }
 #endif
+
+  return 0;
 }

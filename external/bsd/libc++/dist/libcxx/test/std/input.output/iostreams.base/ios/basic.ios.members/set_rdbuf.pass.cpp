@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,6 +16,8 @@
 #include <streambuf>
 #include <cassert>
 
+#include "test_macros.h"
+
 struct testbuf
     : public std::streambuf
 {
@@ -29,21 +30,25 @@ struct testios
     void set_rdbuf(std::streambuf* x) {std::ios::set_rdbuf(x);}
 };
 
-int main()
+int main(int, char**)
 {
     testbuf sb1;
     testbuf sb2;
     testios ios(&sb1);
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
     {
         ios.setstate(std::ios::badbit);
         ios.exceptions(std::ios::badbit);
+        assert(false);
     }
     catch (...)
     {
     }
+#endif
     ios.set_rdbuf(&sb2);
     assert(ios.rdbuf() == &sb2);
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
     {
         ios.setstate(std::ios::badbit);
@@ -52,6 +57,9 @@ int main()
     catch (...)
     {
     }
+#endif
     ios.set_rdbuf(0);
     assert(ios.rdbuf() == 0);
+
+  return 0;
 }

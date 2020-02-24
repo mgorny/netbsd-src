@@ -8,8 +8,8 @@
 set -e
 
 cd dist/libcxx
-rm -rf .svn cmake Makefile CMakeLists.txt lib src/support www .arcconfig
-rm -rf include/support */CMakeLists.txt .gitignore appveyor* docs
+rm -rf .svn cmake Makefile CMakeLists.txt lib www .arcconfig
+rm -rf */CMakeLists.txt .gitignore appveyor* docs
 rm -rf benchmarks fuzzing utils
 cd ../libcxxrt
 rm -rf .git CMakeLists.txt */CMakeLists.txt src/doxygen_config

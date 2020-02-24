@@ -1,16 +1,18 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
 // test bool none() const;
 
 #include <bitset>
+#include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
 
 template <std::size_t N>
 void test_none()
@@ -20,7 +22,8 @@ void test_none()
     assert(v.none() == true);
     v.set();
     assert(v.none() == (N == 0));
-    if (N > 1)
+    const bool greater_than_1 = std::integral_constant<bool, (N > 1)>::value; // avoid compiler warnings
+    if (greater_than_1)
     {
         v[N/2] = false;
         assert(v.none() == false);
@@ -30,7 +33,7 @@ void test_none()
     }
 }
 
-int main()
+int main(int, char**)
 {
     test_none<0>();
     test_none<1>();
@@ -41,4 +44,6 @@ int main()
     test_none<64>();
     test_none<65>();
     test_none<1000>();
+
+  return 0;
 }

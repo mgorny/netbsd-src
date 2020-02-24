@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,6 +12,8 @@
 
 #include <type_traits>
 
+#include "test_macros.h"
+
 template <class T>
 void test_has_virtual_destructor()
 {
@@ -20,6 +21,12 @@ void test_has_virtual_destructor()
     static_assert( std::has_virtual_destructor<const T>::value, "");
     static_assert( std::has_virtual_destructor<volatile T>::value, "");
     static_assert( std::has_virtual_destructor<const volatile T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert( std::has_virtual_destructor_v<T>, "");
+    static_assert( std::has_virtual_destructor_v<const T>, "");
+    static_assert( std::has_virtual_destructor_v<volatile T>, "");
+    static_assert( std::has_virtual_destructor_v<const volatile T>, "");
+#endif
 }
 
 template <class T>
@@ -29,6 +36,12 @@ void test_has_not_virtual_destructor()
     static_assert(!std::has_virtual_destructor<const T>::value, "");
     static_assert(!std::has_virtual_destructor<volatile T>::value, "");
     static_assert(!std::has_virtual_destructor<const volatile T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert(!std::has_virtual_destructor_v<T>, "");
+    static_assert(!std::has_virtual_destructor_v<const T>, "");
+    static_assert(!std::has_virtual_destructor_v<volatile T>, "");
+    static_assert(!std::has_virtual_destructor_v<const volatile T>, "");
+#endif
 }
 
 class Empty
@@ -57,7 +70,7 @@ struct A
     ~A();
 };
 
-int main()
+int main(int, char**)
 {
     test_has_not_virtual_destructor<void>();
     test_has_not_virtual_destructor<A>();
@@ -74,4 +87,6 @@ int main()
 
     test_has_virtual_destructor<Abstract>();
     test_has_virtual_destructor<NotEmpty>();
+
+  return 0;
 }

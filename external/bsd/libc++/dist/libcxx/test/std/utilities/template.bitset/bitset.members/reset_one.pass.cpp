@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -11,16 +10,20 @@
 
 #include <bitset>
 #include <cassert>
+#include <stdexcept>
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wtautological-compare"
+#include "test_macros.h"
 
 template <std::size_t N>
-void test_reset_one()
+void test_reset_one(bool test_throws)
 {
     std::bitset<N> v;
+#ifdef TEST_HAS_NO_EXCEPTIONS
+    if (test_throws) return;
+#else
     try
     {
+#endif
         v.set();
         v.reset(50);
         if (50 >= v.size())
@@ -30,21 +33,27 @@ void test_reset_one()
                 assert(!v[i]);
             else
                 assert(v[i]);
+        assert(!test_throws);
+#ifndef TEST_HAS_NO_EXCEPTIONS
     }
     catch (std::out_of_range&)
     {
+        assert(test_throws);
     }
+#endif
 }
 
-int main()
+int main(int, char**)
 {
-    test_reset_one<0>();
-    test_reset_one<1>();
-    test_reset_one<31>();
-    test_reset_one<32>();
-    test_reset_one<33>();
-    test_reset_one<63>();
-    test_reset_one<64>();
-    test_reset_one<65>();
-    test_reset_one<1000>();
+    test_reset_one<0>(true);
+    test_reset_one<1>(true);
+    test_reset_one<31>(true);
+    test_reset_one<32>(true);
+    test_reset_one<33>(true);
+    test_reset_one<63>(false);
+    test_reset_one<64>(false);
+    test_reset_one<65>(false);
+    test_reset_one<1000>(false);
+
+  return 0;
 }

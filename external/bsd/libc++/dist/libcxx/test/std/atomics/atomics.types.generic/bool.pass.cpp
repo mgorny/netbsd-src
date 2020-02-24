@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -39,7 +38,7 @@
 //                                 memory_order m = memory_order_seq_cst) volatile;
 //     bool compare_exchange_strong(T& expc, T desr,
 //                                  memory_order m = memory_order_seq_cst);
-// 
+//
 //     atomic() = default;
 //     constexpr atomic(T desr);
 //     atomic(const atomic&) = delete;
@@ -57,7 +56,9 @@
 
 #include <cmpxchg_loop.h>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
         volatile std::atomic<bool> obj(true);
@@ -226,9 +227,11 @@ int main()
     }
     {
         typedef std::atomic<bool> A;
-        _ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
-        A& zero = *new (storage) A();    
+        TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {1};
+        A& zero = *new (storage) A();
         assert(zero == false);
         zero.~A();
     }
+
+  return 0;
 }

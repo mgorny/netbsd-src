@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -22,6 +21,8 @@
 #include <utility>
 #include <cassert>
 
+#include "test_macros.h"
+
 struct B
 {
     int id_;
@@ -37,29 +38,36 @@ struct D
     explicit D(int i) : B(i) {}
 };
 
-int main()
+struct E {
+  E() = default;
+  E& operator=(int) {
+      return *this;
+  }
+};
+
+int main(int, char**)
 {
     {
-        typedef std::tuple<double> T0;
-        typedef std::tuple<int> T1;
-        T0 t0(2.5);
+        typedef std::tuple<long> T0;
+        typedef std::tuple<long long> T1;
+        T0 t0(2);
         T1 t1;
         t1 = std::move(t0);
         assert(std::get<0>(t1) == 2);
     }
     {
-        typedef std::tuple<double, char> T0;
-        typedef std::tuple<int, int> T1;
-        T0 t0(2.5, 'a');
+        typedef std::tuple<long, char> T0;
+        typedef std::tuple<long long, int> T1;
+        T0 t0(2, 'a');
         T1 t1;
         t1 = std::move(t0);
         assert(std::get<0>(t1) == 2);
         assert(std::get<1>(t1) == int('a'));
     }
     {
-        typedef std::tuple<double, char, D> T0;
-        typedef std::tuple<int, int, B> T1;
-        T0 t0(2.5, 'a', D(3));
+        typedef std::tuple<long, char, D> T0;
+        typedef std::tuple<long long, int, B> T1;
+        T0 t0(2, 'a', D(3));
         T1 t1;
         t1 = std::move(t0);
         assert(std::get<0>(t1) == 2);
@@ -69,23 +77,37 @@ int main()
     {
         D d(3);
         D d2(2);
-        typedef std::tuple<double, char, D&> T0;
-        typedef std::tuple<int, int, B&> T1;
-        T0 t0(2.5, 'a', d2);
-        T1 t1(1.5, 'b', d);
+        typedef std::tuple<long, char, D&> T0;
+        typedef std::tuple<long long, int, B&> T1;
+        T0 t0(2, 'a', d2);
+        T1 t1(1, 'b', d);
         t1 = std::move(t0);
         assert(std::get<0>(t1) == 2);
         assert(std::get<1>(t1) == int('a'));
         assert(std::get<2>(t1).id_ == 2);
     }
     {
-        typedef std::tuple<double, char, std::unique_ptr<D>> T0;
-        typedef std::tuple<int, int, std::unique_ptr<B>> T1;
-        T0 t0(2.5, 'a', std::unique_ptr<D>(new D(3)));
+        typedef std::tuple<long, char, std::unique_ptr<D>> T0;
+        typedef std::tuple<long long, int, std::unique_ptr<B>> T1;
+        T0 t0(2, 'a', std::unique_ptr<D>(new D(3)));
         T1 t1;
         t1 = std::move(t0);
         assert(std::get<0>(t1) == 2);
         assert(std::get<1>(t1) == int('a'));
         assert(std::get<2>(t1)->id_ == 3);
     }
+    {
+        // Test that tuple evaluates correctly applies an lvalue reference
+        // before evaluating is_assignable (i.e. 'is_assignable<int&, int&&>')
+        // instead of evaluating 'is_assignable<int&&, int&&>' which is false.
+        int x = 42;
+        int y = 43;
+        std::tuple<int&&, E> t(std::move(x), E{});
+        std::tuple<int&&, int> t2(std::move(y), 44);
+        t = std::move(t2);
+        assert(std::get<0>(t) == 43);
+        assert(&std::get<0>(t) == &x);
+    }
+
+  return 0;
 }

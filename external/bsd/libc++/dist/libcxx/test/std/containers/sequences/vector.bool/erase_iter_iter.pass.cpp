@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,9 +14,10 @@
 #include <vector>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     bool a1[] = {1, 0, 1};
     {
@@ -50,7 +50,7 @@ int main()
         assert(distance(l1.cbegin(), l1.cend()) == 0);
         assert(i == l1.begin());
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         std::vector<bool, min_allocator<bool>> l1(a1, a1+3);
         std::vector<bool, min_allocator<bool>>::iterator i = l1.erase(l1.cbegin(), l1.cbegin());
@@ -82,4 +82,6 @@ int main()
         assert(i == l1.begin());
     }
 #endif
+
+  return 0;
 }

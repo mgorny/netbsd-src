@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,6 +12,8 @@
 
 #include <locale>
 #include <cassert>
+
+#include "test_macros.h"
 
 int facet_count = 0;
 
@@ -29,16 +30,19 @@ struct my_facet
 
 std::locale::id my_facet::id;
 
-int main()
+int main(int, char**)
 {
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
     {
         const my_facet& f = std::use_facet<my_facet>(std::locale());
+        ((void)f); // Prevent unused warning
         assert(false);
     }
     catch (std::bad_cast&)
     {
     }
+#endif
     const my_facet* fp = 0;
     {
         std::locale loc(std::locale(), new my_facet);
@@ -49,4 +53,6 @@ int main()
         assert(facet_count == 1);
     }
     assert(facet_count == 0);
+
+  return 0;
 }

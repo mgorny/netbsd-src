@@ -1,36 +1,55 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
 // <unordered_set>
 
-// template <class Value, class Hash = hash<Value>, class Pred = equal_to<Value>,
-//           class Alloc = allocator<Value>>
 // class unordered_multiset
 
 // size_type max_size() const;
 
-#include <unordered_set>
 #include <cassert>
+#include <limits>
+#include <type_traits>
+#include <unordered_set>
 
-#include "min_allocator.h"
+#include "test_allocator.h"
+#include "test_macros.h"
 
-int main()
+int main(int, char**)
 {
     {
-        std::unordered_multiset<int> u;
-        assert(u.max_size() > 0);
+      typedef limited_allocator<int, 10> A;
+      typedef std::unordered_multiset<int, std::hash<int>, std::equal_to<int>,
+                                      A>
+          C;
+      C c;
+      assert(c.max_size() <= 10);
+      LIBCPP_ASSERT(c.max_size() == 10);
     }
-#if __cplusplus >= 201103L
     {
-        std::unordered_multiset<int, std::hash<int>,
-                                      std::equal_to<int>, min_allocator<int>> u;
-        assert(u.max_size() > 0);
+      typedef limited_allocator<int, (size_t)-1> A;
+      typedef std::unordered_multiset<int, std::hash<int>, std::equal_to<int>,
+                                      A>
+          C;
+      const C::size_type max_dist =
+          static_cast<C::size_type>(std::numeric_limits<C::difference_type>::max());
+      C c;
+      assert(c.max_size() <= max_dist);
+      LIBCPP_ASSERT(c.max_size() == max_dist);
     }
-#endif
+    {
+      typedef std::unordered_multiset<char> C;
+      const C::size_type max_dist =
+          static_cast<C::size_type>(std::numeric_limits<C::difference_type>::max());
+      C c;
+      assert(c.max_size() <= max_dist);
+      assert(c.max_size() <= alloc_max_size(c.get_allocator()));
+    }
+
+  return 0;
 }

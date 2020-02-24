@@ -1,16 +1,17 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
 #ifndef MOVEONLY_H
 #define MOVEONLY_H
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#include "test_macros.h"
+
+#if TEST_STD_VER >= 11
 
 #include <cstddef>
 #include <functional>
@@ -32,19 +33,22 @@ public:
 
     bool operator==(const MoveOnly& x) const {return data_ == x.data_;}
     bool operator< (const MoveOnly& x) const {return data_ <  x.data_;}
+    MoveOnly operator+(const MoveOnly& x) const { return MoveOnly{data_ + x.data_}; }
+    MoveOnly operator*(const MoveOnly& x) const { return MoveOnly{data_ * x.data_}; }
 };
 
 namespace std {
 
 template <>
 struct hash<MoveOnly>
-    : public std::unary_function<MoveOnly, std::size_t>
 {
+    typedef MoveOnly argument_type;
+    typedef size_t result_type;
     std::size_t operator()(const MoveOnly& x) const {return x.get();}
 };
 
 }
 
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#endif  // TEST_STD_VER >= 11
 
 #endif  // MOVEONLY_H

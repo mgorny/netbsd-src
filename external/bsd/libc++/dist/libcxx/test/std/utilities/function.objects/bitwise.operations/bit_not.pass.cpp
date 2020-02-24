@@ -1,12 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
+// UNSUPPORTED: c++98, c++03, c++11
 // <functional>
 
 // bit_not
@@ -15,9 +15,10 @@
 #include <type_traits>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
-#if _LIBCPP_STD_VER > 11
     typedef std::bit_not<int> F;
     const F f = F();
     static_assert((std::is_same<F::argument_type, int>::value), "" );
@@ -43,5 +44,6 @@ int main()
 
     constexpr int bar = std::bit_not<> () (0xEA95) & 0xFFFF;
     static_assert ( bar == 0x156A, "" );
-#endif
+
+  return 0;
 }

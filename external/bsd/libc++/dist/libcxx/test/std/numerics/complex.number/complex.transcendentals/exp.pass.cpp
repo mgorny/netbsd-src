@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,6 +15,7 @@
 #include <complex>
 #include <cassert>
 
+#include "test_macros.h"
 #include "../cases.h"
 
 template <class T>
@@ -34,81 +34,83 @@ test()
 
 void test_edges()
 {
-    const unsigned N = sizeof(x) / sizeof(x[0]);
+    const unsigned N = sizeof(testcases) / sizeof(testcases[0]);
     for (unsigned i = 0; i < N; ++i)
     {
-        std::complex<double> r = exp(x[i]);
-        if (x[i].real() == 0 && x[i].imag() == 0)
+        std::complex<double> r = exp(testcases[i]);
+        if (testcases[i].real() == 0 && testcases[i].imag() == 0)
         {
             assert(r.real() == 1.0);
             assert(r.imag() == 0);
-            assert(std::signbit(x[i].imag()) == std::signbit(r.imag()));
+            assert(std::signbit(testcases[i].imag()) == std::signbit(r.imag()));
         }
-        else if (std::isfinite(x[i].real()) && std::isinf(x[i].imag()))
+        else if (std::isfinite(testcases[i].real()) && std::isinf(testcases[i].imag()))
         {
             assert(std::isnan(r.real()));
             assert(std::isnan(r.imag()));
         }
-        else if (std::isfinite(x[i].real()) && std::isnan(x[i].imag()))
+        else if (std::isfinite(testcases[i].real()) && std::isnan(testcases[i].imag()))
         {
             assert(std::isnan(r.real()));
             assert(std::isnan(r.imag()));
         }
-        else if (std::isinf(x[i].real()) && x[i].real() > 0 && x[i].imag() == 0)
+        else if (std::isinf(testcases[i].real()) && testcases[i].real() > 0 && testcases[i].imag() == 0)
         {
             assert(std::isinf(r.real()));
             assert(r.real() > 0);
             assert(r.imag() == 0);
-            assert(std::signbit(x[i].imag()) == std::signbit(r.imag()));
+            assert(std::signbit(testcases[i].imag()) == std::signbit(r.imag()));
         }
-        else if (std::isinf(x[i].real()) && x[i].real() < 0 && std::isinf(x[i].imag()))
+        else if (std::isinf(testcases[i].real()) && testcases[i].real() < 0 && std::isinf(testcases[i].imag()))
         {
             assert(r.real() == 0);
             assert(r.imag() == 0);
         }
-        else if (std::isinf(x[i].real()) && x[i].real() > 0 && std::isinf(x[i].imag()))
+        else if (std::isinf(testcases[i].real()) && testcases[i].real() > 0 && std::isinf(testcases[i].imag()))
         {
             assert(std::isinf(r.real()));
             assert(std::isnan(r.imag()));
         }
-        else if (std::isinf(x[i].real()) && x[i].real() < 0 && std::isnan(x[i].imag()))
+        else if (std::isinf(testcases[i].real()) && testcases[i].real() < 0 && std::isnan(testcases[i].imag()))
         {
             assert(r.real() == 0);
             assert(r.imag() == 0);
         }
-        else if (std::isinf(x[i].real()) && x[i].real() > 0 && std::isnan(x[i].imag()))
+        else if (std::isinf(testcases[i].real()) && testcases[i].real() > 0 && std::isnan(testcases[i].imag()))
         {
             assert(std::isinf(r.real()));
             assert(std::isnan(r.imag()));
         }
-        else if (std::isnan(x[i].real()) && x[i].imag() == 0)
+        else if (std::isnan(testcases[i].real()) && testcases[i].imag() == 0)
         {
             assert(std::isnan(r.real()));
             assert(r.imag() == 0);
-            assert(std::signbit(x[i].imag()) == std::signbit(r.imag()));
+            assert(std::signbit(testcases[i].imag()) == std::signbit(r.imag()));
         }
-        else if (std::isnan(x[i].real()) && x[i].imag() != 0)
+        else if (std::isnan(testcases[i].real()) && testcases[i].imag() != 0)
         {
             assert(std::isnan(r.real()));
             assert(std::isnan(r.imag()));
         }
-        else if (std::isnan(x[i].real()) && std::isnan(x[i].imag()))
+        else if (std::isnan(testcases[i].real()) && std::isnan(testcases[i].imag()))
         {
             assert(std::isnan(r.real()));
             assert(std::isnan(r.imag()));
         }
-        else if (std::isfinite(x[i].imag()) && std::abs(x[i].imag()) <= 1)
+        else if (std::isfinite(testcases[i].imag()) && std::abs(testcases[i].imag()) <= 1)
         {
             assert(!std::signbit(r.real()));
-            assert(std::signbit(r.imag()) == std::signbit(x[i].imag()));
+            assert(std::signbit(r.imag()) == std::signbit(testcases[i].imag()));
         }
     }
 }
 
-int main()
+int main(int, char**)
 {
     test<float>();
     test<double>();
     test<long double>();
     test_edges();
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,11 +12,13 @@
 
 #include <list>
 #include <cassert>
+
+#include "test_macros.h"
 #include "DefaultOnly.h"
 #include "test_allocator.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         std::list<int> l(3, 2);
@@ -30,15 +31,13 @@ int main()
         assert(l2 == l);
         assert(l2.get_allocator() == l.get_allocator());
     }
-#ifndef _LIBCPP_HAS_NO_ADVANCED_SFINAE
+#if TEST_STD_VER >= 11
     {
         std::list<int, other_allocator<int> > l(3, 2, other_allocator<int>(5));
         std::list<int, other_allocator<int> > l2 = l;
         assert(l2 == l);
         assert(l2.get_allocator() == other_allocator<int>(-2));
     }
-#endif  // _LIBCPP_HAS_NO_ADVANCED_SFINAE
-#if __cplusplus >= 201103L
     {
         std::list<int, min_allocator<int>> l(3, 2);
         std::list<int, min_allocator<int>> l2 = l;
@@ -51,4 +50,6 @@ int main()
         assert(l2.get_allocator() == l.get_allocator());
     }
 #endif
+
+  return 0;
 }

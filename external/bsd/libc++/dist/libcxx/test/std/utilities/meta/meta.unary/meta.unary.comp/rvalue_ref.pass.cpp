@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,6 +11,8 @@
 // rvalue_ref
 
 #include <type_traits>
+
+#include "test_macros.h"
 
 template <class T>
 void test_rvalue_ref()
@@ -25,10 +26,10 @@ void test_rvalue_ref()
     static_assert(!std::is_member_pointer<T>::value, "");
 }
 
-int main()
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
     test_rvalue_ref<int&&>();
     test_rvalue_ref<const int&&>();
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+
+  return 0;
 }

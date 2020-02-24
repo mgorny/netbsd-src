@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -22,9 +21,10 @@
 #include <unordered_set>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::unordered_set<int> C;
@@ -42,9 +42,9 @@ int main()
         size_t bc = c.bucket_count();
         assert(bc >= 5);
         for (size_t i = 0; i < 13; ++i)
-            assert(c.bucket(i) == i % bc);
+            LIBCPP_ASSERT(c.bucket(i) == i % bc);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef std::unordered_set<int, std::hash<int>, std::equal_to<int>, min_allocator<int>> C;
         typedef int P;
@@ -61,15 +61,17 @@ int main()
         size_t bc = c.bucket_count();
         assert(bc >= 5);
         for (size_t i = 0; i < 13; ++i)
-            assert(c.bucket(i) == i % bc);
+            LIBCPP_ASSERT(c.bucket(i) == i % bc);
     }
 #endif
 #if _LIBCPP_DEBUG_LEVEL >= 1
     {
         typedef std::unordered_set<int> C;
         C c;
-        C::size_type i = c.bucket(3);
+        (void) c.bucket(3);
         assert(false);
     }
 #endif
+
+  return 0;
 }

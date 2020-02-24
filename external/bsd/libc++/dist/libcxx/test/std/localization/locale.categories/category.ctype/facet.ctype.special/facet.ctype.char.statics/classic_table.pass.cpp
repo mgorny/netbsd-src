@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,7 +15,9 @@
 #include <locale>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     typedef std::ctype<char> F;
     assert(F::classic_table() != 0);
@@ -30,7 +31,7 @@ int main()
     for ( size_t i = 0; i < 128; ++i ) // values above 128 are not consistent
     {
         mask set = 0;
-        
+
         if ( i  < 32  || i  > 126 ) set |= F::cntrl;
         if ( i >= 32  && i <= 126 ) set |= F::print;
 
@@ -51,9 +52,11 @@ int main()
         if ( i >=  58 && i <=  64 ) set |= F::punct;    // ':' .. '@'
         if ( i >=  91 && i <=  96 ) set |= F::punct;    // '[' .. '`'
         if ( i >= 123 && i <= 126 ) set |= F::punct;    // '{' .. '~'    }
-        
+
         assert(( p[i] &  set) == set);            // all the right bits set
         assert(((p[i] & ~set) & defined) == 0);   // no extra ones
     }
-    
+
+
+  return 0;
 }

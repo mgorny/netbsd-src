@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03
 
 // <istream>
 
@@ -17,7 +18,7 @@
 #include <istream>
 #include <cassert>
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#include "test_macros.h"
 
 template <class CharT>
 struct testbuf
@@ -37,11 +38,8 @@ struct test_istream
         : base(std::move(s)) {}
 };
 
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
-
-int main()
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
     {
         testbuf<char> sb;
         test_istream<char> is1(&sb);
@@ -74,5 +72,6 @@ int main()
         assert(is.precision() == 6);
         assert(is.getloc().name() == "C");
     }
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+
+  return 0;
 }

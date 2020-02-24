@@ -1,12 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
+// UNSUPPORTED: libcpp-no-exceptions
 // <regex>
 
 // template <class charT, class traits = regex_traits<charT>> class basic_regex;
@@ -16,8 +16,9 @@
 
 #include <regex>
 #include <cassert>
+#include "test_macros.h"
 
-static bool error_escape_thrown(const char *pat) 
+static bool error_escape_thrown(const char *pat)
 {
     bool result = false;
     try {
@@ -28,10 +29,11 @@ static bool error_escape_thrown(const char *pat)
     return result;
 }
 
-int main() 
+int main(int, char**)
 {
     assert(error_escape_thrown("[\\a]"));
     assert(error_escape_thrown("\\a"));
+    assert(error_escape_thrown("\\"));
 
     assert(error_escape_thrown("[\\e]"));
     assert(error_escape_thrown("\\e"));
@@ -42,4 +44,6 @@ int main()
     assert(!error_escape_thrown("[\\cA]"));
     assert(!error_escape_thrown("\\cA"));
 
+
+  return 0;
 }

@@ -1,13 +1,13 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: libcpp-has-no-threads
+// UNSUPPORTED: c++98, c++03, c++11
 
 // <shared_mutex>
 
@@ -18,7 +18,7 @@
 #include <shared_mutex>
 #include <cassert>
 
-#if _LIBCPP_STD_VER > 11
+#include "test_macros.h"
 
 struct mutex
 {
@@ -28,11 +28,8 @@ struct mutex
 
 mutex m;
 
-#endif  // _LIBCPP_STD_VER > 11
-
-int main()
+int main(int, char**)
 {
-#if _LIBCPP_STD_VER > 11
     std::shared_lock<mutex> lk1(m);
     std::shared_lock<mutex> lk2;
     lk1.swap(lk2);
@@ -41,5 +38,6 @@ int main()
     assert(lk2.mutex() == &m);
     assert(lk2.owns_lock() == true);
     static_assert(noexcept(lk1.swap(lk2)), "member swap must be noexcept");
-#endif  // _LIBCPP_STD_VER > 11
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,6 +15,7 @@
 #include <complex>
 #include <cassert>
 
+#include "test_macros.h"
 #include "../cases.h"
 
 template <class T>
@@ -35,13 +35,11 @@ test()
 
 void test_edges()
 {
-    typedef std::complex<double> C;
-    const double pi = std::atan2(+0., -0.);
-    const unsigned N = sizeof(x) / sizeof(x[0]);
+    const unsigned N = sizeof(testcases) / sizeof(testcases[0]);
     for (unsigned i = 0; i < N; ++i)
     {
-        std::complex<double> r = tan(x[i]);
-        std::complex<double> t1(-imag(x[i]), real(x[i]));
+        std::complex<double> r = tan(testcases[i]);
+        std::complex<double> t1(-imag(testcases[i]), real(testcases[i]));
         std::complex<double> t2 = tanh(t1);
         std::complex<double> z(imag(t2), -real(t2));
         if (std::isnan(real(r)))
@@ -61,10 +59,12 @@ void test_edges()
     }
 }
 
-int main()
+int main(int, char**)
 {
     test<float>();
     test<double>();
     test<long double>();
     test_edges();
+
+  return 0;
 }

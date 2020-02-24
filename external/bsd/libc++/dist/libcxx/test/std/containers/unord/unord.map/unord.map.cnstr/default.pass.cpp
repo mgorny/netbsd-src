@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -18,13 +17,14 @@
 #include <unordered_map>
 #include <cassert>
 
+#include "test_macros.h"
 #include "../../../NotConstructible.h"
 #include "../../../test_compare.h"
 #include "../../../test_hash.h"
 #include "test_allocator.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::unordered_map<NotConstructible, NotConstructible,
@@ -34,7 +34,7 @@ int main()
                                                                   NotConstructible> >
                                    > C;
         C c;
-        assert(c.bucket_count() == 0);
+        LIBCPP_ASSERT(c.bucket_count() == 0);
         assert(c.hash_function() == test_hash<std::hash<NotConstructible> >());
         assert(c.key_eq() == test_compare<std::equal_to<NotConstructible> >());
         assert(c.get_allocator() ==
@@ -45,7 +45,7 @@ int main()
         assert(c.load_factor() == 0);
         assert(c.max_load_factor() == 1);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef std::unordered_map<NotConstructible, NotConstructible,
                                    test_hash<std::hash<NotConstructible> >,
@@ -54,7 +54,7 @@ int main()
                                                                   NotConstructible> >
                                    > C;
         C c;
-        assert(c.bucket_count() == 0);
+        LIBCPP_ASSERT(c.bucket_count() == 0);
         assert(c.hash_function() == test_hash<std::hash<NotConstructible> >());
         assert(c.key_eq() == test_compare<std::equal_to<NotConstructible> >());
         assert(c.get_allocator() ==
@@ -66,8 +66,41 @@ int main()
         assert(c.max_load_factor() == 1);
     }
     {
+        typedef explicit_allocator<std::pair<const NotConstructible, NotConstructible>> A;
+        typedef std::unordered_map<NotConstructible, NotConstructible,
+                                   test_hash<std::hash<NotConstructible> >,
+                                   test_compare<std::equal_to<NotConstructible> >,
+                                   A
+                                   > C;
+        {
+        C c;
+        LIBCPP_ASSERT(c.bucket_count() == 0);
+        assert(c.hash_function() == test_hash<std::hash<NotConstructible> >());
+        assert(c.key_eq() == test_compare<std::equal_to<NotConstructible> >());
+        assert(c.get_allocator() == A());
+        assert(c.size() == 0);
+        assert(c.empty());
+        assert(std::distance(c.begin(), c.end()) == 0);
+        assert(c.load_factor() == 0);
+        assert(c.max_load_factor() == 1);
+        }
+        {
+        A a;
+        C c(a);
+        LIBCPP_ASSERT(c.bucket_count() == 0);
+        assert(c.hash_function() == test_hash<std::hash<NotConstructible> >());
+        assert(c.key_eq() == test_compare<std::equal_to<NotConstructible> >());
+        assert(c.get_allocator() == a);
+        assert(c.size() == 0);
+        assert(c.empty());
+        assert(std::distance(c.begin(), c.end()) == 0);
+        assert(c.load_factor() == 0);
+        assert(c.max_load_factor() == 1);
+        }
+    }
+    {
         std::unordered_map<int, int> c = {};
-        assert(c.bucket_count() == 0);
+        LIBCPP_ASSERT(c.bucket_count() == 0);
         assert(c.size() == 0);
         assert(c.empty());
         assert(std::distance(c.begin(), c.end()) == 0);
@@ -75,4 +108,6 @@ int main()
         assert(c.max_load_factor() == 1);
     }
 #endif
+
+  return 0;
 }

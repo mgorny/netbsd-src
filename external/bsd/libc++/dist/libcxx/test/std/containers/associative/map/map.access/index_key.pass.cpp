@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,10 +15,15 @@
 #include <map>
 #include <cassert>
 
+#include "test_macros.h"
+#include "count_new.h"
 #include "min_allocator.h"
-#include "private_constructor.hpp"
+#include "private_constructor.h"
+#if TEST_STD_VER >= 11
+#include "container_test_types.h"
+#endif
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::pair<const int, double> V;
@@ -46,7 +50,7 @@ int main()
     assert(m[6] == 6.5);
     assert(m.size() == 8);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::pair<const int, double> V;
     V ar[] =
@@ -73,8 +77,41 @@ int main()
     assert(m[6] == 6.5);
     assert(m.size() == 8);
     }
+    {
+        // Use "container_test_types.h" to check what arguments get passed
+        // to the allocator for operator[]
+        using Container = TCT::map<>;
+        using Key = Container::key_type;
+        using MappedType = Container::mapped_type;
+        ConstructController* cc = getConstructController();
+        cc->reset();
+        {
+            Container c;
+            const Key k(1);
+            cc->expect<std::piecewise_construct_t const&, std::tuple<Key const&>&&, std::tuple<>&&>();
+            MappedType& mref = c[k];
+            assert(!cc->unchecked());
+            {
+                DisableAllocationGuard g;
+                MappedType& mref2 = c[k];
+                assert(&mref == &mref2);
+            }
+        }
+        {
+            Container c;
+            Key k(1);
+            cc->expect<std::piecewise_construct_t const&, std::tuple<Key const&>&&, std::tuple<>&&>();
+            MappedType& mref = c[k];
+            assert(!cc->unchecked());
+            {
+                DisableAllocationGuard g;
+                MappedType& mref2 = c[k];
+                assert(&mref == &mref2);
+            }
+        }
+    }
 #endif
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     {
     typedef std::pair<const int, double> V;
     V ar[] =
@@ -102,4 +139,6 @@ int main()
     assert(m.size() == 8);
     }
 #endif
+
+  return 0;
 }

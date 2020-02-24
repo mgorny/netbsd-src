@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03, c++11
 
 // <string>
 
@@ -19,9 +20,10 @@
 #include <string>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
-#if _LIBCPP_STD_VER > 11
     { // N3644 testing
         typedef std::string C;
         C::iterator ii1{}, ii2{};
@@ -40,11 +42,25 @@ int main()
         C::iterator ii4 = ii1;
         C::const_iterator cii{};
         assert ( ii1 == ii2 );
-        assert ( ii1 == ii4 );        
+        assert ( ii1 == ii4 );
         assert ( ii1 == cii );
         assert ( !(ii1 != ii2 ));
         assert ( !(ii1 != cii ));
     }
+
+#if defined(__cpp_lib_char8_t) && __cpp_lib_char8_t >= 201811L
+    {
+        typedef std::u8string C;
+        C::iterator ii1{}, ii2{};
+        C::iterator ii4 = ii1;
+        C::const_iterator cii{};
+        assert ( ii1 == ii2 );
+        assert ( ii1 == ii4 );
+        assert ( ii1 == cii );
+        assert ( !(ii1 != ii2 ));
+        assert ( !(ii1 != cii ));
+    }
+#endif
 
     { // N3644 testing
         typedef std::u16string C;
@@ -69,5 +85,6 @@ int main()
         assert ( !(ii1 != ii2 ));
         assert ( !(ii1 != cii ));
     }
-#endif
+
+  return 0;
 }

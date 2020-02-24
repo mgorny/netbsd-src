@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,18 +18,17 @@
 #include <string>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
         typedef std::unordered_multimap<int, std::string> C;
-        typedef C::const_iterator I;
-        typedef std::pair<int, std::string> P;
         const C c;
-        assert(c.bucket_count() == 0);
+        LIBCPP_ASSERT(c.bucket_count() == 0);
     }
     {
         typedef std::unordered_multimap<int, std::string> C;
-        typedef C::const_iterator I;
         typedef std::pair<int, std::string> P;
         P a[] =
         {
@@ -44,6 +42,8 @@ int main()
             P(80, "eighty"),
         };
         const C c(std::begin(a), std::end(a));
-        assert(c.bucket_count() >= 11);
+        assert(c.bucket_count() >= 8);
     }
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -19,6 +18,8 @@
 #include <mutex>
 #include <thread>
 #include <cassert>
+
+#include "test_macros.h"
 
 typedef std::chrono::milliseconds ms;
 
@@ -47,12 +48,13 @@ void init3()
     ++init3_called;
     std::this_thread::sleep_for(ms(250));
     if (init3_called == 1)
-        throw 1;
+        TEST_THROW(1);
     ++init3_completed;
 }
 
 void f3()
 {
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
     {
         std::call_once(flg3, init3);
@@ -60,9 +62,10 @@ void f3()
     catch (...)
     {
     }
+#endif
 }
 
-#ifndef _LIBCPP_HAS_NO_VARIADICS
+#if TEST_STD_VER >= 11
 
 struct init1
 {
@@ -97,7 +100,7 @@ void f2()
     std::call_once(flg2, init2(), 4, 5);
 }
 
-#endif  // _LIBCPP_HAS_NO_VARIADICS
+#endif  // TEST_STD_VER >= 11
 
 std::once_flag flg41;
 std::once_flag flg42;
@@ -131,7 +134,7 @@ void f42()
     std::call_once(flg41, init41);
 }
 
-#ifndef _LIBCPP_HAS_NO_VARIADICS
+#if TEST_STD_VER >= 11
 
 class MoveOnly
 {
@@ -170,7 +173,6 @@ public:
     void operator()(int&) {}
 };
 
-#if __cplusplus >= 201103L
 // reference qualifiers on functions are a C++11 extension
 struct RefQual
 {
@@ -181,10 +183,10 @@ struct RefQual
     void operator()() & { ++lv_called; }
     void operator()() && { ++rv_called; }
 };
-#endif
-#endif
 
-int main()
+#endif // TEST_STD_VER >= 11
+
+int main(int, char**)
 {
     // check basic functionality
     {
@@ -194,6 +196,7 @@ int main()
         t1.join();
         assert(init0_called == 1);
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     // check basic exception safety
     {
         std::thread t0(f3);
@@ -203,6 +206,7 @@ int main()
         assert(init3_called == 2);
         assert(init3_completed == 1);
     }
+#endif
     // check deadlock avoidance
     {
         std::thread t0(f41);
@@ -212,7 +216,7 @@ int main()
         assert(init41_called == 1);
         assert(init42_called == 1);
     }
-#ifndef _LIBCPP_HAS_NO_VARIADICS
+#if TEST_STD_VER >= 11
     // check functors with 1 arg
     {
         std::thread t0(f1);
@@ -239,7 +243,6 @@ int main()
         int i = 0;
         std::call_once(f, NonCopyable(), i);
     }
-#if __cplusplus >= 201103L
 // reference qualifiers on functions are a C++11 extension
     {
         std::once_flag f1, f2;
@@ -249,6 +252,7 @@ int main()
         std::call_once(f2, std::move(rq));
         assert(rq.rv_called == 1);
     }
-#endif
-#endif  // _LIBCPP_HAS_NO_VARIADICS
+#endif  // TEST_STD_VER >= 11
+
+  return 0;
 }

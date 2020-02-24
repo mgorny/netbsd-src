@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,7 +14,9 @@
 #include <type_traits>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     typedef std::bit_and<int> F;
     const F f = F();
@@ -27,7 +28,7 @@ int main()
     assert(f(0x58D3, 0xEA95) == 0x4891);
     assert(f(0x58D3, 0) == 0);
     assert(f(0xFFFF, 0x58D3) == 0x58D3);
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     typedef std::bit_and<> F2;
     const F2 f2 = F2();
     assert(f2(0xEA95, 0xEA95) == 0xEA95);
@@ -56,4 +57,6 @@ int main()
     constexpr int bar = std::bit_and<> () (0x58D3L, 0xEA95);
     static_assert ( bar == 0x4891, "" );
 #endif
+
+  return 0;
 }

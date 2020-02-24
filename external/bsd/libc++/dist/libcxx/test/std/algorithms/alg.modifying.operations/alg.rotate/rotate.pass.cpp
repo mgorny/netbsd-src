@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,10 +14,9 @@
 
 #include <algorithm>
 #include <cassert>
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
 #include <memory>
-#endif
 
+#include "test_macros.h"
 #include "test_iterators.h"
 
 template <class Iter>
@@ -26,7 +24,7 @@ void
 test()
 {
     int ia[] = {0};
-    const unsigned sa = sizeof(ia)/sizeof(ia[0]);
+    const int sa = static_cast<int>(sizeof(ia)/sizeof(ia[0]));
     Iter r = std::rotate(Iter(ia), Iter(ia), Iter(ia));
     assert(base(r) == ia);
     assert(ia[0] == 0);
@@ -38,7 +36,7 @@ test()
     assert(ia[0] == 0);
 
     int ib[] = {0, 1};
-    const unsigned sb = sizeof(ib)/sizeof(ib[0]);
+    const int sb = static_cast<int>(sizeof(ib)/sizeof(ib[0]));
     r = std::rotate(Iter(ib), Iter(ib), Iter(ib+sb));
     assert(base(r) == ib+sb);
     assert(ib[0] == 0);
@@ -53,7 +51,7 @@ test()
     assert(ib[1] == 0);
 
     int ic[] = {0, 1, 2};
-    const unsigned sc = sizeof(ic)/sizeof(ic[0]);
+    const int sc = static_cast<int>(sizeof(ic)/sizeof(ic[0]));
     r = std::rotate(Iter(ic), Iter(ic), Iter(ic+sc));
     assert(base(r) == ic+sc);
     assert(ic[0] == 0);
@@ -76,7 +74,7 @@ test()
     assert(ic[2] == 2);
 
     int id[] = {0, 1, 2, 3};
-    const unsigned sd = sizeof(id)/sizeof(id[0]);
+    const int sd = static_cast<int>(sizeof(id)/sizeof(id[0]));
     r = std::rotate(Iter(id), Iter(id), Iter(id+sd));
     assert(base(r) == id+sd);
     assert(id[0] == 0);
@@ -109,7 +107,7 @@ test()
     assert(id[3] == 1);
 
     int ie[] = {0, 1, 2, 3, 4};
-    const unsigned se = sizeof(ie)/sizeof(ie[0]);
+    const int se = static_cast<int>(sizeof(ie)/sizeof(ie[0]));
     r = std::rotate(Iter(ie), Iter(ie), Iter(ie+se));
     assert(base(r) == ie+se);
     assert(ie[0] == 0);
@@ -154,7 +152,7 @@ test()
     assert(ie[4] == 4);
 
     int ig[] = {0, 1, 2, 3, 4, 5};
-    const unsigned sg = sizeof(ig)/sizeof(ig[0]);
+    const int sg = static_cast<int>(sizeof(ig)/sizeof(ig[0]));
     r = std::rotate(Iter(ig), Iter(ig), Iter(ig+sg));
     assert(base(r) == ig+sg);
     assert(ig[0] == 0);
@@ -213,14 +211,14 @@ test()
     assert(ig[5] == 2);
 }
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
 
 template <class Iter>
 void
 test1()
 {
     std::unique_ptr<int> ia[1];
-    const unsigned sa = sizeof(ia)/sizeof(ia[0]);
+    const int sa = static_cast<int>(sizeof(ia)/sizeof(ia[0]));
     for (int i = 0; i < sa; ++i)
         ia[i].reset(new int(i));
     Iter r = std::rotate(Iter(ia), Iter(ia), Iter(ia));
@@ -234,7 +232,7 @@ test1()
     assert(*ia[0] == 0);
 
     std::unique_ptr<int> ib[2];
-    const unsigned sb = sizeof(ib)/sizeof(ib[0]);
+    const int sb = static_cast<int>(sizeof(ib)/sizeof(ib[0]));
     for (int i = 0; i < sb; ++i)
         ib[i].reset(new int(i));
     r = std::rotate(Iter(ib), Iter(ib), Iter(ib+sb));
@@ -251,7 +249,7 @@ test1()
     assert(*ib[1] == 0);
 
     std::unique_ptr<int> ic[3];
-    const unsigned sc = sizeof(ic)/sizeof(ic[0]);
+    const int sc = static_cast<int>(sizeof(ic)/sizeof(ic[0]));
     for (int i = 0; i < sc; ++i)
         ic[i].reset(new int(i));
     r = std::rotate(Iter(ic), Iter(ic), Iter(ic+sc));
@@ -276,7 +274,7 @@ test1()
     assert(*ic[2] == 2);
 
     std::unique_ptr<int> id[4];
-    const unsigned sd = sizeof(id)/sizeof(id[0]);
+    const int sd = static_cast<int>(sizeof(id)/sizeof(id[0]));
     for (int i = 0; i < sd; ++i)
         id[i].reset(new int(i));
     r = std::rotate(Iter(id), Iter(id), Iter(id+sd));
@@ -311,7 +309,7 @@ test1()
     assert(*id[3] == 1);
 
     std::unique_ptr<int> ie[5];
-    const unsigned se = sizeof(ie)/sizeof(ie[0]);
+    const int se = static_cast<int>(sizeof(ie)/sizeof(ie[0]));
     for (int i = 0; i < se; ++i)
         ie[i].reset(new int(i));
     r = std::rotate(Iter(ie), Iter(ie), Iter(ie+se));
@@ -358,7 +356,7 @@ test1()
     assert(*ie[4] == 4);
 
     std::unique_ptr<int> ig[6];
-    const unsigned sg = sizeof(ig)/sizeof(ig[0]);
+    const int sg = static_cast<int>(sizeof(ig)/sizeof(ig[0]));
     for (int i = 0; i < sg; ++i)
         ig[i].reset(new int(i));
     r = std::rotate(Iter(ig), Iter(ig), Iter(ig+sg));
@@ -419,21 +417,23 @@ test1()
     assert(*ig[5] == 2);
 }
 
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#endif  // TEST_STD_VER >= 11
 
-int main()
+int main(int, char**)
 {
     test<forward_iterator<int*> >();
     test<bidirectional_iterator<int*> >();
     test<random_access_iterator<int*> >();
     test<int*>();
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
 
     test1<forward_iterator<std::unique_ptr<int>*> >();
     test1<bidirectional_iterator<std::unique_ptr<int>*> >();
     test1<random_access_iterator<std::unique_ptr<int>*> >();
     test1<std::unique_ptr<int>*>();
 
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#endif
+
+  return 0;
 }

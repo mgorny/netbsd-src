@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,6 +15,7 @@
 #include <complex>
 #include <cassert>
 
+#include "test_macros.h"
 #include "../cases.h"
 
 template <class T>
@@ -37,16 +37,16 @@ test()
 
 void test_edges()
 {
-    const unsigned N = sizeof(x) / sizeof(x[0]);
+    const unsigned N = sizeof(testcases) / sizeof(testcases[0]);
     for (unsigned i = 0; i < N; ++i)
     {
         for (unsigned j = 0; j < N; ++j)
         {
-            std::complex<double> r = x[i] / x[j];
-            switch (classify(x[i]))
+            std::complex<double> r = testcases[i] / testcases[j];
+            switch (classify(testcases[i]))
             {
             case zero:
-                switch (classify(x[j]))
+                switch (classify(testcases[j]))
                 {
                 case zero:
                     assert(classify(r) == NaN);
@@ -66,7 +66,7 @@ void test_edges()
                 }
                 break;
             case non_zero:
-                switch (classify(x[j]))
+                switch (classify(testcases[j]))
                 {
                 case zero:
                     assert(classify(r) == inf);
@@ -86,7 +86,7 @@ void test_edges()
                 }
                 break;
             case inf:
-                switch (classify(x[j]))
+                switch (classify(testcases[j]))
                 {
                 case zero:
                     assert(classify(r) == inf);
@@ -106,7 +106,7 @@ void test_edges()
                 }
                 break;
             case NaN:
-                switch (classify(x[j]))
+                switch (classify(testcases[j]))
                 {
                 case zero:
                     assert(classify(r) == NaN);
@@ -126,7 +126,7 @@ void test_edges()
                 }
                 break;
             case non_zero_nan:
-                switch (classify(x[j]))
+                switch (classify(testcases[j]))
                 {
                 case zero:
                     assert(classify(r) == inf);
@@ -150,10 +150,12 @@ void test_edges()
     }
 }
 
-int main()
+int main(int, char**)
 {
     test<float>();
     test<double>();
     test<long double>();
     test_edges();
+
+  return 0;
 }

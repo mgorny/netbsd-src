@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,6 +15,8 @@
 
 #include <streambuf>
 #include <cassert>
+
+#include "test_macros.h"
 
 int pbackfail_called = 0;
 
@@ -32,14 +33,14 @@ struct test
     }
 
 protected:
-    int_type pbackfail(int_type c = traits_type::eof())
+    int_type pbackfail(int_type = traits_type::eof())
     {
         ++pbackfail_called;
         return 'a';
     }
 };
 
-int main()
+int main(int, char**)
 {
     {
         test t;
@@ -53,4 +54,6 @@ int main()
         assert(t.sputbackc('A') == 'a');
         assert(pbackfail_called == 2);
     }
+
+  return 0;
 }

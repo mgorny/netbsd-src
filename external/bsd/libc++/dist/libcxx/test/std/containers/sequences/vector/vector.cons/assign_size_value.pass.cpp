@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,8 +13,8 @@
 #include <vector>
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 #include "asan_testing.h"
 
@@ -26,11 +25,11 @@ void test ( Vec &v )
 {
     v.assign(5, 6);
     assert(v.size() == 5);
-    assert(is_contiguous_container_asan_correct(v)); 
+    assert(is_contiguous_container_asan_correct(v));
     assert(std::all_of(v.begin(), v.end(), is6));
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::vector<int> V;
@@ -41,7 +40,7 @@ int main()
     test(d2);
     }
 
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::vector<int, min_allocator<int>> V;
     V d1;
@@ -51,4 +50,6 @@ int main()
     test(d2);
     }
 #endif
+
+  return 0;
 }

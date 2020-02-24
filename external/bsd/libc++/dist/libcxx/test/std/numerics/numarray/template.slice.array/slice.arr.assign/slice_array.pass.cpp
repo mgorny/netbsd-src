@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,7 +15,9 @@
 #include <valarray>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
     int a1[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
@@ -45,11 +46,12 @@ int main()
     // Test return value of assignment.
     {
     int a1[] = {0, 1, 2};
-    int a2[] = {3, 4, 3};
     std::valarray<int> v1(a1, 3);
     std::slice_array<int> s1 = v1[std::slice(1, 1, 1)];
     std::slice_array<int> s2 = v1[std::slice(0, 1, 1)];
     std::slice_array<int> const & s3 = (s1 = s2);
     assert(&s1 == &s3);
     }
+
+  return 0;
 }

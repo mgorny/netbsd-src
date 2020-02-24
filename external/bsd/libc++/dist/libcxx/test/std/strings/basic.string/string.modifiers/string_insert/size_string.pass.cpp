@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,33 +11,48 @@
 // basic_string<charT,traits,Allocator>&
 //   insert(size_type pos1, const basic_string& str);
 
+// When back-deploying to macosx10.7, the RTTI for exception classes
+// incorrectly provided by libc++.dylib is mixed with the one in
+// libc++abi.dylib and exceptions are not caught properly.
+// XFAIL: with_system_cxx_lib=macosx10.7
+
 #include <string>
 #include <stdexcept>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class S>
 void
 test(S s, typename S::size_type pos, S str, S expected)
 {
-    typename S::size_type old_size = s.size();
+    const typename S::size_type old_size = s.size();
     S s0 = s;
-    try
+    if (pos <= old_size)
     {
         s.insert(pos, str);
-        assert(s.__invariants());
-        assert(pos <= old_size);
+        LIBCPP_ASSERT(s.__invariants());
         assert(s == expected);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos > old_size);
-        assert(s == s0);
+        try
+        {
+            s.insert(pos, str);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos > old_size);
+            assert(s == s0);
+        }
     }
+#endif
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string S;
@@ -123,7 +137,7 @@ int main()
     test(S("abcdefghijklmnopqrst"), 21, S("1234567890"), S("can't happen"));
     test(S("abcdefghijklmnopqrst"), 21, S("12345678901234567890"), S("can't happen"));
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> S;
     test(S(""), 0, S(""), S(""));
@@ -208,4 +222,15 @@ int main()
     test(S("abcdefghijklmnopqrst"), 21, S("12345678901234567890"), S("can't happen"));
     }
 #endif
+
+#if TEST_STD_VER > 3
+    {   // LWG 2946
+    std::string s;
+    s.insert(0, {"abc", 1});
+    assert(s.size() == 1);
+    assert(s == "a");
+    }
+#endif
+
+  return 0;
 }

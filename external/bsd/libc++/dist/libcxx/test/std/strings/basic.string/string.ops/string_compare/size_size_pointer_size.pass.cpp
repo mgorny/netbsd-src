@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -11,11 +10,18 @@
 
 // int compare(size_type pos, size_type n1, const charT *s, size_type n2) const;
 
+// When back-deploying to macosx10.7, the RTTI for exception classes
+// incorrectly provided by libc++.dylib is mixed with the one in
+// libc++abi.dylib and exceptions are not caught properly.
+// XFAIL: with_system_cxx_lib=macosx10.7
+
 #include <string>
 #include <stdexcept>
 #include <cassert>
 
 #include "min_allocator.h"
+
+#include "test_macros.h"
 
 int sign(int x)
 {
@@ -31,15 +37,22 @@ void
 test(const S& s, typename S::size_type pos, typename S::size_type n1,
      const typename S::value_type* str, typename S::size_type n2, int x)
 {
-    try
-    {
+    if (pos <= s.size())
         assert(sign(s.compare(pos, n1, str, n2)) == sign(x));
-        assert(pos <= s.size());
-    }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos > s.size());
+        try
+        {
+            TEST_IGNORE_NODISCARD s.compare(pos, n1, str, n2);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos > s.size());
+        }
     }
+#endif
 }
 
 template <class S>
@@ -1286,7 +1299,7 @@ void test11()
     test(S("abcdefghijklmnopqrst"), 21, 0, "abcdefghijklmnopqrst", 20, 0);
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string S;
@@ -1303,7 +1316,7 @@ int main()
     test10<S>();
     test11<S>();
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> S;
     test0<S>();
@@ -1320,4 +1333,6 @@ int main()
     test11<S>();
     }
 #endif
+
+  return 0;
 }

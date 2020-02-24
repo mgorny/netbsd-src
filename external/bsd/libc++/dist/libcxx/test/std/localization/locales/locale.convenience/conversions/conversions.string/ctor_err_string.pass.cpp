@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -18,19 +17,22 @@
 #include <codecvt>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     typedef std::codecvt_utf8<wchar_t> Codecvt;
     typedef std::wstring_convert<Codecvt> Myconv;
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     static_assert(!std::is_convertible<std::string, Myconv>::value, "");
     static_assert( std::is_constructible<Myconv, std::string>::value, "");
 #endif
+#ifndef TEST_HAS_NO_EXCEPTIONS
     {
         Myconv myconv;
         try
         {
-            myconv.to_bytes(L"\xDA83");
+            TEST_IGNORE_NODISCARD myconv.to_bytes(L"\xDA83");
             assert(false);
         }
         catch (const std::range_error&)
@@ -38,25 +40,28 @@ int main()
         }
         try
         {
-            myconv.from_bytes('\xA5');
+            TEST_IGNORE_NODISCARD myconv.from_bytes('\xA5');
             assert(false);
         }
         catch (const std::range_error&)
         {
         }
     }
+#endif
     {
         Myconv myconv("byte error");
         std::string bs = myconv.to_bytes(L"\xDA83");
         assert(bs == "byte error");
+#ifndef TEST_HAS_NO_EXCEPTIONS
         try
         {
-            myconv.from_bytes('\xA5');
+            TEST_IGNORE_NODISCARD myconv.from_bytes('\xA5');
             assert(false);
         }
         catch (const std::range_error&)
         {
         }
+#endif
     }
     {
         Myconv myconv("byte error", L"wide error");
@@ -65,4 +70,6 @@ int main()
         std::wstring ws = myconv.from_bytes('\xA5');
         assert(ws == L"wide error");
     }
+
+  return 0;
 }

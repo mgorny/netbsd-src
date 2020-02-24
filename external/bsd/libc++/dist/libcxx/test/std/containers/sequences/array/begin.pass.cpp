@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,9 +13,18 @@
 #include <array>
 #include <cassert>
 
-#include "suppress_array_warnings.h"
+#include "test_macros.h"
 
-int main()
+// std::array is explicitly allowed to be initialized with A a = { init-list };.
+// Disable the missing braces warning for this reason.
+#include "disable_missing_braces_warning.h"
+
+struct NoDefault {
+  NoDefault(int) {}
+};
+
+
+int main(int, char**)
 {
     {
         typedef double T;
@@ -29,4 +37,17 @@ int main()
         *i = 5.5;
         assert(c[0] == 5.5);
     }
+    {
+      typedef NoDefault T;
+      typedef std::array<T, 0> C;
+      C c = {};
+      C::iterator ib, ie;
+      ib = c.begin();
+      ie = c.end();
+      assert(ib == ie);
+      LIBCPP_ASSERT(ib != nullptr);
+      LIBCPP_ASSERT(ie != nullptr);
+    }
+
+  return 0;
 }

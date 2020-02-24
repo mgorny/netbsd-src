@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -21,6 +20,8 @@
 #include <cassert>
 
 #include "platform_support.h" // locale name macros
+
+#include "test_macros.h"
 
 struct testbuf
     : public std::streambuf
@@ -109,7 +110,7 @@ void g3(std::ios_base::event ev, std::ios_base& stream, int index)
     }
 }
 
-int main()
+int main(int, char**)
 {
     testbuf sb1;
     std::ios ios1(&sb1);
@@ -157,6 +158,7 @@ int main()
     ios1.copyfmt(ios1);
     assert(!f1_called);
 
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
     {
         ios1.copyfmt(ios2);
@@ -187,4 +189,7 @@ int main()
     assert(ios1.pword(1) == &d2);
     assert(ios1.tie() == (std::ostream*)2);
     assert(ios1.fill() == '2');
+#endif
+
+  return 0;
 }

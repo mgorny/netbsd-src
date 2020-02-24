@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,7 +12,8 @@
 
 #include <memory>
 #include <cassert>
-#include "../test_deleter.h"
+#include "test_macros.h"
+#include "deleter_types.h"
 #include "test_allocator.h"
 #include "min_allocator.h"
 
@@ -29,7 +29,7 @@ struct A
 int A::count = 0;
 
 
-int main()
+int main(int, char**)
 {
     {
     A* ptr = new A;
@@ -68,7 +68,7 @@ int main()
     assert(test_deleter<A>::count == 0);
     assert(test_deleter<A>::dealloc_count == 1);
     test_deleter<A>::dealloc_count = 0;
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     // Test an allocator that returns class-type pointers
     {
     A* ptr = new A;
@@ -86,4 +86,6 @@ int main()
     assert(test_deleter<A>::count == 0);
     assert(test_deleter<A>::dealloc_count == 1);
 #endif
+
+  return 0;
 }

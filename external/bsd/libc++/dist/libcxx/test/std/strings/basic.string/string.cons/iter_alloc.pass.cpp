@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,10 +12,13 @@
 //   basic_string(InputIterator begin, InputIterator end,
 //   const Allocator& a = Allocator());
 
+
 #include <string>
 #include <iterator>
 #include <cassert>
+#include <cstddef>
 
+#include "test_macros.h"
 #include "test_allocator.h"
 #include "../input_iterator.h"
 #include "min_allocator.h"
@@ -27,11 +29,10 @@ test(It first, It last)
 {
     typedef typename std::iterator_traits<It>::value_type charT;
     typedef std::basic_string<charT, std::char_traits<charT>, test_allocator<charT> > S;
-    typedef typename S::traits_type T;
     typedef typename S::allocator_type A;
     S s2(first, last);
-    assert(s2.__invariants());
-    assert(s2.size() == std::distance(first, last));
+    LIBCPP_ASSERT(s2.__invariants());
+    assert(s2.size() == static_cast<std::size_t>(std::distance(first, last)));
     unsigned i = 0;
     for (It it = first; it != last; ++it, ++i)
         assert(s2[i] == *it);
@@ -45,10 +46,9 @@ test(It first, It last, const A& a)
 {
     typedef typename std::iterator_traits<It>::value_type charT;
     typedef std::basic_string<charT, std::char_traits<charT>, A> S;
-    typedef typename S::traits_type T;
     S s2(first, last, a);
-    assert(s2.__invariants());
-    assert(s2.size() == std::distance(first, last));
+    LIBCPP_ASSERT(s2.__invariants());
+    assert(s2.size() == static_cast<std::size_t>(std::distance(first, last)));
     unsigned i = 0;
     for (It it = first; it != last; ++it, ++i)
         assert(s2[i] == *it);
@@ -56,7 +56,7 @@ test(It first, It last, const A& a)
     assert(s2.capacity() >= s2.size());
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef test_allocator<char> A;
@@ -86,7 +86,7 @@ int main()
     test(input_iterator<const char*>(s), input_iterator<const char*>(s+50));
     test(input_iterator<const char*>(s), input_iterator<const char*>(s+50), A(2));
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef min_allocator<char> A;
     const char* s = "12345678901234567890123456789012345678901234567890";
@@ -116,4 +116,15 @@ int main()
     test(input_iterator<const char*>(s), input_iterator<const char*>(s+50), A());
     }
 #endif
+    {
+      static_assert((!std::is_constructible<std::string, std::string,
+                                            std::string>::value),
+                    "");
+      static_assert(
+          (!std::is_constructible<std::string, std::string, std::string,
+                                  std::allocator<char> >::value),
+          "");
+    }
+
+  return 0;
 }

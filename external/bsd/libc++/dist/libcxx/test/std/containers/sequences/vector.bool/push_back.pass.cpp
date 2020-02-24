@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,10 +13,12 @@
 
 #include <vector>
 #include <cassert>
+#include <cstddef>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         bool a[] = {0, 1, 1, 0, 1, 0, 0};
@@ -27,11 +28,11 @@ int main()
         {
             c.push_back(a[i]);
             assert(c.size() == i+1);
-            for (int j = 0; j < c.size(); ++j)
+            for (std::size_t j = 0; j < c.size(); ++j)
                 assert(c[j] == a[j]);
         }
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         bool a[] = {0, 1, 1, 0, 1, 0, 0};
         const unsigned N = sizeof(a)/sizeof(a[0]);
@@ -40,9 +41,11 @@ int main()
         {
             c.push_back(a[i]);
             assert(c.size() == i+1);
-            for (int j = 0; j < c.size(); ++j)
+            for (std::size_t j = 0; j < c.size(); ++j)
                 assert(c[j] == a[j]);
         }
     }
 #endif
+
+  return 0;
 }

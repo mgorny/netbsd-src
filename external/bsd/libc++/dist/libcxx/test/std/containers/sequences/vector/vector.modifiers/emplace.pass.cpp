@@ -1,27 +1,24 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03
 
 // <vector>
 
 // template <class... Args> iterator emplace(const_iterator pos, Args&&... args);
 
-#if _LIBCPP_DEBUG >= 1
-#define _LIBCPP_ASSERT(x, m) ((x) ? (void)0 : std::exit(0))
-#endif
-
 #include <vector>
 #include <cassert>
-#include "../../../stack_allocator.h"
+
+#include "test_macros.h"
+#include "test_allocator.h"
 #include "min_allocator.h"
 #include "asan_testing.h"
-
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
 
 class A
 {
@@ -55,11 +52,8 @@ public:
     double getd() const {return d_;}
 };
 
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
-
-int main()
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
     {
         std::vector<A> c;
         std::vector<A>::iterator i = c.emplace(c.cbegin(), 2, 3.5);
@@ -67,7 +61,7 @@ int main()
         assert(c.size() == 1);
         assert(c.front().geti() == 2);
         assert(c.front().getd() == 3.5);
-        assert(is_contiguous_container_asan_correct(c)); 
+        assert(is_contiguous_container_asan_correct(c));
         i = c.emplace(c.cend(), 3, 4.5);
         assert(i == c.end()-1);
         assert(c.size() == 2);
@@ -75,7 +69,7 @@ int main()
         assert(c.front().getd() == 3.5);
         assert(c.back().geti() == 3);
         assert(c.back().getd() == 4.5);
-        assert(is_contiguous_container_asan_correct(c)); 
+        assert(is_contiguous_container_asan_correct(c));
         i = c.emplace(c.cbegin()+1, 4, 6.5);
         assert(i == c.begin()+1);
         assert(c.size() == 3);
@@ -85,16 +79,16 @@ int main()
         assert(c[1].getd() == 6.5);
         assert(c.back().geti() == 3);
         assert(c.back().getd() == 4.5);
-        assert(is_contiguous_container_asan_correct(c)); 
+        assert(is_contiguous_container_asan_correct(c));
     }
     {
-        std::vector<A, stack_allocator<A, 7> > c;
-        std::vector<A, stack_allocator<A, 7> >::iterator i = c.emplace(c.cbegin(), 2, 3.5);
+        std::vector<A, limited_allocator<A, 7> > c;
+        std::vector<A, limited_allocator<A, 7> >::iterator i = c.emplace(c.cbegin(), 2, 3.5);
         assert(i == c.begin());
         assert(c.size() == 1);
         assert(c.front().geti() == 2);
         assert(c.front().getd() == 3.5);
-        assert(is_contiguous_container_asan_correct(c)); 
+        assert(is_contiguous_container_asan_correct(c));
         i = c.emplace(c.cend(), 3, 4.5);
         assert(i == c.end()-1);
         assert(c.size() == 2);
@@ -102,7 +96,7 @@ int main()
         assert(c.front().getd() == 3.5);
         assert(c.back().geti() == 3);
         assert(c.back().getd() == 4.5);
-        assert(is_contiguous_container_asan_correct(c)); 
+        assert(is_contiguous_container_asan_correct(c));
         i = c.emplace(c.cbegin()+1, 4, 6.5);
         assert(i == c.begin()+1);
         assert(c.size() == 3);
@@ -112,17 +106,8 @@ int main()
         assert(c[1].getd() == 6.5);
         assert(c.back().geti() == 3);
         assert(c.back().getd() == 4.5);
-        assert(is_contiguous_container_asan_correct(c)); 
+        assert(is_contiguous_container_asan_correct(c));
     }
-#if _LIBCPP_DEBUG >= 1
-    {
-        std::vector<A> c1;
-        std::vector<A> c2;
-        std::vector<A>::iterator i = c1.emplace(c2.cbegin(), 2, 3.5);
-        assert(false);
-    }
-#endif
-#if __cplusplus >= 201103L
     {
         std::vector<A, min_allocator<A>> c;
         std::vector<A, min_allocator<A>>::iterator i = c.emplace(c.cbegin(), 2, 3.5);
@@ -147,14 +132,6 @@ int main()
         assert(c.back().geti() == 3);
         assert(c.back().getd() == 4.5);
     }
-#if _LIBCPP_DEBUG >= 1
-    {
-        std::vector<A, min_allocator<A>> c1;
-        std::vector<A, min_allocator<A>> c2;
-        std::vector<A, min_allocator<A>>::iterator i = c1.emplace(c2.cbegin(), 2, 3.5);
-        assert(false);
-    }
-#endif
-#endif
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+
+  return 0;
 }

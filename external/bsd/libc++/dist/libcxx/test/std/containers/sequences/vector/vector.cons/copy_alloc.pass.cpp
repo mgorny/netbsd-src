@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,6 +12,8 @@
 
 #include <vector>
 #include <cassert>
+
+#include "test_macros.h"
 #include "test_allocator.h"
 #include "min_allocator.h"
 #include "asan_testing.h"
@@ -21,15 +22,15 @@ template <class C>
 void
 test(const C& x, const typename C::allocator_type& a)
 {
-    unsigned s = x.size();
+    typename C::size_type s = x.size();
     C c(x, a);
-    assert(c.__invariants());
+    LIBCPP_ASSERT(c.__invariants());
     assert(c.size() == s);
     assert(c == x);
-    assert(is_contiguous_container_asan_correct(c)); 
+    LIBCPP_ASSERT(is_contiguous_container_asan_correct(c));
 }
 
-int main()
+int main(int, char**)
 {
     {
         int a[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 1, 0};
@@ -48,7 +49,7 @@ int main()
         assert(l2 == l);
         assert(l2.get_allocator() == other_allocator<int>(3));
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         int a[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 1, 0};
         int* an = a + sizeof(a)/sizeof(a[0]);
@@ -61,4 +62,6 @@ int main()
         assert(l2.get_allocator() == min_allocator<int>());
     }
 #endif
+
+  return 0;
 }

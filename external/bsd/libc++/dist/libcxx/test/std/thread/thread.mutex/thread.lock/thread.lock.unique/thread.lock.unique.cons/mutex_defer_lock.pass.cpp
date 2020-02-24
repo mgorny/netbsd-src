@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -17,11 +16,26 @@
 
 #include <mutex>
 #include <cassert>
+#include "nasty_containers.h"
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
-    std::mutex m;
-    std::unique_lock<std::mutex> lk(m, std::defer_lock);
-    assert(lk.mutex() == &m);
+    {
+    typedef std::mutex M;
+    M m;
+    std::unique_lock<M> lk(m, std::defer_lock);
+    assert(lk.mutex() == std::addressof(m));
     assert(lk.owns_lock() == false);
+    }
+    {
+    typedef nasty_mutex M;
+    M m;
+    std::unique_lock<M> lk(m, std::defer_lock);
+    assert(lk.mutex() == std::addressof(m));
+    assert(lk.owns_lock() == false);
+    }
+
+  return 0;
 }

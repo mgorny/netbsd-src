@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03
 
 // <memory>
 
@@ -15,6 +16,8 @@
 
 #include <memory>
 #include <cassert>
+
+#include "test_macros.h"
 
 struct A
 {
@@ -27,7 +30,7 @@ struct A
 
 int A::count = 0;
 
-int main()
+int main(int, char**)
 {
     {
         std::shared_ptr<A> pA(new A);
@@ -37,22 +40,22 @@ int main()
             A* p = pA.get();
             std::shared_ptr<A> pA2(std::move(pA));
             assert(A::count == 1);
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
             assert(pA.use_count() == 0);
             assert(pA2.use_count() == 1);
-#else  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#else
             assert(pA.use_count() == 2);
             assert(pA2.use_count() == 2);
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#endif
             assert(pA2.get() == p);
         }
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
         assert(pA.use_count() == 0);
         assert(A::count == 0);
-#else  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#else
         assert(pA.use_count() == 1);
         assert(A::count == 1);
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#endif
     }
     assert(A::count == 0);
     {
@@ -70,4 +73,6 @@ int main()
         assert(A::count == 0);
     }
     assert(A::count == 0);
+
+  return 0;
 }

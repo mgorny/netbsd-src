@@ -1,7 +1,16 @@
+//===----------------------------------------------------------------------===//
+//
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+//
+//===----------------------------------------------------------------------===//
 #ifndef SUPPORT_TRACKED_VALUE_H
 #define SUPPORT_TRACKED_VALUE_H
 
 #include <cassert>
+
+#include "test_macros.h"
 
 struct TrackedValue {
     enum State { CONSTRUCTED, MOVED_FROM, DESTROYED };
@@ -14,7 +23,7 @@ struct TrackedValue {
         assert(t.state != State::DESTROYED  && "copying a destroyed object");
     }
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
     TrackedValue(TrackedValue&& t) : state(State::CONSTRUCTED) {
         assert(t.state != State::MOVED_FROM && "double moving from an object");
         assert(t.state != State::DESTROYED  && "moving from a destroyed object");
@@ -30,7 +39,7 @@ struct TrackedValue {
         return *this;
     }
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
     TrackedValue& operator=(TrackedValue&& t) {
         assert(state != State::DESTROYED && "move assigning into destroyed object");
         assert(t.state != State::MOVED_FROM && "double moving from an object");

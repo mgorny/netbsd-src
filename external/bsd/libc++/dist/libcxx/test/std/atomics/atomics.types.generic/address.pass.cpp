@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -45,13 +44,13 @@
 //     T* fetch_add(ptrdiff_t op, memory_order m = memory_order_seq_cst);
 //     T* fetch_sub(ptrdiff_t op, memory_order m = memory_order_seq_cst) volatile;
 //     T* fetch_sub(ptrdiff_t op, memory_order m = memory_order_seq_cst);
-// 
+//
 //     atomic() = default;
 //     constexpr atomic(T* desr);
 //     atomic(const atomic&) = delete;
 //     atomic& operator=(const atomic&) = delete;
 //     atomic& operator=(const atomic&) volatile = delete;
-// 
+//
 //     T* operator=(T*) volatile;
 //     T* operator=(T*);
 //     T* operator++(int) volatile;
@@ -74,6 +73,8 @@
 #include <cassert>
 
 #include <cmpxchg_loop.h>
+
+#include "test_macros.h"
 
 template <class A, class T>
 void
@@ -121,9 +122,9 @@ do_test()
     assert(obj == T(2*sizeof(X)));
 
     {
-        _ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
-        A& zero = *new (storage) A();    
-        assert(zero == 0);
+        TEST_ALIGNAS_TYPE(A) char storage[sizeof(A)] = {23};
+        A& zero = *new (storage) A();
+        assert(zero == T(0));
         zero.~A();
     }
 }
@@ -135,7 +136,9 @@ void test()
     do_test<volatile A, T>();
 }
 
-int main()
+int main(int, char**)
 {
     test<std::atomic<int*>, int*>();
+
+  return 0;
 }

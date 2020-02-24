@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -17,7 +16,7 @@
 //     atomic_compare_exchange_strong_explicit(volatile atomic<T>* obj, T* expc,
 //                                           T desr,
 //                                           memory_order s, memory_order f);
-// 
+//
 // template <class T>
 //     bool
 //     atomic_compare_exchange_strong_explicit(atomic<T>* obj, T* expc, T desr,
@@ -27,6 +26,7 @@
 #include <type_traits>
 #include <cassert>
 
+#include "test_macros.h"
 #include "atomic_helpers.h"
 
 template <class T>
@@ -63,7 +63,9 @@ struct TestFn {
   }
 };
 
-int main()
+int main(int, char**)
 {
     TestEachAtomicType<TestFn>()();
+
+  return 0;
 }

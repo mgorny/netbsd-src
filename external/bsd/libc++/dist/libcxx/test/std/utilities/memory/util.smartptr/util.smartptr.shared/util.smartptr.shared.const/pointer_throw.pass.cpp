@@ -1,22 +1,27 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: libcpp-no-exceptions
+// UNSUPPORTED: sanitizer-new-delete
 
 // <memory>
 
 // template<class Y> explicit shared_ptr(Y* p);
 
-// UNSUPPORTED: sanitizer-new-delete
 
 #include <memory>
 #include <new>
 #include <cstdlib>
 #include <cassert>
+
+#include "count_new.h"
+
+#include "test_macros.h"
 
 struct A
 {
@@ -29,26 +34,12 @@ struct A
 
 int A::count = 0;
 
-bool throw_next = false;
 
-void* operator new(std::size_t s) throw(std::bad_alloc)
+int main(int, char**)
 {
-    if (throw_next)
-        throw std::bad_alloc();
-    return std::malloc(s);
-}
-
-void  operator delete(void* p) throw()
-{
-    std::free(p);
-}
-
-int main()
-{
-    {
     A* ptr = new A;
-    throw_next = true;
     assert(A::count == 1);
+    globalMemCounter.throw_after = 0;
     try
     {
         std::shared_ptr<A> p(ptr);
@@ -58,5 +49,7 @@ int main()
     {
         assert(A::count == 0);
     }
-    }
+    assert(globalMemCounter.checkOutstandingNewEq(0));
+
+  return 0;
 }

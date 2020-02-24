@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -20,7 +19,9 @@
 #include <functional>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
         int i = 0;
@@ -40,7 +41,7 @@ int main()
         assert(i == 0);
         assert(j == 0);
     }
-#if _LIBCPP_STD_VER > 11 
+#if TEST_STD_VER > 11
     {
         constexpr auto t1 = std::make_tuple(0, 1, 3.14);
         constexpr int i1 = std::get<1>(t1);
@@ -49,4 +50,6 @@ int main()
         static_assert (d1 == 3.14, "" );
     }
 #endif
+
+  return 0;
 }

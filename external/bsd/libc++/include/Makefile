@@ -7,24 +7,33 @@
 INCSDIR=	/usr/include/c++
 
 INCS=	__bit_reference \
+	__bsd_locale_defaults.h \
+	__bsd_locale_fallbacks.h \
 	__config \
 	__debug \
+	__errc \
 	__functional_03 \
 	__functional_base \
 	__functional_base_03 \
 	__hash_table \
+	__libcpp_version \
 	__locale \
 	__mutex_base \
+	__node_handle \
+	__nullptr \
 	__split_buffer \
 	__sso_allocator \
 	__std_stream \
+	__string \
+	__threading_support \
 	__tree \
 	__tuple \
-	__undef___deallocate \
-	__undef_min_max \
+	__undef_macros \
 	algorithm \
+	any \
 	array \
 	atomic \
+	bit \
 	bitset \
 	cassert \
 	ccomplex \
@@ -32,6 +41,7 @@ INCS=	__bit_reference \
 	cerrno \
 	cfenv \
 	cfloat \
+	charconv \
 	chrono \
 	cinttypes \
 	ciso646 \
@@ -39,6 +49,7 @@ INCS=	__bit_reference \
 	clocale \
 	cmath \
 	codecvt \
+	compare \
 	complex \
 	complex.h \
 	condition_variable \
@@ -57,6 +68,7 @@ INCS=	__bit_reference \
 	cwctype \
 	deque \
 	exception \
+	execution \
 	forward_list \
 	fstream \
 	functional \
@@ -68,14 +80,17 @@ INCS=	__bit_reference \
 	iostream \
 	istream \
 	iterator \
+	filesystem \
 	limits \
 	list \
 	locale \
 	map \
+	math.h \
 	memory \
 	mutex \
 	new \
 	numeric \
+	optional \
 	ostream \
 	queue \
 	random \
@@ -84,24 +99,28 @@ INCS=	__bit_reference \
 	scoped_allocator \
 	set \
 	shared_mutex \
+	span \
 	sstream \
 	stack \
 	stdexcept \
 	streambuf \
 	string \
+	string_view \
 	strstream \
 	system_error \
 	tgmath.h \
 	thread \
 	tuple \
+	type_traits \
 	typeindex \
 	typeinfo \
-	type_traits \
 	unordered_map \
 	unordered_set \
 	utility \
 	valarray \
-	vector
+	variant \
+	vector \
+	version
 
 INCS+=		cxxabi.h
 
@@ -109,16 +128,26 @@ INCS+=	ext/__hash \
 	ext/hash_map \
 	ext/hash_set
 INCS+=	experimental/__config \
+	experimental/__memory \
 	experimental/algorithm \
-	experimental/chrono \
-	experimental/dynarray \
-	experimental/optional \
-	experimental/ratio \
-	experimental/string_view \
-	experimental/system_error \
-	experimental/tuple \
+	experimental/coroutine \
+	experimental/deque \
+	experimental/filesystem \
+	experimental/forward_list \
+	experimental/iterator \
+	experimental/list \
+	experimental/map \
+	experimental/memory_resource \
+	experimental/propagate_const \
+	experimental/regex \
+	experimental/set \
+	experimental/simd \
+	experimental/string \
 	experimental/type_traits \
-	experimental/utility
+	experimental/unordered_map \
+	experimental/unordered_set \
+	experimental/utility \
+	experimental/vector
 
 cxxabi.h: ${LIBCXXRT_SRCDIR}/src/cxxabi.h
 	cp ${LIBCXXRT_SRCDIR}/src/cxxabi.h .

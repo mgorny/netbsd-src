@@ -1,16 +1,18 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
 // test bool all() const;
 
 #include <bitset>
+#include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
 
 template <std::size_t N>
 void test_all()
@@ -20,14 +22,15 @@ void test_all()
     assert(v.all() == (N == 0));
     v.set();
     assert(v.all() == true);
-    if (N > 1)
+    const bool greater_than_1 = std::integral_constant<bool, (N > 1)>::value; // avoid compiler warnings
+    if (greater_than_1)
     {
         v[N/2] = false;
         assert(v.all() == false);
     }
 }
 
-int main()
+int main(int, char**)
 {
     test_all<0>();
     test_all<1>();
@@ -38,4 +41,6 @@ int main()
     test_all<64>();
     test_all<65>();
     test_all<1000>();
+
+  return 0;
 }

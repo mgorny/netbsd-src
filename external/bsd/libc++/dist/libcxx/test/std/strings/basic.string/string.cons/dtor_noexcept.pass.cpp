@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03
 
 // <string>
 
@@ -14,23 +15,25 @@
 #include <string>
 #include <cassert>
 
+#include "test_macros.h"
 #include "test_allocator.h"
 
-#if __has_feature(cxx_noexcept)
-
 template <class T>
-struct some_alloc
+struct throwing_alloc
 {
     typedef T value_type;
-    some_alloc(const some_alloc&);
-    ~some_alloc() noexcept(false);
+    throwing_alloc(const throwing_alloc&);
+    T *allocate(size_t);
+    ~throwing_alloc() noexcept(false);
 };
 
-#endif
+// Test that it's possible to take the address of basic_string's destructors
+// by creating globals which will register their destructors with cxa_atexit.
+std::string s;
+std::wstring ws;
 
-int main()
+int main(int, char**)
 {
-#if __has_feature(cxx_noexcept)
     {
         typedef std::string C;
         static_assert(std::is_nothrow_destructible<C>::value, "");
@@ -39,9 +42,12 @@ int main()
         typedef std::basic_string<char, std::char_traits<char>, test_allocator<char>> C;
         static_assert(std::is_nothrow_destructible<C>::value, "");
     }
+#if defined(_LIBCPP_VERSION)
     {
-        typedef std::basic_string<char, std::char_traits<char>, some_alloc<char>> C;
+        typedef std::basic_string<char, std::char_traits<char>, throwing_alloc<char>> C;
         static_assert(!std::is_nothrow_destructible<C>::value, "");
     }
-#endif
+#endif // _LIBCPP_VERSION
+
+  return 0;
 }

@@ -1,15 +1,13 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
 // REQUIRES: locale.ru_RU.UTF-8
 // REQUIRES: locale.zh_CN.UTF-8
-// UNSUPPORTED: sanitizer-new-delete
 
 // <locale>
 
@@ -19,21 +17,9 @@
 #include <new>
 #include <cassert>
 
+#include "count_new.h"
+#include "test_macros.h"
 #include "platform_support.h" // locale name macros
-
-int new_called = 0;
-
-void* operator new(std::size_t s) throw(std::bad_alloc)
-{
-    ++new_called;
-    return std::malloc(s);
-}
-
-void  operator delete(void* p) throw()
-{
-    --new_called;
-    std::free(p);
-}
 
 void check(const std::locale& loc)
 {
@@ -70,7 +56,7 @@ void check(const std::locale& loc)
     assert((std::has_facet<std::messages<wchar_t> >(loc)));
 }
 
-int main()
+int main(int, char**)
 {
     {
         std::locale loc(std::string(LOCALE_ru_RU_UTF_8));
@@ -83,5 +69,7 @@ int main()
         assert(!(loc == loc3));
         assert(loc != loc3);
     }
-    assert(new_called == 0);
+    assert(globalMemCounter.checkOutstandingNewEq(0));
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,7 +18,9 @@
 #include <limits>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     // typedef std::int8_t
     static_assert(sizeof(std::int8_t)*CHAR_BIT == 8,
@@ -172,8 +173,8 @@ int main()
     // INTN_MIN
     static_assert(INT8_MIN == -128, "INT8_MIN == -128");
     static_assert(INT16_MIN == -32768, "INT16_MIN == -32768");
-    static_assert(INT32_MIN == -2147483648U, "INT32_MIN == -2147483648");
-    static_assert(INT64_MIN == -9223372036854775808ULL, "INT64_MIN == -9223372036854775808LL");
+    static_assert(INT32_MIN == -2147483647 - 1, "INT32_MIN == -2147483648");
+    static_assert(INT64_MIN == -9223372036854775807LL - 1, "INT64_MIN == -9223372036854775808LL");
 
     // INTN_MAX
     static_assert(INT8_MAX == 127, "INT8_MAX == 127");
@@ -190,8 +191,8 @@ int main()
     // INT_FASTN_MIN
     static_assert(INT_FAST8_MIN <= -128, "INT_FAST8_MIN <= -128");
     static_assert(INT_FAST16_MIN <= -32768, "INT_FAST16_MIN <= -32768");
-    static_assert(INT_FAST32_MIN <= -2147483648U, "INT_FAST32_MIN <= -2147483648");
-    static_assert(INT_FAST64_MIN <= -9223372036854775808ULL, "INT_FAST64_MIN <= -9223372036854775808LL");
+    static_assert(INT_FAST32_MIN <= -2147483647 - 1, "INT_FAST32_MIN <= -2147483648");
+    static_assert(INT_FAST64_MIN <= -9223372036854775807LL - 1, "INT_FAST64_MIN <= -9223372036854775808LL");
 
     // INT_FASTN_MAX
     static_assert(INT_FAST8_MAX >= 127, "INT_FAST8_MAX >= 127");
@@ -289,4 +290,6 @@ int main()
 #ifndef UINTMAX_C
 #error UINTMAX_C not defined
 #endif
+
+  return 0;
 }

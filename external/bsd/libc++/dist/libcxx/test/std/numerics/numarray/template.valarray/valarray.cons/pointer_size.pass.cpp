@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,8 +14,11 @@
 
 #include <valarray>
 #include <cassert>
+#include <cstddef>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
         typedef int T;
@@ -24,7 +26,7 @@ int main()
         const unsigned N = sizeof(a)/sizeof(a[0]);
         std::valarray<T> v(a, N);
         assert(v.size() == N);
-        for (int i = 0; i < N; ++i)
+        for (unsigned i = 0; i < N; ++i)
             assert(v[i] == a[i]);
     }
     {
@@ -33,7 +35,7 @@ int main()
         const unsigned N = sizeof(a)/sizeof(a[0]);
         std::valarray<T> v(a, N);
         assert(v.size() == N);
-        for (int i = 0; i < N; ++i)
+        for (unsigned i = 0; i < N; ++i)
             assert(v[i] == a[i]);
     }
     {
@@ -42,11 +44,13 @@ int main()
         const unsigned N = sizeof(a)/sizeof(a[0]);
         std::valarray<T> v(a, N);
         assert(v.size() == N);
-        for (int i = 0; i < N; ++i)
+        for (unsigned i = 0; i < N; ++i)
         {
             assert(v[i].size() == a[i].size());
-            for (int j = 0; j < v[i].size(); ++j)
+            for (std::size_t j = 0; j < v[i].size(); ++j)
                 assert(v[i][j] == a[i][j]);
         }
     }
+
+  return 0;
 }

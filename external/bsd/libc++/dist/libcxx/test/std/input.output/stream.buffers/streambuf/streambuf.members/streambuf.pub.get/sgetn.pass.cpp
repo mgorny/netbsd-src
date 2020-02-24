@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -17,6 +16,8 @@
 #include <streambuf>
 #include <cassert>
 
+#include "test_macros.h"
+
 int xsgetn_called = 0;
 
 struct test
@@ -25,17 +26,19 @@ struct test
     test() {}
 
 protected:
-    std::streamsize xsgetn(char_type* s, std::streamsize n)
+    std::streamsize xsgetn(char_type*, std::streamsize)
     {
         ++xsgetn_called;
         return 10;
     }
 };
 
-int main()
+int main(int, char**)
 {
     test t;
     assert(xsgetn_called == 0);
     assert(t.sgetn(0, 0) == 10);
     assert(xsgetn_called == 1);
+
+  return 0;
 }

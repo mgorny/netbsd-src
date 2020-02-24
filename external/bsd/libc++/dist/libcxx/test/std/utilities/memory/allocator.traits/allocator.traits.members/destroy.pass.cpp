@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -21,6 +20,9 @@
 #include <new>
 #include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
+#include "incomplete_type_helper.h"
 
 template <class T>
 struct A
@@ -52,7 +54,7 @@ struct A0
 
 int A0::count = 0;
 
-int main()
+int main(int, char**)
 {
     {
         A0::count = 0;
@@ -63,7 +65,14 @@ int main()
         std::allocator_traits<A<int> >::destroy(a, (A0*)&a0);
         assert(A0::count == 1);
     }
-#ifndef _LIBCPP_HAS_NO_ADVANCED_SFINAE
+    {
+      typedef IncompleteHolder* VT;
+      typedef A<VT> Alloc;
+      Alloc a;
+      std::aligned_storage<sizeof(VT)>::type store;
+      std::allocator_traits<Alloc>::destroy(a, (VT*)&store);
+    }
+#if defined(_LIBCPP_VERSION) || TEST_STD_VER >= 11
     {
         A0::count = 0;
         b_destroy = 0;
@@ -76,5 +85,7 @@ int main()
         assert(A0::count == 1);
         assert(b_destroy == 1);
     }
-#endif  // _LIBCPP_HAS_NO_ADVANCED_SFINAE
+#endif
+
+  return 0;
 }

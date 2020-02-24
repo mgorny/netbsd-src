@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,9 +18,39 @@
 #include <regex>
 #include <cassert>
 
+#include "test_macros.h"
 #include "test_iterators.h"
 
-int main()
+extern "C" void LLVMFuzzerTestOneInput(const char *data)
+{
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    size_t size = strlen(data);
+    if (size > 0)
+    {
+        try
+        {
+            std::regex::flag_type flag = std::regex_constants::grep;
+            std::string s((const char *)data, size);
+            std::regex re(s, flag);
+            TEST_IGNORE_NODISCARD std::regex_match(s, re);
+        }
+        catch (std::regex_error &) {}
+    }
+#else
+    ((void)data);
+#endif
+}
+
+
+void fuzz_tests()  // patterns that the fuzzer has found
+{
+// Raw string literals are a C++11 feature.
+#if TEST_STD_VER >= 11
+    LLVMFuzzerTestOneInput(R"XX(Õ)_%()()((\8'_%()_%()_%()_%(()_%()_%()_%(.t;)()¥f()_%()(.)_%;)()!¥f(((()()XX");
+#endif
+}
+
+int main(int, char**)
 {
     {
         std::cmatch m;
@@ -55,4 +84,7 @@ int main()
         assert(m.position(0) == 0);
         assert(m.str(0) == "");
     }
+    fuzz_tests();
+
+  return 0;
 }

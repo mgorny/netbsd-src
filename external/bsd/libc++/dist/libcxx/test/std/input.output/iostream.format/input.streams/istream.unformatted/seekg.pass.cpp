@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,6 +12,8 @@
 
 #include <istream>
 #include <cassert>
+
+#include "test_macros.h"
 
 template <class CharT>
 struct testbuf
@@ -45,7 +46,7 @@ protected:
     }
 };
 
-int main()
+int main(int, char**)
 {
     {
         testbuf<char> sb(" 123456789");
@@ -63,4 +64,15 @@ int main()
         is.seekg(-1);
         assert(is.fail());
     }
+    {
+        testbuf<char> sb(" 123456789");
+        std::istream is(&sb);
+        is.setstate(std::ios_base::eofbit);
+        assert(is.eof());
+        is.seekg(5);
+        assert(is.good());
+        assert(!is.eof());
+    }
+
+  return 0;
 }

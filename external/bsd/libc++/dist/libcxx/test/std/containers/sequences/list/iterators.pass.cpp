@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -20,6 +19,7 @@
 #include <cassert>
 #include <iterator>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 struct A
@@ -28,7 +28,7 @@ struct A
     int second;
 };
 
-int main()
+int main(int, char**)
 {
     {
         typedef int T;
@@ -77,7 +77,7 @@ int main()
         C::iterator i;
         C::const_iterator j;
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef int T;
         typedef std::list<T, min_allocator<T>> C;
@@ -135,9 +135,8 @@ int main()
         assert(j->first == 3);
     }
 #endif
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     {
-        std::list<int> c;
         std::list<int>::iterator ii1{}, ii2{};
         std::list<int>::iterator ii4 = ii1;
         std::list<int>::const_iterator cii{};
@@ -150,10 +149,9 @@ int main()
         assert ( (cii == ii1 ));
         assert (!(ii1 != cii ));
         assert (!(cii != ii1 ));
-
-        assert ( ii1 != c.cbegin());
-        assert ( cii != c.begin());
     }
 #endif
 
+
+  return 0;
 }

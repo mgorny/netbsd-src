@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,26 +18,30 @@
 #include <utility>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
-        typedef std::pair<double, char> T0;
-        typedef std::tuple<int, short> T1;
-        T0 t0(2.5, 'a');
+        typedef std::pair<long, char> T0;
+        typedef std::tuple<long long, short> T1;
+        T0 t0(2, 'a');
         T1 t1 = t0;
         assert(std::get<0>(t1) == 2);
         assert(std::get<1>(t1) == short('a'));
     }
-#if _LIBCPP_STD_VER > 11 
+#if TEST_STD_VER > 11
     {
-        typedef std::pair<double, char> P0;
-        typedef std::tuple<int, short> T1;
-        constexpr P0 p0(2.5, 'a');
+        typedef std::pair<long, char> P0;
+        typedef std::tuple<long long, short> T1;
+        constexpr P0 p0(2, 'a');
         constexpr T1 t1 = p0;
-        static_assert(std::get<0>(t1) != std::get<0>(p0), "");
+        static_assert(std::get<0>(t1) == std::get<0>(p0), "");
         static_assert(std::get<1>(t1) == std::get<1>(p0), "");
         static_assert(std::get<0>(t1) == 2, "");
         static_assert(std::get<1>(t1) == short('a'), "");
     }
 #endif
+
+  return 0;
 }

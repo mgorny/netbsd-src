@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,10 +15,14 @@
 //     ...
 // };
 
+#include <limits>
 #include <memory>
 #include <new>
 #include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
+#include "incomplete_type_helper.h"
 
 template <class T>
 struct A
@@ -39,20 +42,8 @@ struct B
     }
 };
 
-int main()
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_ADVANCED_SFINAE
-    {
-        A<int> a;
-        assert(std::allocator_traits<A<int> >::max_size(a) ==
-               std::numeric_limits<std::size_t>::max());
-    }
-    {
-        const A<int> a = {};
-        assert(std::allocator_traits<A<int> >::max_size(a) ==
-               std::numeric_limits<std::size_t>::max());
-    }
-#endif  // _LIBCPP_HAS_NO_ADVANCED_SFINAE
     {
         B<int> b;
         assert(std::allocator_traits<B<int> >::max_size(b) == 100);
@@ -61,10 +52,28 @@ int main()
         const B<int> b = {};
         assert(std::allocator_traits<B<int> >::max_size(b) == 100);
     }
-#if __cplusplus >= 201103
+    {
+        typedef IncompleteHolder* VT;
+        typedef B<VT> Alloc;
+        Alloc a;
+        assert(std::allocator_traits<Alloc >::max_size(a) == 100);
+    }
+#if TEST_STD_VER >= 11
+    {
+        A<int> a;
+        assert(std::allocator_traits<A<int> >::max_size(a) ==
+               std::numeric_limits<std::size_t>::max() / sizeof(int));
+    }
+    {
+        const A<int> a = {};
+        assert(std::allocator_traits<A<int> >::max_size(a) ==
+               std::numeric_limits<std::size_t>::max() / sizeof(int));
+    }
     {
         std::allocator<int> a;
         static_assert(noexcept(std::allocator_traits<std::allocator<int>>::max_size(a)) == true, "");
     }
 #endif
+
+  return 0;
 }

@@ -1,11 +1,15 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: libcpp-no-exceptions
+
+// This test fails due to a stack overflow
+// XFAIL: LIBCXX-WINDOWS-FIXME
 
 // <exception>
 
@@ -17,12 +21,14 @@
 #include <cstdlib>
 #include <cassert>
 
+#include "test_macros.h"
+
 class A
 {
     int data_;
 public:
     explicit A(int data) : data_(data) {}
-    virtual ~A() _NOEXCEPT {}
+    virtual ~A() TEST_NOEXCEPT {}
 
     friend bool operator==(const A& x, const A& y) {return x.data_ == y.data_;}
 };
@@ -36,13 +42,51 @@ public:
     B(const B& b) : A(b) {}
 };
 
-int main()
+class C
+{
+public:
+    virtual ~C() {}
+    C * operator&() const { assert(false); return nullptr; } // should not be called
+};
+
+class D : private std::nested_exception {};
+
+
+class E1 : public std::nested_exception {};
+class E2 : public std::nested_exception {};
+class E : public E1, public E2 {};
+
+int main(int, char**)
 {
     {
         try
         {
-            A a(3);
+            A a(3);  // not a polymorphic type --> no effect
             std::rethrow_if_nested(a);
+            assert(true);
+        }
+        catch (...)
+        {
+            assert(false);
+        }
+    }
+    {
+        try
+        {
+            D s;  // inaccessible base class --> no effect
+            std::rethrow_if_nested(s);
+            assert(true);
+        }
+        catch (...)
+        {
+            assert(false);
+        }
+    }
+    {
+        try
+        {
+            E s;  // ambiguous base class --> no effect
+            std::rethrow_if_nested(s);
             assert(true);
         }
         catch (...)
@@ -68,9 +112,9 @@ int main()
                     std::rethrow_if_nested(a);
                     assert(false);
                 }
-                catch (const B& b)
+                catch (const B& b2)
                 {
-                    assert(b == B(5));
+                    assert(b2 == B(5));
                 }
             }
         }
@@ -78,7 +122,7 @@ int main()
     {
         try
         {
-            std::rethrow_if_nested(1);
+            std::rethrow_if_nested(C());
             assert(true);
         }
         catch (...)
@@ -86,4 +130,7 @@ int main()
             assert(false);
         }
     }
+
+
+  return 0;
 }

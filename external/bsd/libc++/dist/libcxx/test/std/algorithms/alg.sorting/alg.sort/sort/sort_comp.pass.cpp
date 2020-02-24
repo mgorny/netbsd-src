@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,8 +18,10 @@
 #include <functional>
 #include <vector>
 #include <cassert>
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#include <cstddef>
 #include <memory>
+
+#include "test_macros.h"
 
 struct indirect_less
 {
@@ -29,23 +30,21 @@ struct indirect_less
         {return *x < *y;}
 };
 
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
-
-int main()
+int main(int, char**)
 {
     {
     std::vector<int> v(1000);
-    for (int i = 0; i < v.size(); ++i)
+    for (int i = 0; static_cast<std::size_t>(i) < v.size(); ++i)
         v[i] = i;
     std::sort(v.begin(), v.end(), std::greater<int>());
     std::reverse(v.begin(), v.end());
     assert(std::is_sorted(v.begin(), v.end()));
     }
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#if TEST_STD_VER >= 11
     {
     std::vector<std::unique_ptr<int> > v(1000);
-    for (int i = 0; i < v.size(); ++i)
+    for (int i = 0; static_cast<std::size_t>(i) < v.size(); ++i)
         v[i].reset(new int(i));
     std::sort(v.begin(), v.end(), indirect_less());
     assert(std::is_sorted(v.begin(), v.end(), indirect_less()));
@@ -53,5 +52,7 @@ int main()
     assert(*v[1] == 1);
     assert(*v[2] == 2);
     }
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#endif
+
+  return 0;
 }

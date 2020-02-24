@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,17 +11,24 @@
 // is_copy_constructible
 
 #include <type_traits>
+#include "test_macros.h"
 
 template <class T>
 void test_is_copy_constructible()
 {
     static_assert( std::is_copy_constructible<T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert( std::is_copy_constructible_v<T>, "");
+#endif
 }
 
 template <class T>
 void test_is_not_copy_constructible()
 {
     static_assert(!std::is_copy_constructible<T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert(!std::is_copy_constructible_v<T>, "");
+#endif
 }
 
 class Empty
@@ -64,7 +70,7 @@ struct C
     void operator=(C&);  // not const
 };
 
-int main()
+int main(int, char**)
 {
     test_is_copy_constructible<A>();
     test_is_copy_constructible<int&>();
@@ -82,7 +88,9 @@ int main()
     test_is_not_copy_constructible<void>();
     test_is_not_copy_constructible<Abstract>();
     test_is_not_copy_constructible<C>();
-#if __has_feature(cxx_access_control_sfinae) 
+#if TEST_STD_VER >= 11
     test_is_not_copy_constructible<B>();
 #endif
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -20,6 +19,9 @@
 #include <cassert>
 #include <vector>
 #include <numeric>
+#include <cstddef>
+
+#include "test_macros.h"
 
 template <class T>
 inline
@@ -29,11 +31,10 @@ sqr(T x)
     return x * x;
 }
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::weibull_distribution<> D;
-        typedef D::param_type P;
         typedef std::mt19937 G;
         G g;
         D d(0.5, 2);
@@ -49,12 +50,12 @@ int main()
         double var = 0;
         double skew = 0;
         double kurtosis = 0;
-        for (int i = 0; i < u.size(); ++i)
+        for (std::size_t i = 0; i < u.size(); ++i)
         {
-            double d = (u[i] - mean);
-            double d2 = sqr(d);
+            double dbl = (u[i] - mean);
+            double d2 = sqr(dbl);
             var += d2;
-            skew += d * d2;
+            skew += dbl * d2;
             kurtosis += d2 * d2;
         }
         var /= u.size();
@@ -77,7 +78,6 @@ int main()
     }
     {
         typedef std::weibull_distribution<> D;
-        typedef D::param_type P;
         typedef std::mt19937 G;
         G g;
         D d(1, .5);
@@ -93,12 +93,12 @@ int main()
         double var = 0;
         double skew = 0;
         double kurtosis = 0;
-        for (int i = 0; i < u.size(); ++i)
+        for (std::size_t i = 0; i < u.size(); ++i)
         {
-            double d = (u[i] - mean);
-            double d2 = sqr(d);
+            double dbl = (u[i] - mean);
+            double d2 = sqr(dbl);
             var += d2;
-            skew += d * d2;
+            skew += dbl * d2;
             kurtosis += d2 * d2;
         }
         var /= u.size();
@@ -121,7 +121,6 @@ int main()
     }
     {
         typedef std::weibull_distribution<> D;
-        typedef D::param_type P;
         typedef std::mt19937 G;
         G g;
         D d(2, 3);
@@ -137,12 +136,12 @@ int main()
         double var = 0;
         double skew = 0;
         double kurtosis = 0;
-        for (int i = 0; i < u.size(); ++i)
+        for (std::size_t i = 0; i < u.size(); ++i)
         {
-            double d = (u[i] - mean);
-            double d2 = sqr(d);
+            double dbl = (u[i] - mean);
+            double d2 = sqr(dbl);
             var += d2;
-            skew += d * d2;
+            skew += dbl * d2;
             kurtosis += d2 * d2;
         }
         var /= u.size();
@@ -163,4 +162,6 @@ int main()
         assert(std::abs((skew - x_skew) / x_skew) < 0.01);
         assert(std::abs((kurtosis - x_kurtosis) / x_kurtosis) < 0.03);
     }
+
+  return 0;
 }

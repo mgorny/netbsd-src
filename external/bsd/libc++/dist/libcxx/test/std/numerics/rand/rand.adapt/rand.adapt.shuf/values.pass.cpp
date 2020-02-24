@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -25,20 +24,29 @@
 #include <type_traits>
 #include <cassert>
 
-template <class _Tp>
-void where(const _Tp &) {}
+#include "test_macros.h"
+
+template <class T>
+void where(const T &) {}
 
 void
 test1()
 {
     typedef std::knuth_b E;
     static_assert(E::table_size == 256, "");
-    /*static_*/assert((E::min() == 1)/*, ""*/);
-    /*static_*/assert((E::max() == 2147483646)/*, ""*/);
+#if TEST_STD_VER >= 11
+    static_assert((E::min() == 1), "");
+    static_assert((E::max() == 2147483646), "");
+#else
+    assert((E::min() == 1));
+    assert((E::max() == 2147483646));
+#endif
     where(E::table_size);
 }
 
-int main()
+int main(int, char**)
 {
     test1();
+
+  return 0;
 }

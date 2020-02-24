@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -16,9 +15,13 @@
 
 #include <algorithm>
 #include <functional>
+#include <random>
 #include <cassert>
 
+#include "test_macros.h"
 #include "test_iterators.h"
+
+std::mt19937 randomness;
 
 template <class Iter>
 void
@@ -44,12 +47,12 @@ test(Iter first, Iter last)
 
 template <class Iter>
 void
-test(unsigned N)
+test(int N)
 {
     int* a = new int[N];
     for (int i = 0; i < N; ++i)
         a[i] = i;
-    std::random_shuffle(a, a+N);
+    std::shuffle(a, a+N, randomness);
     test(Iter(a), Iter(a+N));
     delete [] a;
 }
@@ -65,11 +68,11 @@ test()
     test<Iter>(10);
     test<Iter>(1000);
     {
-    const unsigned N = 100;
+    const int N = 100;
     int* a = new int[N];
     for (int i = 0; i < N; ++i)
         a[i] = 5;
-    std::random_shuffle(a, a+N);
+    std::shuffle(a, a+N, randomness);
     typedef std::greater<int> Compare;
     Compare comp;
     std::pair<Iter, Iter> p = std::minmax_element(Iter(a), Iter(a+N), comp);
@@ -79,26 +82,28 @@ test()
     }
 }
 
-#if __cplusplus >= 201402L
+#if TEST_STD_VER >= 14
 constexpr int il[] = { 2, 4, 6, 8, 7, 5, 3, 1 };
 struct less { constexpr bool operator ()( const int &x, const int &y) const { return x < y; }};
 #endif
 
 void constexpr_test()
 {
-#if __cplusplus >= 201402L
+#if TEST_STD_VER >= 14
     constexpr auto p = std::minmax_element(il, il+8, less());
     static_assert ( *(p.first)  == 1, "" );
     static_assert ( *(p.second) == 8, "" );
 #endif
 }
 
-int main()
+int main(int, char**)
 {
     test<forward_iterator<const int*> >();
     test<bidirectional_iterator<const int*> >();
     test<random_access_iterator<const int*> >();
     test<const int*>();
-    
+
     constexpr_test();
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -11,14 +10,16 @@
 
 // reference_wrapper
 
-// Test that reference wrapper meets the requirements of TriviallyCopyable,
-// CopyConstructible and CopyAssignable.
+// Test that reference wrapper meets the requirements of CopyConstructible and
+// CopyAssignable, and TriviallyCopyable (starting in C++14).
 
 #include <functional>
 #include <type_traits>
 #include <string>
 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
+#include "test_macros.h"
+
+#if TEST_STD_VER >= 11
 class MoveOnly
 {
     MoveOnly(const MoveOnly&);
@@ -43,16 +44,19 @@ void test()
     typedef std::reference_wrapper<T> Wrap;
     static_assert(std::is_copy_constructible<Wrap>::value, "");
     static_assert(std::is_copy_assignable<Wrap>::value, "");
-    // Extension up for standardization: See N4151.
+#if TEST_STD_VER >= 14
     static_assert(std::is_trivially_copyable<Wrap>::value, "");
+#endif
 }
 
-int main()
+int main(int, char**)
 {
     test<int>();
     test<double>();
-    test<std::string>(); 
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
-    test<MoveOnly>(); 
+    test<std::string>();
+#if TEST_STD_VER >= 11
+    test<MoveOnly>();
 #endif
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,15 +18,19 @@
 #include <locale>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
-    std::money_base mb;
-    assert(mb.none == 0);
-    assert(mb.space == 1);
-    assert(mb.symbol == 2);
-    assert(mb.sign == 3);
-    assert(mb.value == 4);
-    assert(sizeof(std::money_base::pattern) == 4);
+    std::money_base mb; ((void)mb);
+    static_assert(std::money_base::none == 0, "");
+    static_assert(std::money_base::space == 1, "");
+    static_assert(std::money_base::symbol == 2, "");
+    static_assert(std::money_base::sign == 3, "");
+    static_assert(std::money_base::value == 4, "");
+    static_assert(sizeof(std::money_base::pattern) == 4, "");
     std::money_base::pattern p;
     p.field[0] = std::money_base::none;
+
+  return 0;
 }

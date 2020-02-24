@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -28,8 +27,10 @@
 #include <type_traits>
 #include <cassert>
 
-template <class _Tp>
-void where(const _Tp &) {}
+#include "test_macros.h"
+
+template <class T>
+void where(const T &) {}
 
 void
 test1()
@@ -38,8 +39,13 @@ test1()
     static_assert((E::word_size == 24), "");
     static_assert((E::short_lag == 10), "");
     static_assert((E::long_lag == 24), "");
-    /*static_*/assert((E::min() == 0)/*, ""*/);
-    /*static_*/assert((E::max() == 0xFFFFFF)/*, ""*/);
+#if TEST_STD_VER >= 11
+    static_assert((E::min() == 0), "");
+    static_assert((E::max() == 0xFFFFFF), "");
+#else
+    assert((E::min() == 0));
+    assert((E::max() == 0xFFFFFF));
+#endif
     static_assert((E::default_seed == 19780503u), "");
     where(E::word_size);
     where(E::short_lag);
@@ -54,8 +60,13 @@ test2()
     static_assert((E::word_size == 48), "");
     static_assert((E::short_lag == 5), "");
     static_assert((E::long_lag == 12), "");
-    /*static_*/assert((E::min() == 0)/*, ""*/);
-    /*static_*/assert((E::max() == 0xFFFFFFFFFFFFull)/*, ""*/);
+#if TEST_STD_VER >= 11
+    static_assert((E::min() == 0), "");
+    static_assert((E::max() == 0xFFFFFFFFFFFFull), "");
+#else
+    assert((E::min() == 0));
+    assert((E::max() == 0xFFFFFFFFFFFFull));
+#endif
     static_assert((E::default_seed == 19780503u), "");
     where(E::word_size);
     where(E::short_lag);
@@ -63,8 +74,10 @@ test2()
     where(E::default_seed);
 }
 
-int main()
+int main(int, char**)
 {
     test1();
     test2();
+
+  return 0;
 }

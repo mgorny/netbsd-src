@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,6 +13,7 @@
 #include <string>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class S>
@@ -23,13 +23,13 @@ test(S s)
     typename S::size_type old_cap = s.capacity();
     S s0 = s;
     s.shrink_to_fit();
-    assert(s.__invariants());
+    LIBCPP_ASSERT(s.__invariants());
     assert(s == s0);
     assert(s.capacity() <= old_cap);
     assert(s.capacity() >= s.size());
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string S;
@@ -44,7 +44,7 @@ int main()
     s.erase(50);
     test(s);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> S;
     S s;
@@ -59,4 +59,6 @@ int main()
     test(s);
     }
 #endif
+
+  return 0;
 }

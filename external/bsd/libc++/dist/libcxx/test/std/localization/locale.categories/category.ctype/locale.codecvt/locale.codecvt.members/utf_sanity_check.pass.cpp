@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -21,7 +20,9 @@
 
 #include <stdio.h>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     typedef std::codecvt<char32_t, char, std::mbstate_t> F32_8;
     typedef std::codecvt<char16_t, char, std::mbstate_t> F16_8;
@@ -30,7 +31,7 @@ int main()
     const F32_8& f32_8 = std::use_facet<F32_8>(std::locale::classic());
     const F32_16& f32_16 = std::use_facet<F32_16>(l);
     const F16_8& f16_8 = std::use_facet<F16_8>(std::locale::classic());
-    std::mbstate_t mbs = {0};
+    std::mbstate_t mbs = {};
     F32_8::intern_type* c32p;
     F16_8::intern_type* c16p;
     F32_8::extern_type* c8p;
@@ -124,4 +125,6 @@ int main()
             assert(c32 == c32x);
         }
     }
+
+  return 0;
 }

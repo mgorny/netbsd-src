@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,7 +12,9 @@
 
 #include <deque>
 #include <cassert>
+#include <cstddef>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class C>
@@ -46,11 +47,11 @@ test(C& c1, int x)
     std::size_t c1_osize = c1.size();
     c1.push_front(x);
     assert(c1.size() == c1_osize + 1);
-    assert(distance(c1.begin(), c1.end()) == c1.size());
+    assert(static_cast<std::size_t>(distance(c1.begin(), c1.end())) == c1.size());
     I i = c1.begin();
     assert(*i == x);
     ++i;
-    for (int j = 0; j < c1_osize; ++j, ++i)
+    for (int j = 0; static_cast<std::size_t>(j) < c1_osize; ++j, ++i)
         assert(*i == j);
 }
 
@@ -62,7 +63,7 @@ testN(int start, int N)
     test(c1, -10);
 }
 
-int main()
+int main(int, char**)
 {
     {
     int rng[] = {0, 1, 2, 3, 1023, 1024, 1025, 2047, 2048, 2049};
@@ -71,7 +72,7 @@ int main()
         for (int j = 0; j < N; ++j)
             testN<std::deque<int> >(rng[i], rng[j]);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
    {
     int rng[] = {0, 1, 2, 3, 1023, 1024, 1025, 2047, 2048, 2049};
     const int N = sizeof(rng)/sizeof(rng[0]);
@@ -80,4 +81,6 @@ int main()
             testN<std::deque<int, min_allocator<int>> >(rng[i], rng[j]);
     }
 #endif
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,10 +11,12 @@
 // class function<R(ArgTypes...)>
 
 // template<class F, class A> void assign(F&&, const A&);
+//     This call was removed post-C++14
 
 #include <functional>
 #include <cassert>
 
+#include "test_macros.h"
 #include "test_allocator.h"
 
 class A
@@ -47,8 +48,9 @@ public:
 
 int A::count = 0;
 
-int main()
+int main(int, char**)
 {
+#if TEST_STD_VER <= 14
     {
     std::function<int(int)> f;
     f.assign(A(), test_allocator<A>());
@@ -57,4 +59,7 @@ int main()
     assert(f.target<int(*)(int)>() == 0);
     }
     assert(A::count == 0);
+#endif
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,9 +11,13 @@
 // nullptr_t
 //  is_null_pointer
 
-#include <type_traits>
+// UNSUPPORTED: c++98, c++03, c++11
 
-#if _LIBCPP_STD_VER > 11
+#include <type_traits>
+#include <cstddef>        // for std::nullptr_t
+
+#include "test_macros.h"
+
 template <class T>
 void test_nullptr_imp()
 {
@@ -43,10 +46,13 @@ void test_nullptr()
     test_nullptr_imp<const volatile T>();
 }
 
-int main()
+struct incomplete_type;
+
+int main(int, char**)
 {
     test_nullptr<std::nullptr_t>();
+
+//  LWG#2582
+    static_assert(!std::is_null_pointer<incomplete_type>::value, "");
+    return 0;
 }
-#else
-int main() {}
-#endif

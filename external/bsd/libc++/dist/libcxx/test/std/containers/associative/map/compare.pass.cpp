@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -13,19 +12,21 @@
 //           class Allocator = allocator<pair<const Key, T>>>
 // class map
 
-// http://llvm.org/bugs/show_bug.cgi?id=16538
-// http://llvm.org/bugs/show_bug.cgi?id=16549
+// https://bugs.llvm.org/show_bug.cgi?id=16538
+// https://bugs.llvm.org/show_bug.cgi?id=16549
 
 #include <map>
 #include <utility>
 #include <cassert>
+
+#include "test_macros.h"
 
 struct Key {
   template <typename T> Key(const T&) {}
   bool operator< (const Key&) const { return false; }
 };
 
-int main()
+int main(int, char**)
 {
     typedef std::map<Key, int> MapT;
     typedef MapT::iterator Iter;
@@ -44,9 +45,11 @@ int main()
         MapT map;
         IterBool result = map.insert(std::make_pair(Key(0), 42));
         assert(result.second);
-        assert(result.first->second = 42);
+        assert(result.first->second == 42);
         IterBool result2 = map.insert(std::make_pair(Key(0), 43));
         assert(!result2.second);
         assert(map[Key(0)] == 42);
     }
+
+  return 0;
 }

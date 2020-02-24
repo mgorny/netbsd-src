@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,11 +11,23 @@
 // template<> struct char_traits<char>
 
 // static int compare(const char_type* s1, const char_type* s2, size_t n);
+// constexpr in C++17
 
 #include <string>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+#if TEST_STD_VER > 14
+constexpr bool test_constexpr()
+{
+    return std::char_traits<char>::compare("123", "223", 3) < 0
+        && std::char_traits<char>::compare("223", "123", 3) > 0
+        && std::char_traits<char>::compare("123", "123", 3) == 0;
+}
+#endif
+
+int main(int, char**)
 {
     assert(std::char_traits<char>::compare("", "", 0) == 0);
     assert(std::char_traits<char>::compare(NULL, NULL, 0) == 0);
@@ -38,4 +49,10 @@ int main()
     assert(std::char_traits<char>::compare("223", "123", 3) > 0);
     assert(std::char_traits<char>::compare("133", "123", 3) > 0);
     assert(std::char_traits<char>::compare("124", "123", 3) > 0);
+
+#if TEST_STD_VER > 14
+    static_assert(test_constexpr(), "" );
+#endif
+
+  return 0;
 }

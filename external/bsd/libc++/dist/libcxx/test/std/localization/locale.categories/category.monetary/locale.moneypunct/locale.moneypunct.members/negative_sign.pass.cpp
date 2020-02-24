@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,12 +13,14 @@
 // string_type negative_sign() const;
 
 // The C++ and C standards are silent.
-//   On this one, commen sense is the guideline.
+//   On this one, common sense is the guideline.
 //   If customers complain, I'll endeavor to minimize customer complaints
 
 #include <locale>
 #include <limits>
 #include <cassert>
+
+#include "test_macros.h"
 
 typedef std::moneypunct<char> F;
 
@@ -55,7 +56,7 @@ public:
         : std::moneypunct<wchar_t, true>(refs) {}
 };
 
-int main()
+int main(int, char**)
 {
     {
         Fnf f(1);
@@ -73,4 +74,6 @@ int main()
         Fwt f(1);
         assert(f.negative_sign() == L"-");
     }
+
+  return 0;
 }

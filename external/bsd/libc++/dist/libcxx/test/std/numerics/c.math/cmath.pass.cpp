@@ -1,22 +1,21 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
 // <cmath>
 
-// NOTE: isinf and isnan are tested separately because they are expected to fail
-// on linux. We don't want their expected failure to hide other failures in this file.
-
 #include <cmath>
+#include <limits>
 #include <type_traits>
 #include <cassert>
 
+#include "test_macros.h"
 #include "hexfloat.h"
+#include "truncate_fp.h"
 
 // convertible to int/float/double/etc
 template <class T, int N=0>
@@ -79,6 +78,7 @@ Ambiguous fma(Ambiguous, Ambiguous, Ambiguous){ return Ambiguous(); }
 Ambiguous fmax(Ambiguous, Ambiguous){ return Ambiguous(); }
 Ambiguous fmin(Ambiguous, Ambiguous){ return Ambiguous(); }
 Ambiguous hypot(Ambiguous, Ambiguous){ return Ambiguous(); }
+Ambiguous hypot(Ambiguous, Ambiguous, Ambiguous){ return Ambiguous(); }
 Ambiguous ilogb(Ambiguous){ return Ambiguous(); }
 Ambiguous lgamma(Ambiguous){ return Ambiguous(); }
 Ambiguous llrint(Ambiguous){ return Ambiguous(); }
@@ -100,14 +100,53 @@ Ambiguous scalbn(Ambiguous, Ambiguous){ return Ambiguous(); }
 Ambiguous tgamma(Ambiguous){ return Ambiguous(); }
 Ambiguous trunc(Ambiguous){ return Ambiguous(); }
 
-void test_abs()
-{
-    static_assert((std::is_same<decltype(std::abs((float)0)), float>::value), "");
-    static_assert((std::is_same<decltype(std::abs((double)0)), double>::value), "");
-    static_assert((std::is_same<decltype(std::abs((long double)0)), long double>::value), "");
-    static_assert((std::is_same<decltype(abs(Ambiguous())), Ambiguous>::value), "");
-    assert(std::abs(-1.) == 1);
+template <class T, class = decltype(std::abs(std::declval<T>()))>
+std::true_type has_abs_imp(int);
+template <class T>
+std::false_type has_abs_imp(...);
+
+template <class T>
+struct has_abs : decltype(has_abs_imp<T>(0)) {};
+
+void test_abs() {
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wabsolute-value"
+#endif
+  static_assert((std::is_same<decltype(std::abs((float)0)), float>::value), "");
+  static_assert((std::is_same<decltype(std::abs((double)0)), double>::value), "");
+  static_assert(
+      (std::is_same<decltype(std::abs((long double)0)), long double>::value), "");
+  static_assert((std::is_same<decltype(std::abs((int)0)), int>::value), "");
+  static_assert((std::is_same<decltype(std::abs((long)0)), long>::value), "");
+  static_assert((std::is_same<decltype(std::abs((long long)0)), long long>::value),
+                "");
+  static_assert((std::is_same<decltype(std::abs((unsigned char)0)), int>::value),
+                "");
+  static_assert((std::is_same<decltype(std::abs((unsigned short)0)), int>::value),
+                "");
+  static_assert((std::is_same<decltype(std::abs((signed char)0)), int>::value),
+                "");
+  static_assert((std::is_same<decltype(std::abs((short)0)), int>::value),
+                "");
+  static_assert((std::is_same<decltype(std::abs((unsigned char)0)), int>::value),
+                "");
+  static_assert((std::is_same<decltype(std::abs((char)0)), int>::value),
+                "");
+  static_assert((std::is_same<decltype(abs(Ambiguous())), Ambiguous>::value), "");
+
+  static_assert(!has_abs<unsigned>::value, "");
+  static_assert(!has_abs<unsigned long>::value, "");
+  static_assert(!has_abs<unsigned long long>::value, "");
+  static_assert(!has_abs<size_t>::value, "");
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
+  assert(std::abs(-1.) == 1);
 }
+
 
 void test_acos()
 {
@@ -552,6 +591,13 @@ void test_signbit()
     static_assert((std::is_same<decltype(std::signbit((long double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(signbit(Ambiguous())), Ambiguous>::value), "");
     assert(std::signbit(-1.0) == true);
+    assert(std::signbit(0u) == false);
+    assert(std::signbit(std::numeric_limits<unsigned>::max()) == false);
+    assert(std::signbit(0) == false);
+    assert(std::signbit(1) == false);
+    assert(std::signbit(-1) == true);
+    assert(std::signbit(std::numeric_limits<int>::max()) == false);
+    assert(std::signbit(std::numeric_limits<int>::min()) == true);
 }
 
 void test_fpclassify()
@@ -565,6 +611,11 @@ void test_fpclassify()
     static_assert((std::is_same<decltype(std::fpclassify((long double)0)), int>::value), "");
     static_assert((std::is_same<decltype(fpclassify(Ambiguous())), Ambiguous>::value), "");
     assert(std::fpclassify(-1.0) == FP_NORMAL);
+    assert(std::fpclassify(0) == FP_ZERO);
+    assert(std::fpclassify(1) == FP_NORMAL);
+    assert(std::fpclassify(-1) == FP_NORMAL);
+    assert(std::fpclassify(std::numeric_limits<int>::max()) == FP_NORMAL);
+    assert(std::fpclassify(std::numeric_limits<int>::min()) == FP_NORMAL);
 }
 
 void test_isfinite()
@@ -578,6 +629,11 @@ void test_isfinite()
     static_assert((std::is_same<decltype(std::isfinite((long double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isfinite(Ambiguous())), Ambiguous>::value), "");
     assert(std::isfinite(-1.0) == true);
+    assert(std::isfinite(0) == true);
+    assert(std::isfinite(1) == true);
+    assert(std::isfinite(-1) == true);
+    assert(std::isfinite(std::numeric_limits<int>::max()) == true);
+    assert(std::isfinite(std::numeric_limits<int>::min()) == true);
 }
 
 void test_isnormal()
@@ -591,6 +647,11 @@ void test_isnormal()
     static_assert((std::is_same<decltype(std::isnormal((long double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isnormal(Ambiguous())), Ambiguous>::value), "");
     assert(std::isnormal(-1.0) == true);
+    assert(std::isnormal(0) == false);
+    assert(std::isnormal(1) == true);
+    assert(std::isnormal(-1) == true);
+    assert(std::isnormal(std::numeric_limits<int>::max()) == true);
+    assert(std::isnormal(std::numeric_limits<int>::min()) == true);
 }
 
 void test_isgreater()
@@ -629,6 +690,35 @@ void test_isgreaterequal()
     static_assert((std::is_same<decltype(std::isgreaterequal((long double)0, (long double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(isgreaterequal(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
     assert(std::isgreaterequal(-1.0, 0.F) == false);
+}
+
+void test_isinf()
+{
+#ifdef isinf
+#error isinf defined
+#endif
+    static_assert((std::is_same<decltype(std::isinf((float)0)), bool>::value), "");
+
+    typedef decltype(std::isinf((double)0)) DoubleRetType;
+#if !defined(__linux__) || defined(__clang__)
+    static_assert((std::is_same<DoubleRetType, bool>::value), "");
+#else
+    // GLIBC < 2.23 defines 'isinf(double)' with a return type of 'int' in
+    // all C++ dialects. The test should tolerate this when libc++ can't work
+    // around it.
+    // See: https://sourceware.org/bugzilla/show_bug.cgi?id=19439
+    static_assert((std::is_same<DoubleRetType, bool>::value
+                || std::is_same<DoubleRetType, int>::value), "");
+#endif
+
+    static_assert((std::is_same<decltype(std::isinf(0)), bool>::value), "");
+    static_assert((std::is_same<decltype(std::isinf((long double)0)), bool>::value), "");
+    assert(std::isinf(-1.0) == false);
+    assert(std::isinf(0) == false);
+    assert(std::isinf(1) == false);
+    assert(std::isinf(-1) == false);
+    assert(std::isinf(std::numeric_limits<int>::max()) == false);
+    assert(std::isinf(std::numeric_limits<int>::min()) == false);
 }
 
 void test_isless()
@@ -686,6 +776,35 @@ void test_islessgreater()
     static_assert((std::is_same<decltype(std::islessgreater((long double)0, (long double)0)), bool>::value), "");
     static_assert((std::is_same<decltype(islessgreater(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
     assert(std::islessgreater(-1.0, 0.F) == true);
+}
+
+void test_isnan()
+{
+#ifdef isnan
+#error isnan defined
+#endif
+    static_assert((std::is_same<decltype(std::isnan((float)0)), bool>::value), "");
+
+    typedef decltype(std::isnan((double)0)) DoubleRetType;
+#if !defined(__linux__) || defined(__clang__)
+    static_assert((std::is_same<DoubleRetType, bool>::value), "");
+#else
+    // GLIBC < 2.23 defines 'isinf(double)' with a return type of 'int' in
+    // all C++ dialects. The test should tolerate this when libc++ can't work
+    // around it.
+    // See: https://sourceware.org/bugzilla/show_bug.cgi?id=19439
+    static_assert((std::is_same<DoubleRetType, bool>::value
+                || std::is_same<DoubleRetType, int>::value), "");
+#endif
+
+    static_assert((std::is_same<decltype(std::isnan(0)), bool>::value), "");
+    static_assert((std::is_same<decltype(std::isnan((long double)0)), bool>::value), "");
+    assert(std::isnan(-1.0) == false);
+    assert(std::isnan(0) == false);
+    assert(std::isnan(1) == false);
+    assert(std::isnan(-1) == false);
+    assert(std::isnan(std::numeric_limits<int>::max()) == false);
+    assert(std::isnan(std::numeric_limits<int>::min()) == false);
 }
 
 void test_isunordered()
@@ -780,7 +899,7 @@ void test_cbrt()
     static_assert((std::is_same<decltype(std::cbrtf(0)), float>::value), "");
     static_assert((std::is_same<decltype(std::cbrtl(0)), long double>::value), "");
     static_assert((std::is_same<decltype(cbrt(Ambiguous())), Ambiguous>::value), "");
-    assert(std::cbrt(1) == 1);
+    assert(truncate_fp(std::cbrt(1)) == 1);
 }
 
 void test_copysign()
@@ -1010,6 +1129,28 @@ void test_hypot()
     static_assert((std::is_same<decltype(std::hypot((int)0, (int)0)), double>::value), "");
     static_assert((std::is_same<decltype(hypot(Ambiguous(), Ambiguous())), Ambiguous>::value), "");
     assert(std::hypot(3,4) == 5);
+
+#if TEST_STD_VER > 14
+    static_assert((std::is_same<decltype(std::hypot((float)0, (float)0, (float)0)), float>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (bool)0, (float)0)), double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (unsigned short)0, (double)0)), double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (int)0, (long double)0)), long double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (unsigned int)0)), double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (double)0, (long)0)), double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (long double)0, (unsigned long)0)), long double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (int)0, (long long)0)), double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (int)0, (unsigned long long)0)), double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (double)0, (double)0)), double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (long double)0, (long double)0)), long double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (float)0, (double)0)), double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (float)0, (long double)0)), long double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((float)0, (double)0, (long double)0)), long double>::value), "");
+    static_assert((std::is_same<decltype(std::hypot((int)0, (int)0, (int)0)), double>::value), "");
+    static_assert((std::is_same<decltype(hypot(Ambiguous(), Ambiguous(), Ambiguous())), Ambiguous>::value), "");
+
+    assert(std::hypot(2,3,6) == 7);
+    assert(std::hypot(1,4,8) == 9);
+#endif
 }
 
 void test_ilogb()
@@ -1412,7 +1553,7 @@ void test_trunc()
     assert(std::trunc(1) == 1);
 }
 
-int main()
+int main(int, char**)
 {
     test_abs();
     test_acos();
@@ -1443,9 +1584,11 @@ int main()
     test_isnormal();
     test_isgreater();
     test_isgreaterequal();
+    test_isinf();
     test_isless();
     test_islessequal();
     test_islessgreater();
+    test_isnan();
     test_isunordered();
     test_acosh();
     test_asinh();
@@ -1482,4 +1625,6 @@ int main()
     test_scalbn();
     test_tgamma();
     test_trunc();
+
+  return 0;
 }

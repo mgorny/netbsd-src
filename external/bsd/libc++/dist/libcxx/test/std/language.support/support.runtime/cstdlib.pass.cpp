@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,6 +11,14 @@
 #include <cstdlib>
 #include <type_traits>
 #include <cassert>
+
+#include "test_macros.h"
+
+// As of 1/10/2015 clang emits a -Wnonnull warnings even if the warning occurs
+// in an unevaluated context. For this reason we manually suppress the warning.
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wnonnull"
+#endif
 
 #ifndef EXIT_FAILURE
 #error EXIT_FAILURE not defined
@@ -42,7 +49,53 @@ void test_div_struct() {
     ((void) obj);
 };
 
-int main()
+template <class T, class = decltype(std::abs(std::declval<T>()))>
+std::true_type has_abs_imp(int);
+template <class T>
+std::false_type has_abs_imp(...);
+
+template <class T>
+struct has_abs : decltype(has_abs_imp<T>(0)) {};
+
+void test_abs() {
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wabsolute-value"
+#endif
+    static_assert((std::is_same<decltype(std::abs((float)0)), float>::value), "");
+    static_assert((std::is_same<decltype(std::abs((double)0)), double>::value), "");
+    static_assert(
+        (std::is_same<decltype(std::abs((long double)0)), long double>::value), "");
+    static_assert((std::is_same<decltype(std::abs((int)0)), int>::value), "");
+    static_assert((std::is_same<decltype(std::abs((long)0)), long>::value), "");
+    static_assert((std::is_same<decltype(std::abs((long long)0)), long long>::value),
+                  "");
+    static_assert((std::is_same<decltype(std::abs((unsigned char)0)), int>::value),
+                  "");
+    static_assert((std::is_same<decltype(std::abs((unsigned short)0)), int>::value),
+                  "");
+    static_assert((std::is_same<decltype(std::abs((signed char)0)), int>::value),
+                  "");
+    static_assert((std::is_same<decltype(std::abs((short)0)), int>::value),
+                  "");
+    static_assert((std::is_same<decltype(std::abs((unsigned char)0)), int>::value),
+                  "");
+    static_assert((std::is_same<decltype(std::abs((char)0)), int>::value),
+                  "");
+
+    static_assert(!has_abs<unsigned>::value, "");
+    static_assert(!has_abs<unsigned long>::value, "");
+    static_assert(!has_abs<unsigned long long>::value, "");
+    static_assert(!has_abs<size_t>::value, "");
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
+    assert(std::abs(-1.) == 1);
+}
+
+int main(int, char**)
 {
     std::size_t s = 0;
     ((void)s);
@@ -65,6 +118,12 @@ int main()
     static_assert((std::is_same<decltype(std::strtoull("", endptr,0)), unsigned long long>::value), "");
     static_assert((std::is_same<decltype(std::rand()), int>::value), "");
     static_assert((std::is_same<decltype(std::srand(0)), void>::value), "");
+
+//  Microsoft does not implement aligned_alloc in their C library
+#if TEST_STD_VER > 14 && defined(TEST_HAS_C11_FEATURES) && !defined(_WIN32)
+    static_assert((std::is_same<decltype(aligned_alloc(0,0)), void*>::value), "");
+#endif
+
     static_assert((std::is_same<decltype(std::calloc(0,0)), void*>::value), "");
     static_assert((std::is_same<decltype(std::free(0)), void>::value), "");
     static_assert((std::is_same<decltype(std::malloc(0)), void*>::value), "");
@@ -90,11 +149,13 @@ int main()
     wchar_t* pw = 0;
     const wchar_t* pwc = 0;
     char* pc = 0;
-#ifndef _LIBCPP_HAS_NO_THREAD_UNSAFE_C_FUNCTIONS
     static_assert((std::is_same<decltype(std::mblen("",0)), int>::value), "");
     static_assert((std::is_same<decltype(std::mbtowc(pw,"",0)), int>::value), "");
     static_assert((std::is_same<decltype(std::wctomb(pc,L' ')), int>::value), "");
-#endif
     static_assert((std::is_same<decltype(std::mbstowcs(pw,"",0)), std::size_t>::value), "");
     static_assert((std::is_same<decltype(std::wcstombs(pc,pwc,0)), std::size_t>::value), "");
+
+    test_abs();
+
+    return 0;
 }

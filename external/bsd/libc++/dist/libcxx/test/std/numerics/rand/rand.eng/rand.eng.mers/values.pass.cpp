@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -40,8 +39,10 @@
 #include <type_traits>
 #include <cassert>
 
-template <class _Tp>
-void where(const _Tp &) {}
+#include "test_macros.h"
+
+template <class T>
+void where(const T &) {}
 
 void
 test1()
@@ -60,8 +61,13 @@ test1()
     static_assert((E::tempering_c == 0xefc60000), "");
     static_assert((E::tempering_l == 18), "");
     static_assert((E::initialization_multiplier == 1812433253), "");
-    /*static_*/assert((E::min() == 0)/*, ""*/);
-    /*static_*/assert((E::max() == 0xFFFFFFFF)/*, ""*/);
+#if TEST_STD_VER >= 11
+    static_assert((E::min() == 0), "");
+    static_assert((E::max() == 0xFFFFFFFF), "");
+#else
+    assert((E::min() == 0));
+    assert((E::max() == 0xFFFFFFFF));
+#endif
     static_assert((E::default_seed == 5489u), "");
     where(E::word_size);
     where(E::state_size);
@@ -96,8 +102,13 @@ test2()
     static_assert((E::tempering_c == 0xfff7eee000000000ull), "");
     static_assert((E::tempering_l == 43), "");
     static_assert((E::initialization_multiplier == 6364136223846793005ull), "");
-    /*static_*/assert((E::min() == 0)/*, ""*/);
-    /*static_*/assert((E::max() == 0xFFFFFFFFFFFFFFFFull)/*, ""*/);
+#if TEST_STD_VER >= 11
+    static_assert((E::min() == 0), "");
+    static_assert((E::max() == 0xFFFFFFFFFFFFFFFFull), "");
+#else
+    assert((E::min() == 0));
+    assert((E::max() == 0xFFFFFFFFFFFFFFFFull));
+#endif
     static_assert((E::default_seed == 5489u), "");
     where(E::word_size);
     where(E::state_size);
@@ -115,8 +126,10 @@ test2()
     where(E::default_seed);
 }
 
-int main()
+int main(int, char**)
 {
     test1();
     test2();
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,7 +18,9 @@
 #include <sstream>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
         std::istringstream inf1("abc");
@@ -28,26 +29,37 @@ int main()
         std::istreambuf_iterator<char> i2(inf2);
         std::istreambuf_iterator<char> i3;
         std::istreambuf_iterator<char> i4;
+        std::istreambuf_iterator<char> i5(nullptr);
 
         assert(!(i1 != i1));
         assert(!(i1 != i2));
         assert( (i1 != i3));
         assert( (i1 != i4));
+        assert( (i1 != i5));
 
         assert(!(i2 != i1));
         assert(!(i2 != i2));
         assert( (i2 != i3));
         assert( (i2 != i4));
+        assert( (i2 != i5));
 
         assert( (i3 != i1));
         assert( (i3 != i2));
         assert(!(i3 != i3));
         assert(!(i3 != i4));
+        assert(!(i3 != i5));
 
         assert( (i4 != i1));
         assert( (i4 != i2));
         assert(!(i4 != i3));
         assert(!(i4 != i4));
+        assert(!(i4 != i5));
+
+        assert( (i5 != i1));
+        assert( (i5 != i2));
+        assert(!(i5 != i3));
+        assert(!(i5 != i4));
+        assert(!(i5 != i5));
     }
     {
         std::wistringstream inf1(L"abc");
@@ -56,25 +68,38 @@ int main()
         std::istreambuf_iterator<wchar_t> i2(inf2);
         std::istreambuf_iterator<wchar_t> i3;
         std::istreambuf_iterator<wchar_t> i4;
+        std::istreambuf_iterator<wchar_t> i5(nullptr);
 
         assert(!(i1 != i1));
         assert(!(i1 != i2));
         assert( (i1 != i3));
         assert( (i1 != i4));
+        assert( (i1 != i5));
 
         assert(!(i2 != i1));
         assert(!(i2 != i2));
         assert( (i2 != i3));
         assert( (i2 != i4));
+        assert( (i2 != i5));
 
         assert( (i3 != i1));
         assert( (i3 != i2));
         assert(!(i3 != i3));
         assert(!(i3 != i4));
+        assert(!(i3 != i5));
 
         assert( (i4 != i1));
         assert( (i4 != i2));
         assert(!(i4 != i3));
         assert(!(i4 != i4));
+        assert(!(i4 != i5));
+
+        assert( (i5 != i1));
+        assert( (i5 != i2));
+        assert(!(i5 != i3));
+        assert(!(i5 != i4));
+        assert(!(i5 != i5));
     }
+
+  return 0;
 }

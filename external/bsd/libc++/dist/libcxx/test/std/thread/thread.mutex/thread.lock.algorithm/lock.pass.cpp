@@ -1,13 +1,17 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: libcpp-has-no-threads
+
+// This test hangs forever when built against libstdc++ and MSVC. In order to allow
+// validation of the test suite against other STLs we have to mark it
+// unsupported.
+// UNSUPPORTED: libstdc++, msvc
 
 // <mutex>
 
@@ -16,6 +20,8 @@
 
 #include <mutex>
 #include <cassert>
+
+#include "test_macros.h"
 
 class L0
 {
@@ -72,12 +78,12 @@ public:
 
     void lock()
     {
-        throw 1;
+        TEST_THROW(1);
     }
 
     bool try_lock()
     {
-        throw 1;
+        TEST_THROW(1);
         return locked_;
     }
 
@@ -86,7 +92,7 @@ public:
     bool locked() const {return locked_;}
 };
 
-int main()
+int main(int, char**)
 {
     {
         L0 l0;
@@ -109,6 +115,7 @@ int main()
         assert(l0.locked());
         assert(l1.locked());
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     {
         L0 l0;
         L2 l1;
@@ -179,7 +186,8 @@ int main()
             assert(!l1.locked());
         }
     }
-#ifndef _LIBCPP_HAS_NO_VARIADICS
+#endif
+#if TEST_STD_VER >= 11
     {
         L0 l0;
         L0 l1;
@@ -189,6 +197,7 @@ int main()
         assert(l1.locked());
         assert(l2.locked());
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     {
         L2 l0;
         L2 l1;
@@ -205,6 +214,7 @@ int main()
             assert(!l2.locked());
         }
     }
+#endif
     {
         L0 l0;
         L0 l1;
@@ -232,6 +242,7 @@ int main()
         assert(l1.locked());
         assert(l2.locked());
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     {
         L0 l0;
         L0 l1;
@@ -376,6 +387,7 @@ int main()
             assert(!l2.locked());
         }
     }
+#endif  // TEST_HAS_NO_EXCEPTIONS
     {
         L0 l0;
         L0 l1;
@@ -431,6 +443,7 @@ int main()
         assert(l2.locked());
         assert(l3.locked());
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     {
         L0 l0;
         L0 l1;
@@ -503,5 +516,8 @@ int main()
             assert(!l3.locked());
         }
     }
-#endif  // _LIBCPP_HAS_NO_VARIADICS
+#endif  // TEST_HAS_NO_EXCEPTIONS
+#endif // TEST_STD_VER >= 11
+
+  return 0;
 }

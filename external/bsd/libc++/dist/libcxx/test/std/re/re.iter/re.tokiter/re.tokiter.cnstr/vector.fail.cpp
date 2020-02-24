@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -18,14 +17,15 @@
 //                      regex_constants::match_flag_type m =
 //                                              regex_constants::match_default);
 
-#if __cplusplus <= 201402L
-#error
-#else
-
 #include <regex>
 #include <cassert>
+#include "test_macros.h"
 
-int main()
+#if TEST_STD_VER < 14
+#error
+#endif
+
+int main(int, char**)
 {
     {
          std::regex phone_numbers("\\d{3}-(\\d{4})");
@@ -36,5 +36,6 @@ int main()
         std::cregex_token_iterator i(std::begin(phone_book), std::end(phone_book)-1,
                                      std::regex("\\d{3}-\\d{4}"), v);
     }
+
+  return 0;
 }
-#endif

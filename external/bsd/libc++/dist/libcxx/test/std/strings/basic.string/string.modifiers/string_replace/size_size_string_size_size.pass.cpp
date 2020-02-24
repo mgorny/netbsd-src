@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,11 +13,17 @@
 //           size_type pos2, size_type n2=npos);
 //  the "=npos" was added in C++14
 
+// When back-deploying to macosx10.7, the RTTI for exception classes
+// incorrectly provided by libc++.dylib is mixed with the one in
+// libc++abi.dylib and exceptions are not caught properly.
+// XFAIL: with_system_cxx_lib=macosx10.7
+
 #include <string>
 #include <stdexcept>
 #include <algorithm>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class S>
@@ -27,23 +32,32 @@ test(S s, typename S::size_type pos1, typename S::size_type n1,
      S str, typename S::size_type pos2, typename S::size_type n2,
      S expected)
 {
-    typename S::size_type old_size = s.size();
+    const typename S::size_type old_size = s.size();
     S s0 = s;
-    try
+    if (pos1 <= old_size && pos2 <= str.size())
     {
         s.replace(pos1, n1, str, pos2, n2);
-        assert(s.__invariants());
-        assert(pos1 <= old_size && pos2 <= str.size());
+        LIBCPP_ASSERT(s.__invariants());
         assert(s == expected);
         typename S::size_type xlen = std::min(n1, old_size - pos1);
         typename S::size_type rlen = std::min(n2, str.size() - pos2);
         assert(s.size() == old_size - xlen + rlen);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos1 > old_size || pos2 > str.size());
-        assert(s == s0);
+        try
+        {
+            s.replace(pos1, n1, str, pos2, n2);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos1 > old_size || pos2 > str.size());
+            assert(s == s0);
+        }
     }
+#endif
 }
 
 template <class S>
@@ -52,23 +66,32 @@ test_npos(S s, typename S::size_type pos1, typename S::size_type n1,
      S str, typename S::size_type pos2,
      S expected)
 {
-    typename S::size_type old_size = s.size();
+    const typename S::size_type old_size = s.size();
     S s0 = s;
-    try
+    if (pos1 <= old_size && pos2 <= str.size())
     {
         s.replace(pos1, n1, str, pos2);
-        assert(s.__invariants());
-        assert(pos1 <= old_size && pos2 <= str.size());
+        LIBCPP_ASSERT(s.__invariants());
         assert(s == expected);
         typename S::size_type xlen = std::min(n1, old_size - pos1);
         typename S::size_type rlen = std::min(S::npos, str.size() - pos2);
         assert(s.size() == old_size - xlen + rlen);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos1 > old_size || pos2 > str.size());
-        assert(s == s0);
+        try
+        {
+            s.replace(pos1, n1, str, pos2);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos1 > old_size || pos2 > str.size());
+            assert(s == s0);
+        }
     }
+#endif
 }
 
 
@@ -5841,7 +5864,7 @@ void test55()
     test_npos(S("abcdefghij"), 9, 2, S("12345"), 6, S("can't happen"));
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string S;
@@ -5902,7 +5925,7 @@ int main()
     test54<S>();
     test55<S>();
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> S;
     test0<S>();
@@ -5963,4 +5986,6 @@ int main()
     test55<S>();
     }
 #endif
+
+  return 0;
 }

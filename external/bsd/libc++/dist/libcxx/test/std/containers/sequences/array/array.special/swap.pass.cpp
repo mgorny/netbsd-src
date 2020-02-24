@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,9 +13,29 @@
 #include <array>
 #include <cassert>
 
-#include "../suppress_array_warnings.h"
+#include "test_macros.h"
+// std::array is explicitly allowed to be initialized with A a = { init-list };.
+// Disable the missing braces warning for this reason.
+#include "disable_missing_braces_warning.h"
 
-int main()
+struct NonSwappable {
+  NonSwappable() {}
+private:
+  NonSwappable(NonSwappable const&);
+  NonSwappable& operator=(NonSwappable const&);
+};
+
+template <class Tp>
+decltype(swap(std::declval<Tp>(), std::declval<Tp>()))
+can_swap_imp(int);
+
+template <class Tp>
+std::false_type can_swap_imp(...);
+
+template <class Tp>
+struct can_swap : std::is_same<decltype(can_swap_imp<Tp>(0)), void> {};
+
+int main(int, char**)
 {
     {
         typedef double T;
@@ -42,4 +61,26 @@ int main()
         assert(c1.size() == 0);
         assert(c2.size() == 0);
     }
+    {
+        typedef NonSwappable T;
+        typedef std::array<T, 0> C0;
+        static_assert(can_swap<C0&>::value, "");
+        C0 l = {};
+        C0 r = {};
+        swap(l, r);
+#if TEST_STD_VER >= 11
+        static_assert(noexcept(swap(l, r)), "");
+#endif
+    }
+#if TEST_STD_VER >= 11
+    {
+        // NonSwappable is still considered swappable in C++03 because there
+        // is no access control SFINAE.
+        typedef NonSwappable T;
+        typedef std::array<T, 42> C1;
+        static_assert(!can_swap<C1&>::value, "");
+    }
+#endif
+
+  return 0;
 }

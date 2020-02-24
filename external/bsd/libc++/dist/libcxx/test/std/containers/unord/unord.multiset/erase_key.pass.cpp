@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -19,14 +18,15 @@
 #include <string>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
 template <typename Unordered>
 bool only_deletions ( const Unordered &whole, const Unordered &part ) {
     typename Unordered::const_iterator w = whole.begin();
     typename Unordered::const_iterator p = part.begin();
-    
+
     while ( w != whole.end () && p != part.end()) {
         if ( *w == *p )
             p++;
@@ -37,7 +37,7 @@ bool only_deletions ( const Unordered &whole, const Unordered &part ) {
 }
 #endif
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::unordered_multiset<int> C;
@@ -95,7 +95,7 @@ int main()
         assert(c.erase(3) == 0);
         assert(c.size() == 0);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef std::unordered_multiset<int, std::hash<int>,
                                       std::equal_to<int>, min_allocator<int>> C;
@@ -160,7 +160,7 @@ int main()
         m.insert(i);  m.insert(i);
         m2.insert(i); m2.insert(i);
         }
-    
+
     C::iterator i = m2.begin();
     int ctr = 0;
     while (i != m2.end()) {
@@ -173,4 +173,6 @@ int main()
     assert (only_deletions (m, m2));
     }
 #endif
+
+  return 0;
 }

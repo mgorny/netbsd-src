@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,8 +14,11 @@
 
 #include <valarray>
 #include <cassert>
+#include <cstddef>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
         typedef int T;
@@ -25,7 +27,7 @@ int main()
         std::valarray<T> v(a, N);
         std::valarray<T> v2 = -v;
         assert(v2.size() == v.size());
-        for (int i = 0; i < v2.size(); ++i)
+        for (std::size_t i = 0; i < v2.size(); ++i)
             assert(v2[i] == -v[i]);
     }
     {
@@ -35,7 +37,7 @@ int main()
         std::valarray<T> v(a, N);
         std::valarray<T> v2 = -v;
         assert(v2.size() == v.size());
-        for (int i = 0; i < v2.size(); ++i)
+        for (std::size_t i = 0; i < v2.size(); ++i)
             assert(v2[i] == -v[i]);
     }
     {
@@ -45,10 +47,10 @@ int main()
         std::valarray<T> v(a, N);
         std::valarray<T> v2 = -v;
         assert(v2.size() == v.size());
-        for (int i = 0; i < N; ++i)
+        for (unsigned i = 0; i < N; ++i)
         {
             assert(v2[i].size() == v[i].size());
-            for (int j = 0; j < v[i].size(); ++j)
+            for (std::size_t j = 0; j < v[i].size(); ++j)
                 assert(v2[i][j] == -v[i][j]);
         }
     }
@@ -59,7 +61,9 @@ int main()
         std::valarray<T> v(a, N);
         std::valarray<T> v2 = -(v + v);
         assert(v2.size() == v.size());
-        for (int i = 0; i < v2.size(); ++i)
+        for (std::size_t i = 0; i < v2.size(); ++i)
             assert(v2[i] == -2*v[i]);
     }
+
+  return 0;
 }

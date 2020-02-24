@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,10 +14,13 @@
 
 #include <vector>
 #include <cassert>
+#include <cstddef>
+
+#include "test_macros.h"
 #include "test_iterators.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         std::vector<bool> v(100);
@@ -28,10 +30,10 @@ int main()
                                         input_iterator<const bool*>(a+N));
         assert(v.size() == 100 + N);
         assert(i == v.begin() + 10);
-        int j;
+        std::size_t j;
         for (j = 0; j < 10; ++j)
             assert(v[j] == 0);
-        for (int k = 0; k < N; ++j, ++k)
+        for (std::size_t k = 0; k < N; ++j, ++k)
             assert(v[j] == a[k]);
         for (; j < v.size(); ++j)
             assert(v[j] == 0);
@@ -47,7 +49,7 @@ int main()
         int j;
         for (j = 0; j < 10; ++j)
             assert(v[j] == 0);
-        for (int k = 0; k < N; ++j, ++k)
+        for (std::size_t k = 0; k < N; ++j, ++k)
             assert(v[j] == a[k]);
         for (; j < 105; ++j)
             assert(v[j] == 0);
@@ -62,10 +64,10 @@ int main()
                                         forward_iterator<const bool*>(a+N));
         assert(v.size() == sz + N);
         assert(i == v.begin() + 10);
-        int j;
+        std::size_t j;
         for (j = 0; j < 10; ++j)
             assert(v[j] == 0);
-        for (int k = 0; k < N; ++j, ++k)
+        for (std::size_t k = 0; k < N; ++j, ++k)
             assert(v[j] == a[k]);
         for (; j < v.size(); ++j)
             assert(v[j] == 0);
@@ -81,15 +83,15 @@ int main()
                                         forward_iterator<const bool*>(a+N));
         assert(v.size() == sz + N);
         assert(i == v.begin() + 10);
-        int j;
+        std::size_t j;
         for (j = 0; j < 10; ++j)
             assert(v[j] == 0);
-        for (int k = 0; k < N; ++j, ++k)
+        for (std::size_t k = 0; k < N; ++j, ++k)
             assert(v[j] == a[k]);
         for (; j < v.size(); ++j)
             assert(v[j] == 0);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         std::vector<bool, min_allocator<bool>> v(100);
         bool a[] = {1, 0, 0, 1, 1};
@@ -98,10 +100,10 @@ int main()
                                         input_iterator<const bool*>(a+N));
         assert(v.size() == 100 + N);
         assert(i == v.begin() + 10);
-        int j;
+        std::size_t j;
         for (j = 0; j < 10; ++j)
             assert(v[j] == 0);
-        for (int k = 0; k < N; ++j, ++k)
+        for (std::size_t k = 0; k < N; ++j, ++k)
             assert(v[j] == a[k]);
         for (; j < v.size(); ++j)
             assert(v[j] == 0);
@@ -114,13 +116,15 @@ int main()
                                         forward_iterator<const bool*>(a+N));
         assert(v.size() == 100 + N);
         assert(i == v.begin() + 10);
-        int j;
+        std::size_t j;
         for (j = 0; j < 10; ++j)
             assert(v[j] == 0);
-        for (int k = 0; k < N; ++j, ++k)
+        for (std::size_t k = 0; k < N; ++j, ++k)
             assert(v[j] == a[k]);
         for (; j < v.size(); ++j)
             assert(v[j] == 0);
     }
 #endif
+
+  return 0;
 }

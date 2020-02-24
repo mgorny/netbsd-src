@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,10 +13,11 @@
 
 #include <vector>
 #include <cassert>
+#include "test_macros.h"
 #include "test_allocator.h"
 #include "min_allocator.h"
 
-int main()
+int main(int, char**)
 {
     {
         std::vector<bool> v1(100);
@@ -30,15 +30,15 @@ int main()
     }
     {
         typedef test_allocator<bool> A;
-        std::vector<bool, A> v1(100, true, A(1));
-        std::vector<bool, A> v2(200, false, A(2));
+        std::vector<bool, A> v1(100, true, A(1, 1));
+        std::vector<bool, A> v2(200, false, A(1, 2));
         swap(v1, v2);
         assert(v1.size() == 200);
         assert(v1.capacity() >= 200);
         assert(v2.size() == 100);
         assert(v2.capacity() >= 100);
-        assert(v1.get_allocator() == A(1));
-        assert(v2.get_allocator() == A(2));
+        assert(v1.get_allocator().get_id() == 1);
+        assert(v2.get_allocator().get_id() == 2);
     }
     {
         typedef other_allocator<bool> A;
@@ -62,7 +62,7 @@ int main()
         assert(v[0] == false);
         assert(v[1] == true);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         std::vector<bool, min_allocator<bool>> v1(100);
         std::vector<bool, min_allocator<bool>> v2(200);
@@ -95,4 +95,6 @@ int main()
         assert(v[1] == true);
     }
 #endif
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,8 +14,11 @@
 
 #include <valarray>
 #include <cassert>
+#include <cstddef>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     {
         typedef int T;
@@ -25,17 +27,19 @@ int main()
         std::valarray<T> v1(a1, N1);
         v1.resize(8);
         assert(v1.size() == 8);
-        for (int i = 0; i < v1.size(); ++i)
+        for (std::size_t i = 0; i < v1.size(); ++i)
             assert(v1[i] == 0);
         v1.resize(0);
         assert(v1.size() == 0);
         v1.resize(80);
         assert(v1.size() == 80);
-        for (int i = 0; i < v1.size(); ++i)
+        for (std::size_t i = 0; i < v1.size(); ++i)
             assert(v1[i] == 0);
         v1.resize(40);
         assert(v1.size() == 40);
-        for (int i = 0; i < v1.size(); ++i)
+        for (std::size_t i = 0; i < v1.size(); ++i)
             assert(v1[i] == 0);
     }
+
+  return 0;
 }

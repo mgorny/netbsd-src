@@ -1,13 +1,14 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: libcpp-has-no-threads
+
+// FLAKY_TEST.
 
 // <mutex>
 
@@ -15,10 +16,15 @@
 
 // explicit lock_guard(mutex_type& m);
 
+// template<class _Mutex> lock_guard(lock_guard<_Mutex>)
+//     -> lock_guard<_Mutex>;  // C++17
+
 #include <mutex>
 #include <thread>
 #include <cstdlib>
 #include <cassert>
+
+#include "test_macros.h"
 
 std::mutex m;
 
@@ -40,11 +46,18 @@ void f()
     assert(d < ms(200));  // within 200ms
 }
 
-int main()
+int main(int, char**)
 {
     m.lock();
     std::thread t(f);
     std::this_thread::sleep_for(ms(250));
     m.unlock();
     t.join();
+
+#ifdef __cpp_deduction_guides
+    std::lock_guard lg(m);
+    static_assert((std::is_same<decltype(lg), std::lock_guard<decltype(m)>>::value), "" );
+#endif
+
+  return 0;
 }

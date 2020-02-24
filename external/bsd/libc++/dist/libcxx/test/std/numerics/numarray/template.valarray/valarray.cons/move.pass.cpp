@@ -1,11 +1,12 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// UNSUPPORTED: c++98, c++03
 
 // <valarray>
 
@@ -16,10 +17,12 @@
 #include <valarray>
 #include <utility>
 #include <cassert>
+#include <cstddef>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_RVALUE_REFERENCES
     {
         typedef int T;
         T a[] = {1, 2, 3, 4, 5};
@@ -28,7 +31,7 @@ int main()
         std::valarray<T> v2 = std::move(v);
         assert(v2.size() == N);
         assert(v.size() == 0);
-        for (int i = 0; i < v2.size(); ++i)
+        for (std::size_t i = 0; i < v2.size(); ++i)
             assert(v2[i] == a[i]);
     }
     {
@@ -39,7 +42,7 @@ int main()
         std::valarray<T> v2 = std::move(v);
         assert(v2.size() == N);
         assert(v.size() == 0);
-        for (int i = 0; i < v2.size(); ++i)
+        for (std::size_t i = 0; i < v2.size(); ++i)
             assert(v2[i] == a[i]);
     }
     {
@@ -50,12 +53,13 @@ int main()
         std::valarray<T> v2 = std::move(v);
         assert(v2.size() == N);
         assert(v.size() == 0);
-        for (int i = 0; i < N; ++i)
+        for (unsigned i = 0; i < N; ++i)
         {
             assert(v2[i].size() == a[i].size());
-            for (int j = 0; j < v2[i].size(); ++j)
+            for (std::size_t j = 0; j < v2[i].size(); ++j)
                 assert(v2[i][j] == a[i][j]);
         }
     }
-#endif  // _LIBCPP_HAS_NO_RVALUE_REFERENCES
+
+  return 0;
 }

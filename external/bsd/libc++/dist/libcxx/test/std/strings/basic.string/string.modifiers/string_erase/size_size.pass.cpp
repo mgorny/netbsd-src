@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,50 +11,76 @@
 // basic_string<charT,traits,Allocator>&
 //   erase(size_type pos = 0, size_type n = npos);
 
+// When back-deploying to macosx10.7, the RTTI for exception classes
+// incorrectly provided by libc++.dylib is mixed with the one in
+// libc++abi.dylib and exceptions are not caught properly.
+// XFAIL: with_system_cxx_lib=macosx10.7
+
 #include <string>
 #include <stdexcept>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class S>
 void
 test(S s, typename S::size_type pos, typename S::size_type n, S expected)
 {
-    typename S::size_type old_size = s.size();
+    const typename S::size_type old_size = s.size();
     S s0 = s;
-    try
+    if (pos <= old_size)
     {
         s.erase(pos, n);
-        assert(s.__invariants());
-        assert(pos <= old_size);
+        LIBCPP_ASSERT(s.__invariants());
+        assert(s[s.size()] == typename S::value_type());
         assert(s == expected);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos > old_size);
-        assert(s == s0);
+        try
+        {
+            s.erase(pos, n);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos > old_size);
+            assert(s == s0);
+        }
     }
+#endif
 }
 
 template <class S>
 void
 test(S s, typename S::size_type pos, S expected)
 {
-    typename S::size_type old_size = s.size();
+    const typename S::size_type old_size = s.size();
     S s0 = s;
-    try
+    if (pos <= old_size)
     {
         s.erase(pos);
-        assert(s.__invariants());
-        assert(pos <= old_size);
+        LIBCPP_ASSERT(s.__invariants());
+        assert(s[s.size()] == typename S::value_type());
         assert(s == expected);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos > old_size);
-        assert(s == s0);
+        try
+        {
+            s.erase(pos);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos > old_size);
+            assert(s == s0);
+        }
     }
+#endif
 }
 
 template <class S>
@@ -63,11 +88,12 @@ void
 test(S s, S expected)
 {
     s.erase();
-    assert(s.__invariants());
+    LIBCPP_ASSERT(s.__invariants());
+    assert(s[s.size()] == typename S::value_type());
     assert(s == expected);
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string S;
@@ -172,7 +198,7 @@ int main()
     test(S("abcdefghij"), S(""));
     test(S("abcdefghijklmnopqrst"), S(""));
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> S;
     test(S(""), 0, 0, S(""));
@@ -277,4 +303,6 @@ int main()
     test(S("abcdefghijklmnopqrst"), S(""));
     }
 #endif
+
+  return 0;
 }

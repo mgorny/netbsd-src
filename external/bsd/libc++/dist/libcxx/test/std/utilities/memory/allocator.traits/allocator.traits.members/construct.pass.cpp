@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -22,6 +21,9 @@
 #include <type_traits>
 #include <cassert>
 
+#include "test_macros.h"
+#include "incomplete_type_helper.h"
+
 template <class T>
 struct A
 {
@@ -36,14 +38,14 @@ struct B
 {
     typedef T value_type;
 
-#ifndef _LIBCPP_HAS_NO_VARIADICS
+#if TEST_STD_VER >= 11
     template <class U, class ...Args>
     void construct(U* p, Args&& ...args)
     {
         ++b_construct;
         ::new ((void*)p) U(std::forward<Args>(args)...);
     }
-#endif  // _LIBCPP_HAS_NO_VARIADICS
+#endif
 };
 
 struct A0
@@ -79,7 +81,7 @@ struct A2
 
 int A2::count = 0;
 
-int main()
+int main(int, char**)
 {
     {
         A0::count = 0;
@@ -105,7 +107,14 @@ int main()
         std::allocator_traits<A<int> >::construct(a, (A2*)&a2, 'd', 5);
         assert(A2::count == 1);
     }
-#ifndef _LIBCPP_HAS_NO_VARIADICS
+    {
+      typedef IncompleteHolder* VT;
+      typedef A<VT> Alloc;
+      Alloc a;
+      std::aligned_storage<sizeof(VT)>::type store;
+      std::allocator_traits<Alloc>::construct(a, (VT*)&store, nullptr);
+    }
+#if TEST_STD_VER >= 11
     {
         A0::count = 0;
         b_construct = 0;
@@ -139,5 +148,7 @@ int main()
         assert(A2::count == 1);
         assert(b_construct == 1);
     }
-#endif  // _LIBCPP_HAS_NO_VARIADICS
+#endif
+
+  return 0;
 }

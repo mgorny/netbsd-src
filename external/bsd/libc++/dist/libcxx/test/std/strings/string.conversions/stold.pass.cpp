@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,13 +11,19 @@
 // long double stold(const string& str, size_t *idx = 0);
 // long double stold(const wstring& str, size_t *idx = 0);
 
-#include <iostream>
+// When back-deploying to macosx10.7, the RTTI for exception classes
+// incorrectly provided by libc++.dylib is mixed with the one in
+// libc++abi.dylib and exceptions are not caught properly.
+// XFAIL: with_system_cxx_lib=macosx10.7
 
-#include <string>
-#include <cmath>
 #include <cassert>
+#include <cmath>
+#include <stdexcept>
+#include <string>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     assert(std::stold("0") == 0);
     assert(std::stold(L"0") == 0);
@@ -34,25 +39,32 @@ int main()
     idx = 0;
     assert(std::stold(L"10g", &idx) == 10);
     assert(idx == 2);
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
+#endif
     {
         assert(std::stold("1.e60", &idx) == 1.e60L);
         assert(idx == 5);
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     catch (const std::out_of_range&)
     {
         assert(false);
     }
     try
+#endif
     {
         assert(std::stold(L"1.e60", &idx) == 1.e60L);
         assert(idx == 5);
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     catch (const std::out_of_range&)
     {
         assert(false);
     }
+#endif
     idx = 0;
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
     {
         assert(std::stold("1.e6000", &idx) == INFINITY);
@@ -72,40 +84,54 @@ int main()
         assert(idx == 0);
     }
     try
+#endif
     {
         assert(std::stold("INF", &idx) == INFINITY);
         assert(idx == 3);
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     catch (const std::out_of_range&)
     {
         assert(false);
     }
+#endif
     idx = 0;
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
+#endif
     {
         assert(std::stold(L"INF", &idx) == INFINITY);
         assert(idx == 3);
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     catch (const std::out_of_range&)
     {
         assert(false);
     }
+#endif
     idx = 0;
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
+#endif
     {
         assert(std::isnan(std::stold("NAN", &idx)));
         assert(idx == 3);
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     catch (const std::out_of_range&)
     {
         assert(false);
     }
+#endif
     idx = 0;
+#ifndef TEST_HAS_NO_EXCEPTIONS
     try
+#endif
     {
         assert(std::isnan(std::stold(L"NAN", &idx)));
         assert(idx == 3);
     }
+#ifndef TEST_HAS_NO_EXCEPTIONS
     catch (const std::out_of_range&)
     {
         assert(false);
@@ -165,4 +191,7 @@ int main()
     {
         assert(idx == 0);
     }
+#endif
+
+  return 0;
 }

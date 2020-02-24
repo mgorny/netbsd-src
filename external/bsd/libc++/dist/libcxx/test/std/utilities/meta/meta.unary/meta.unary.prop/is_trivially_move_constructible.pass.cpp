@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,17 +11,24 @@
 // is_trivially_move_constructible
 
 #include <type_traits>
+#include "test_macros.h"
 
 template <class T>
 void test_is_trivially_move_constructible()
 {
     static_assert( std::is_trivially_move_constructible<T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert( std::is_trivially_move_constructible_v<T>, "");
+#endif
 }
 
 template <class T>
 void test_has_not_trivial_move_constructor()
 {
     static_assert(!std::is_trivially_move_constructible<T>::value, "");
+#if TEST_STD_VER > 14
+    static_assert(!std::is_trivially_move_constructible_v<T>, "");
+#endif
 }
 
 class Empty
@@ -53,7 +59,7 @@ struct A
     A(const A&);
 };
 
-#if __has_feature(cxx_defaulted_functions)
+#if TEST_STD_VER >= 11
 
 struct MoveOnly1
 {
@@ -67,7 +73,7 @@ struct MoveOnly2
 
 #endif
 
-int main()
+int main(int, char**)
 {
     test_has_not_trivial_move_constructor<void>();
     test_has_not_trivial_move_constructor<A>();
@@ -82,8 +88,10 @@ int main()
     test_is_trivially_move_constructible<const int*>();
     test_is_trivially_move_constructible<bit_zero>();
 
-#if __has_feature(cxx_defaulted_functions)
+#if TEST_STD_VER >= 11
     static_assert(!std::is_trivially_move_constructible<MoveOnly1>::value, "");
     static_assert( std::is_trivially_move_constructible<MoveOnly2>::value, "");
 #endif
+
+  return 0;
 }

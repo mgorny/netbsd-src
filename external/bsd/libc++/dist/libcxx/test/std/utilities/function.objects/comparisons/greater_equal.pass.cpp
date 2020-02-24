@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,7 +14,10 @@
 #include <type_traits>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+#include "pointer_comparison_test_helper.h"
+
+int main(int, char**)
 {
     typedef std::greater_equal<int> F;
     const F f = F();
@@ -25,7 +27,12 @@ int main()
     assert(f(36, 36));
     assert(f(36, 6));
     assert(!f(6, 36));
-#if _LIBCPP_STD_VER > 11
+    {
+        // test total ordering of int* for greater_equal<int*> and
+        // greater_equal<void>.
+        do_pointer_comparison_test<int, std::greater_equal>();
+    }
+#if TEST_STD_VER > 11
     typedef std::greater_equal<> F2;
     const F2 f2 = F2();
     assert(f2(36, 36));
@@ -42,4 +49,6 @@ int main()
     constexpr bool bar = std::greater_equal<> () (36.0, 36);
     static_assert ( bar, "" );
 #endif
+
+  return 0;
 }

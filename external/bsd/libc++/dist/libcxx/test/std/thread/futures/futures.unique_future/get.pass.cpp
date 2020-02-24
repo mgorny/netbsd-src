@@ -1,13 +1,13 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
 // UNSUPPORTED: libcpp-has-no-threads
+// UNSUPPORTED: c++98, c++03
 
 // <future>
 
@@ -19,6 +19,8 @@
 
 #include <future>
 #include <cassert>
+
+#include "test_macros.h"
 
 void func1(std::promise<int> p)
 {
@@ -59,7 +61,7 @@ void func6(std::promise<void> p)
     p.set_exception(std::make_exception_ptr('c'));
 }
 
-int main()
+int main(int, char**)
 {
     {
         typedef int T;
@@ -71,6 +73,7 @@ int main()
             assert(f.get() == 3);
             assert(!f.valid());
         }
+#ifndef TEST_HAS_NO_EXCEPTIONS
         {
             std::promise<T> p;
             std::future<T> f = p.get_future();
@@ -87,6 +90,7 @@ int main()
             }
             assert(!f.valid());
         }
+#endif
     }
     {
         typedef int& T;
@@ -98,6 +102,7 @@ int main()
             assert(f.get() == 5);
             assert(!f.valid());
         }
+#ifndef TEST_HAS_NO_EXCEPTIONS
         {
             std::promise<T> p;
             std::future<T> f = p.get_future();
@@ -114,6 +119,7 @@ int main()
             }
             assert(!f.valid());
         }
+#endif
     }
     {
         typedef void T;
@@ -125,6 +131,7 @@ int main()
             f.get();
             assert(!f.valid());
         }
+#ifndef TEST_HAS_NO_EXCEPTIONS
         {
             std::promise<T> p;
             std::future<T> f = p.get_future();
@@ -141,5 +148,8 @@ int main()
             }
             assert(!f.valid());
         }
+#endif
     }
+
+  return 0;
 }

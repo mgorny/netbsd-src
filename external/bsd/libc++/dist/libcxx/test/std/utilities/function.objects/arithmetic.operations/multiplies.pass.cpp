@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,7 +14,9 @@
 #include <type_traits>
 #include <cassert>
 
-int main()
+#include "test_macros.h"
+
+int main(int, char**)
 {
     typedef std::multiplies<int> F;
     const F f = F();
@@ -23,7 +24,7 @@ int main()
     static_assert((std::is_same<int, F::second_argument_type>::value), "" );
     static_assert((std::is_same<int, F::result_type>::value), "" );
     assert(f(3, 2) == 6);
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
     typedef std::multiplies<> F2;
     const F2 f2 = F2();
     assert(f2(3,2) == 6);
@@ -33,7 +34,9 @@ int main()
     constexpr int foo = std::multiplies<int> () (3, 2);
     static_assert ( foo == 6, "" );
 
-    constexpr int bar = std::multiplies<> () (3.0, 2);
-    static_assert ( bar == 6, "" );
+    constexpr double bar = std::multiplies<> () (3.0, 2);
+    static_assert ( bar == 6.0, "" );
 #endif
+
+  return 0;
 }

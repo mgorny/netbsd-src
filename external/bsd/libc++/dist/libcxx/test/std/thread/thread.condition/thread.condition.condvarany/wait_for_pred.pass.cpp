@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 //
@@ -23,6 +22,8 @@
 #include <thread>
 #include <chrono>
 #include <cassert>
+
+#include "test_macros.h"
 
 class Pred
 {
@@ -44,6 +45,7 @@ int test1 = 0;
 int test2 = 0;
 
 int runs = 0;
+bool expect_result = false;
 
 void f()
 {
@@ -54,7 +56,8 @@ void f()
     test1 = 1;
     cv.notify_one();
     Clock::time_point t0 = Clock::now();
-    bool r = cv.wait_for(lk, milliseconds(250), Pred(test2));
+    bool result = cv.wait_for(lk, milliseconds(250), Pred(test2));
+    assert(result == expect_result);
     Clock::time_point t1 = Clock::now();
     if (runs == 0)
     {
@@ -69,9 +72,10 @@ void f()
     ++runs;
 }
 
-int main()
+int main(int, char**)
 {
     {
+        expect_result = true;
         L1 lk(m0);
         std::thread t(f);
         assert(test1 == 0);
@@ -86,6 +90,7 @@ int main()
     test1 = 0;
     test2 = 0;
     {
+        expect_result = false;
         L1 lk(m0);
         std::thread t(f);
         assert(test1 == 0);
@@ -95,4 +100,6 @@ int main()
         lk.unlock();
         t.join();
     }
+
+  return 0;
 }

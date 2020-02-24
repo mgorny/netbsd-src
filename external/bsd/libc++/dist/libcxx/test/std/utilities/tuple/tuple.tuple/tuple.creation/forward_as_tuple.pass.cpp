@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -18,9 +17,11 @@
 #include <type_traits>
 #include <cassert>
 
+#include "test_macros.h"
+
 template <class Tuple>
 void
-test0(const Tuple& t)
+test0(const Tuple&)
 {
     static_assert(std::tuple_size<Tuple>::value == 0, "");
 }
@@ -54,16 +55,16 @@ test2a(const Tuple& t)
     assert(std::get<1>(t) == 'a');
 }
 
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
 template <class Tuple>
-constexpr int 
-test3(const Tuple& t)
+constexpr int
+test3(const Tuple&)
 {
     return std::tuple_size<Tuple>::value;
 }
 #endif
 
-int main()
+int main(int, char**)
 {
     {
         test0(std::forward_as_tuple());
@@ -79,8 +80,10 @@ int main()
         double i = 2.5;
         char c = 'a';
         test2a(std::forward_as_tuple(i, c));
-#if _LIBCPP_STD_VER > 11
+#if TEST_STD_VER > 11
         static_assert ( test3 (std::forward_as_tuple(i, c)) == 2, "" );
 #endif
     }
+
+  return 0;
 }

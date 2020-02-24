@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -12,11 +11,17 @@
 // basic_string<charT,traits,Allocator>&
 //   replace(size_type pos, size_type n1, size_type n2, charT c);
 
+// When back-deploying to macosx10.7, the RTTI for exception classes
+// incorrectly provided by libc++.dylib is mixed with the one in
+// libc++abi.dylib and exceptions are not caught properly.
+// XFAIL: with_system_cxx_lib=macosx10.7
+
 #include <string>
 #include <stdexcept>
 #include <algorithm>
 #include <cassert>
 
+#include "test_macros.h"
 #include "min_allocator.h"
 
 template <class S>
@@ -25,23 +30,32 @@ test(S s, typename S::size_type pos, typename S::size_type n1,
      typename S::size_type n2, typename S::value_type c,
      S expected)
 {
-    typename S::size_type old_size = s.size();
+    const typename S::size_type old_size = s.size();
     S s0 = s;
-    try
+    if (pos <= old_size)
     {
         s.replace(pos, n1, n2, c);
-        assert(s.__invariants());
-        assert(pos <= old_size);
+        LIBCPP_ASSERT(s.__invariants());
         assert(s == expected);
         typename S::size_type xlen = std::min(n1, old_size - pos);
         typename S::size_type rlen = n2;
         assert(s.size() == old_size - xlen + rlen);
     }
-    catch (std::out_of_range&)
+#ifndef TEST_HAS_NO_EXCEPTIONS
+    else
     {
-        assert(pos > old_size);
-        assert(s == s0);
+        try
+        {
+            s.replace(pos, n1, n2, c);
+            assert(false);
+        }
+        catch (std::out_of_range&)
+        {
+            assert(pos > old_size);
+            assert(s == s0);
+        }
     }
+#endif
 }
 
 template <class S>
@@ -355,7 +369,7 @@ void test2()
     test(S("abcdefghijklmnopqrst"), 21, 0, 20, '2', S("can't happen"));
 }
 
-int main()
+int main(int, char**)
 {
     {
     typedef std::string S;
@@ -363,7 +377,7 @@ int main()
     test1<S>();
     test2<S>();
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
     typedef std::basic_string<char, std::char_traits<char>, min_allocator<char>> S;
     test0<S>();
@@ -371,4 +385,6 @@ int main()
     test2<S>();
     }
 #endif
+
+  return 0;
 }

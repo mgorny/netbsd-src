@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -14,10 +13,15 @@
 #include <forward_list>
 #include <cassert>
 
+#include "test_macros.h"
 #include "DefaultOnly.h"
 #include "min_allocator.h"
 
-int main()
+#if TEST_STD_VER >= 11
+#include "container_test_types.h"
+#endif
+
+int main(int, char**)
 {
     {
         typedef int T;
@@ -49,7 +53,7 @@ int main()
         assert(*next(c.begin(), 4) == 10);
         assert(*next(c.begin(), 5) == 10);
     }
-#if __cplusplus >= 201103L
+#if TEST_STD_VER >= 11
     {
         typedef int T;
         typedef std::forward_list<T, min_allocator<T>> C;
@@ -80,5 +84,20 @@ int main()
         assert(*next(c.begin(), 4) == 10);
         assert(*next(c.begin(), 5) == 10);
     }
+    {
+        // Test that the allocator's construct method is being used to
+        // construct the new elements and that it's called exactly N times.
+        typedef std::forward_list<int, ContainerTestAllocator<int, int>> Container;
+        ConstructController* cc = getConstructController();
+        cc->reset();
+        {
+            Container c;
+            cc->expect<int const&>(6);
+            c.resize(6, 42);
+            assert(!cc->unchecked());
+        }
+    }
 #endif
+
+  return 0;
 }

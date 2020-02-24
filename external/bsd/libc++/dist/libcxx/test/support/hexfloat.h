@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,7 +14,6 @@
 #ifndef HEXFLOAT_H
 #define HEXFLOAT_H
 
-#include <algorithm>
 #include <cmath>
 #include <climits>
 
@@ -23,13 +21,26 @@ template <class T>
 class hexfloat
 {
     T value_;
+
+    static int CountLeadingZeros(unsigned long long n) {
+        const std::size_t Digits = sizeof(unsigned long long) * CHAR_BIT;
+        const unsigned long long TopBit = 1ull << (Digits - 1);
+        if (n == 0) return Digits;
+        int LeadingZeros = 0;
+        while ((n & TopBit) == 0) {
+            ++LeadingZeros;
+            n <<= 1;
+        }
+        return LeadingZeros;
+    }
+
 public:
     hexfloat(long long m1, unsigned long long m0, int exp)
     {
-        const std::size_t n = sizeof(unsigned long long) * CHAR_BIT;
+        const std::size_t Digits = sizeof(unsigned long long) * CHAR_BIT;
         int s = m1 < 0 ? -1 : 1;
-        value_ = std::ldexp(m1 + s * std::ldexp(T(m0), -static_cast<int>(n -
-                                                     std::__clz(m0)/4*4)), exp);
+        int exp2 = -static_cast<int>(Digits - CountLeadingZeros(m0)/4*4);
+        value_ = std::ldexp(m1 + s * std::ldexp(T(m0), exp2), exp);
     }
 
     operator T() const {return value_;}

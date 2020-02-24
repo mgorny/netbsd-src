@@ -1,24 +1,24 @@
 // -*- C++ -*-
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
 // <regex>
 
 // match_not_eol:
-//     The last character in the sequence [first,last) shall be treated as 
-//     though it is not at the end of a line, so the character "$" in 
+//     The last character in the sequence [first,last) shall be treated as
+//     though it is not at the end of a line, so the character "$" in
 //     the regular expression shall not match [last,last).
 
 #include <regex>
 #include <cassert>
+#include "test_macros.h"
 
-int main()
+int main(int, char**)
 {
     {
     std::string target = "foo";
@@ -47,4 +47,6 @@ int main()
     assert( std::regex_search(target, re));
     assert( std::regex_search(target, re, std::regex_constants::match_not_eol));
     }
+
+  return 0;
 }

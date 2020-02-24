@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -18,6 +17,8 @@
 
 #include <memory>
 #include <type_traits>
+
+#include "test_macros.h"
 
 template <class T>
 struct ReboundA {};
@@ -61,19 +62,41 @@ struct E
     template <class U> struct rebind {typedef ReboundA<U> otter;};
 };
 
-int main()
+template <class T>
+struct F {
+    typedef T value_type;
+private:
+    template <class>
+    struct rebind { typedef void other; };
+};
+
+template <class T>
+struct G {
+    typedef T value_type;
+    template <class>
+    struct rebind {
+    private:
+        typedef void other;
+    };
+};
+
+int main(int, char**)
 {
-#ifndef _LIBCPP_HAS_NO_TEMPLATE_ALIASES
+#if TEST_STD_VER >= 11
     static_assert((std::is_same<std::allocator_traits<A<char> >::rebind_alloc<double>, ReboundA<double> >::value), "");
     static_assert((std::is_same<std::allocator_traits<B<int, char> >::rebind_alloc<double>, ReboundB<double, char> >::value), "");
     static_assert((std::is_same<std::allocator_traits<C<char> >::rebind_alloc<double>, C<double> >::value), "");
     static_assert((std::is_same<std::allocator_traits<D<int, char> >::rebind_alloc<double>, D<double, char> >::value), "");
     static_assert((std::is_same<std::allocator_traits<E<char> >::rebind_alloc<double>, E<double> >::value), "");
-#else  // _LIBCPP_HAS_NO_TEMPLATE_ALIASES
+    static_assert((std::is_same<std::allocator_traits<F<char> >::rebind_alloc<double>, F<double> >::value), "");
+    static_assert((std::is_same<std::allocator_traits<G<char> >::rebind_alloc<double>, G<double> >::value), "");
+#else
     static_assert((std::is_same<std::allocator_traits<A<char> >::rebind_alloc<double>::other, ReboundA<double> >::value), "");
     static_assert((std::is_same<std::allocator_traits<B<int, char> >::rebind_alloc<double>::other, ReboundB<double, char> >::value), "");
     static_assert((std::is_same<std::allocator_traits<C<char> >::rebind_alloc<double>::other, C<double> >::value), "");
     static_assert((std::is_same<std::allocator_traits<D<int, char> >::rebind_alloc<double>::other, D<double, char> >::value), "");
     static_assert((std::is_same<std::allocator_traits<E<char> >::rebind_alloc<double>::other, E<double> >::value), "");
-#endif  // _LIBCPP_HAS_NO_TEMPLATE_ALIASES
+#endif
+
+  return 0;
 }

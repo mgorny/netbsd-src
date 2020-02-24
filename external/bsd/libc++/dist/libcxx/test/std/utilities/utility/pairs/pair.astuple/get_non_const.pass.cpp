@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -18,7 +17,9 @@
 #include <utility>
 #include <cassert>
 
-#if __cplusplus > 201103L
+#include "test_macros.h"
+
+#if TEST_STD_VER > 11
 struct S {
    std::pair<int, int> a;
    int k;
@@ -28,11 +29,11 @@ struct S {
 constexpr std::pair<int, int> getP () { return { 3, 4 }; }
 #endif
 
-int main()
+int main(int, char**)
 {
     {
         typedef std::pair<int, short> P;
-        P p(3, 4);
+        P p(3, static_cast<short>(4));
         assert(std::get<0>(p) == 3);
         assert(std::get<1>(p) == 4);
         std::get<0>(p) = 5;
@@ -41,11 +42,13 @@ int main()
         assert(std::get<1>(p) == 6);
     }
 
-#if __cplusplus > 201103L
+#if TEST_STD_VER > 11
     {
         static_assert(S().k == 1, "");
         static_assert(std::get<1>(getP()) == 4, "");
     }
 #endif
 
+
+  return 0;
 }

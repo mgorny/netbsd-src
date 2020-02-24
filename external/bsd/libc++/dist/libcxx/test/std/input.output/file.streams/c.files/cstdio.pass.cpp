@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -11,6 +10,8 @@
 
 #include <cstdio>
 #include <type_traits>
+
+#include "test_macros.h"
 
 #ifndef BUFSIZ
 #error BUFSIZ not defined
@@ -78,16 +79,24 @@
 
 #include <cstdarg>
 
+#if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wformat-zero-length"
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
 
-int main()
+int main(int, char**)
 {
     std::FILE* fp = 0;
-    std::fpos_t fpos = {0};
+    std::fpos_t fpos = std::fpos_t();
     std::size_t s = 0;
     char* cp = 0;
     std::va_list va;
+    ((void)fp); // Prevent unused warning
+    ((void)fpos); // Prevent unused warning
+    ((void)s); // Prevent unused warning
+    ((void)cp); // Prevent unused warning
+    ((void)va); // Prevent unused warning
     static_assert((std::is_same<decltype(std::fclose(fp)), int>::value), "");
     static_assert((std::is_same<decltype(std::fflush(fp)), int>::value), "");
     static_assert((std::is_same<decltype(std::setbuf(fp,cp)), void>::value), "");
@@ -132,7 +141,7 @@ int main()
 
 #ifndef _LIBCPP_HAS_NO_STDIN
     static_assert((std::is_same<decltype(std::getchar()), int>::value), "");
-#if _LIBCPP_STD_VER <= 11
+#if TEST_STD_VER <= 11
     static_assert((std::is_same<decltype(std::gets(cp)), char*>::value), "");
 #endif
     static_assert((std::is_same<decltype(std::scanf(" ")), int>::value), "");
@@ -145,4 +154,6 @@ int main()
     static_assert((std::is_same<decltype(std::puts("")), int>::value), "");
     static_assert((std::is_same<decltype(std::vprintf(" ",va)), int>::value), "");
 #endif
+
+  return 0;
 }

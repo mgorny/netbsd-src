@@ -1,11 +1,14 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
+
+// XFAIL: with_system_cxx_lib=macosx10.11
+// XFAIL: with_system_cxx_lib=macosx10.10
+// XFAIL: with_system_cxx_lib=macosx10.9
 
 // <istream>
 
@@ -13,6 +16,8 @@
 
 #include <istream>
 #include <cassert>
+
+#include "test_macros.h"
 
 int seekoff_called = 0;
 
@@ -40,7 +45,7 @@ public:
     CharT* egptr() const {return base::egptr();}
 protected:
     typename base::pos_type seekoff(typename base::off_type off,
-                                    std::ios_base::seekdir way,
+                                    std::ios_base::seekdir,
                                     std::ios_base::openmode which)
     {
         assert(which == std::ios_base::in);
@@ -49,7 +54,7 @@ protected:
     }
 };
 
-int main()
+int main(int, char**)
 {
     {
         testbuf<char> sb(" 123456789");
@@ -71,4 +76,15 @@ int main()
         assert(is.fail());
         assert(seekoff_called == 4);
     }
+    {
+        testbuf<char> sb(" 123456789");
+        std::istream is(&sb);
+        is.setstate(std::ios_base::eofbit);
+        assert(is.eof());
+        is.seekg(5, std::ios_base::beg);
+        assert(is.good());
+        assert(!is.eof());
+    }
+
+  return 0;
 }

@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -23,6 +22,8 @@
 #include <type_traits>
 #include <limits>
 
+#include "test_macros.h"
+
 template <class T>
 void
 test()
@@ -30,6 +31,7 @@ test()
     typedef std::hash<T> H;
     static_assert((std::is_same<typename H::argument_type, T>::value), "" );
     static_assert((std::is_same<typename H::result_type, std::size_t>::value), "" );
+    ASSERT_NOEXCEPT(H()(T()));
     H h;
 
     typedef typename std::remove_pointer<T>::type type;
@@ -38,7 +40,22 @@ test()
     assert(h(&i) != h(&j));
 }
 
-int main()
+// can't hash nullptr_t until C++17
+void test_nullptr()
+{
+#if TEST_STD_VER > 14
+    typedef std::nullptr_t T;
+    typedef std::hash<T> H;
+    static_assert((std::is_same<typename H::argument_type, T>::value), "" );
+    static_assert((std::is_same<typename H::result_type, std::size_t>::value), "" );
+    ASSERT_NOEXCEPT(H()(T()));
+#endif
+}
+
+int main(int, char**)
 {
     test<int*>();
+    test_nullptr();
+
+  return 0;
 }

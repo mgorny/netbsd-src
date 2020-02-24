@@ -1,9 +1,8 @@
 //===----------------------------------------------------------------------===//
 //
-//                     The LLVM Compiler Infrastructure
-//
-// This file is dual licensed under the MIT and the University of Illinois Open
-// Source Licenses. See LICENSE.TXT for details.
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 //
 //===----------------------------------------------------------------------===//
 
@@ -15,7 +14,9 @@
 
 #include <deque>
 #include <cassert>
+#include <cstddef>
 
+#include "test_macros.h"
 #include "../../../Emplaceable.h"
 #include "min_allocator.h"
 
@@ -51,7 +52,7 @@ test(int P, C& c1)
     CI i = c1.emplace(c1.begin() + P, Emplaceable(1, 2.5));
     assert(i == c1.begin() + P);
     assert(c1.size() == c1_osize + 1);
-    assert(distance(c1.begin(), c1.end()) == c1.size());
+    assert(static_cast<std::size_t>(distance(c1.begin(), c1.end())) == c1.size());
     assert(*i == Emplaceable(1, 2.5));
 }
 
@@ -86,7 +87,7 @@ testN(int start, int N)
 }
 
 
-int main()
+int main(int, char**)
 {
     {
     int rng[] = {0, 1, 2, 3, 1023, 1024, 1025, 2047, 2048, 2049};
@@ -102,4 +103,6 @@ int main()
         for (int j = 0; j < N; ++j)
             testN<std::deque<Emplaceable, min_allocator<Emplaceable>> >(rng[i], rng[j]);
     }
+
+  return 0;
 }

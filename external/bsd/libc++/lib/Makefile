@@ -8,12 +8,13 @@ NOLINT=		# defined
 
 .PATH: ${LIBCXX_SRCDIR}/src
 
-SRCS=	algorithm.cpp bind.cpp chrono.cpp condition_variable.cpp debug.cpp \
-	exception.cpp future.cpp hash.cpp ios.cpp iostream.cpp locale.cpp \
-	memory.cpp mutex.cpp new.cpp optional.cpp random.cpp regex.cpp \
-	shared_mutex.cpp stdexcept.cpp \
-	string.cpp strstream.cpp system_error.cpp thread.cpp \
-	utility.cpp valarray.cpp
+SRCS=	algorithm.cpp bind.cpp charconv.cpp chrono.cpp \
+	condition_variable.cpp condition_variable_destructor.cpp debug.cpp \
+	exception.cpp functional.cpp future.cpp hash.cpp ios.cpp iostream.cpp \
+	locale.cpp memory.cpp mutex.cpp mutex_destructor.cpp new.cpp \
+	optional.cpp random.cpp regex.cpp shared_mutex.cpp stdexcept.cpp \
+	string.cpp strstream.cpp system_error.cpp thread.cpp utility.cpp \
+	valarray.cpp variant.cpp vector.cpp
 # typeinfo.cc: prefer libcxxrt's version
 
 LIBCXXRT_SRCS+= \
@@ -34,7 +35,7 @@ CLEANFILES+=	rt_${src}
 .include <bsd.own.mk>
 
 CPPFLAGS+=	-nostdinc++ -cxx-isystem ${LIBCXX_SRCDIR}/include -I${LIBCXXRT_SRCDIR}/src
-CPPFLAGS+=	-DLIBCXXRT
+CPPFLAGS+=	-DLIBCXXRT -D_LIBCPP_BUILDING_LIBRARY
 CXXFLAGS+=	-std=c++11
 
 CWARNFLAGS.gcc+=	-Wno-error
@@ -43,7 +44,6 @@ CWARNFLAGS.clang+=	-Wno-error=unused-variable -Wno-error=missing-noreturn
 CWARNFLAGS.clang+=	-Wno-error=missing-prototypes -Wno-error=sometimes-uninitialized
 CWARNFLAGS.clang+=	-Wno-error=missing-field-initializers -Wno-error=switch
 CWARNFLAGS.clang+=	-Wno-error=implicit-exception-spec-mismatch
-
 # with SSP and FORTIFY, on earm...
 COPTS.rt_libelftc_dem_gnu3.c += ${${ACTIVE_CC} == "clang":? -Wno-error=builtin-memcpy-chk-size :}
 
@@ -56,3 +56,5 @@ CWARNFLAGS+=		-Wno-atomic-alignment
 .endif
 
 .include <bsd.lib.mk>
+
+CXXFLAGS+=	-Wno-old-style-cast
