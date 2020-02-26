@@ -48,7 +48,6 @@ ATF_TC_BODY(errno_constants, tc)
 	 * The following definitions should be available
 	 * according to IEEE Std 1003.1-2008, issue 7.
 	 */
-	atf_tc_expect_fail("PR standards/44921");
 
 	fail = true;
 

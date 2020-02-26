@@ -172,7 +172,11 @@
 #define	ENOLINK		95		/* Link has been severed */
 #define	EPROTO		96		/* Protocol error */
 
-#define	ELAST		96		/* Must equal largest errno */
+/* Robust mutexes */
+#define	EOWNERDEAD	97		/* Previous owner died */
+#define	ENOTRECOVERABLE	98		/* State not recoverable */
+
+#define	ELAST		98		/* Must equal largest errno */
 
 #if defined(_KERNEL) || defined(_KMEMUSER)
 /* pseudo-errors returned inside kernel to modify return to process */

@@ -505,6 +505,11 @@ Occurs when the link (virtual circuit) connecting to a remote machine is gone.
 Some protocol error occurred.
 This error is device-specific, but is generally not related to a hardware
 failure.
+.It Er 97 EOWNERDEAD Em "Previous owner died" .
+Occurs when the last owner of a robust mutex dies while holding the mutex.
+.It Er 98 ENOTRECOVERABLE Em "State not recoverable" .
+Occurs when the last owner of a robust mutex died and the new owner
+had unlocked the mutex without making its state consistent.
 .El
 .Sh DEFINITIONS
 .Bl -tag -width Ds
