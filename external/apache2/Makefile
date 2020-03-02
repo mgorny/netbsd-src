@@ -6,6 +6,10 @@
 SUBDIR+= argon2
 .endif
 
+.if (${MKLIBCXX} != "no")
+SUBDIR+= libc++
+.endif
+
 .if (${MKLLVM} != "no" || ${MKLLVMRT} != "no")
 SUBDIR+= llvm
 .endif

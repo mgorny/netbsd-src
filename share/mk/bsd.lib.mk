@@ -632,7 +632,7 @@ LDADD+= -lgcc
 .if ${LIBISCXX} != "no"
 LIBCC:=	${CXX}
 . if ${MKLIBCXX} == "yes"
-LIBDPLIBS+=     c++	${.CURDIR}/../../../../../external/bsd/libc++/lib
+LIBDPLIBS+=     c++	${.CURDIR}/../../../../../external/apache2/libc++/lib
 . else
 LIBDPLIBS+=     stdc++	${.CURDIR}/../../../../../external/gpl3/${EXTERNAL_GCC_SUBDIR}/lib/libstdc++-v3
 . endif

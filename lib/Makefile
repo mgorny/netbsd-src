@@ -161,7 +161,7 @@ SUBDIR+=	../external/gpl3/${EXTERNAL_BINUTILS_SUBDIR}/lib	# libbfd depends on li
 .endif
 
 .if (${MKLIBCXX} != "no")
-SUBDIR+=	../external/bsd/libc++
+SUBDIR+=	../external/apache2/libc++
 .endif
 
 .if (${MKGCC} != "no" && ${MKCXX} != "no" && ${MKLIBSTDCXX} != "no")

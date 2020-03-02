@@ -150,8 +150,8 @@ if ${cvsmode}; then
 		src/sys
 
 	iswanted usr && \
-	    echo \!src/external/bsd/libc++/dist/libcxx/test \
-	           src/external/bsd/libc++
+	    echo \!src/external/apache2/libc++/dist/libcxx/test \
+	           src/external/apache2/libc++
 
 	# pick a few useful archs, namely those mentioned in buildrump.sh
 	for arch in ${ARCHS}; do
