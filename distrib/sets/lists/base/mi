@@ -1097,8 +1097,11 @@
 ./usr/include/altq				base-c-usr
 ./usr/include/arpa				base-c-usr
 ./usr/include/c++				base-cxx-usr
-./usr/include/c++/experimental			base-cxx-usr
-./usr/include/c++/ext				base-cxx-usr
+./usr/include/c++/experimental			base-cxx-usr		obsolete
+./usr/include/c++/ext				base-cxx-usr		obsolete
+./usr/include/c++/v1				base-cxx-usr
+./usr/include/c++/v1/experimental		base-cxx-usr
+./usr/include/c++/v1/ext			base-cxx-usr
 ./usr/include/cdk				base-obsolete		obsolete
 ./usr/include/clang-3.4				base-obsolete		obsolete
 ./usr/include/clang-3.5				base-obsolete		obsolete

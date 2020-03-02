@@ -4,7 +4,7 @@
 
 .PATH: ${LIBCXX_SRCDIR}/include
 
-INCSDIR=	/usr/include/c++
+INCSDIR=	/usr/include/c++/v1
 
 INCS=	__bit_reference \
 	__bsd_locale_defaults.h \
