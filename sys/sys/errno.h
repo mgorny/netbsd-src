@@ -168,7 +168,7 @@
 #define	ENOATTR		93		/* Attribute not found */
 
 /* Realtime, XSI STREAMS option errors */
-#define	EMULTIHOP	94		/* Multihop attempted */ 
+#define	EMULTIHOP	94		/* Multihop attempted */
 #define	ENOLINK		95		/* Link has been severed */
 #define	EPROTO		96		/* Protocol error */
 
