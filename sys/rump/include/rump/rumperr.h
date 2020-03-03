@@ -1,4 +1,4 @@
-/*	$NetBSD: rumperr.h,v 1.8 2018/08/21 11:47:37 christos Exp $	*/
+/*	$NetBSD: makerumpdefs.sh,v 1.31 2018/08/21 11:45:23 christos Exp $	*/
 
 /*
  *	AUTOMATICALLY GENERATED.  DO NOT EDIT.
@@ -205,6 +205,10 @@ rump_strerror(int error)
 		return "Link has been severed";
 	case 96: /* (EPROTO) */
 		return "Protocol error";
+	case 97: /* (EOWNERDEAD) */
+		return "Previous owner died";
+	case 98: /* (ENOTRECOVERABLE) */
+		return "State not recoverable";
 	default:
 		return "Invalid error!";
 	}

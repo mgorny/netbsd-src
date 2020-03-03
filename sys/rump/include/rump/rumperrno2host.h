@@ -1,4 +1,4 @@
-/*	$NetBSD: rumperrno2host.h,v 1.5 2018/08/21 11:47:37 christos Exp $	*/
+/*	$NetBSD: makerumpdefs.sh,v 1.31 2018/08/21 11:45:23 christos Exp $	*/
 
 /*
  *	AUTOMATICALLY GENERATED.  DO NOT EDIT.
@@ -400,6 +400,14 @@ rump_errno2host(int rumperrno)
 #ifdef EPROTO
 	case 96:
 		return EPROTO;
+#endif
+#ifdef EOWNERDEAD
+	case 97:
+		return EOWNERDEAD;
+#endif
+#ifdef ENOTRECOVERABLE
+	case 98:
+		return ENOTRECOVERABLE;
 #endif
 	default:
 #ifdef EINVAL

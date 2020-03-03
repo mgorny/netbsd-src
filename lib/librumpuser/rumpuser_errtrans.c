@@ -315,6 +315,12 @@ rumpuser__errtrans(int hosterr)
 #ifdef EPROTO
 	case EPROTO         : return 96;
 #endif
+#ifdef EOWNERDEAD
+	case EOWNERDEAD     : return 97;
+#endif
+#ifdef ENOTRECOVERABLE
+	case ENOTRECOVERABLE: return 98;
+#endif
 
 	default             : return 22; /* EINVAL */
 	}
