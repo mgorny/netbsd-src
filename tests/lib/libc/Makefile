@@ -6,8 +6,8 @@
 SUBDIR+=	tls_dso .WAIT sync
 
 TESTS_SUBDIRS+=	atomic
-TESTS_SUBDIRS+=	c063 db gen hash inet locale misc net regex rpc setjmp stdlib
-TESTS_SUBDIRS+=	stdio string sys termios time tls ttyio
+TESTS_SUBDIRS+=	c063 db gen hash inet locale misc net nls regex rpc setjmp
+TESTS_SUBDIRS+=	stdlib stdio string sys termios time tls ttyio
 
 .if ${HAVE_SSP} == "yes"
 TESTS_SUBDIRS+=	ssp
