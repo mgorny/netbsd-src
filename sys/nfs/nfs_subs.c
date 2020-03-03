@@ -207,7 +207,7 @@ const int nfsv2_procid[NFS_NPROCS] = {
  * Use NFSERR_IO as the catch all for ones not specifically defined in
  * RFC 1094.
  */
-static const u_char nfsrv_v2errmap[ELAST] = {
+static const u_char nfsrv_v2errmap[] = {
   NFSERR_PERM,	NFSERR_NOENT,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,
   NFSERR_NXIO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,
   NFSERR_IO,	NFSERR_IO,	NFSERR_ACCES,	NFSERR_IO,	NFSERR_IO,
@@ -224,8 +224,12 @@ static const u_char nfsrv_v2errmap[ELAST] = {
   NFSERR_NOTEMPTY, NFSERR_IO,	NFSERR_IO,	NFSERR_DQUOT,	NFSERR_STALE,
   NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,
   NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,
-  NFSERR_IO,	NFSERR_IO,
+  NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,
+  NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,
+  NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,	NFSERR_IO,
+  NFSERR_IO,	NFSERR_IO,	NFSERR_IO
 };
+__CTASSERT(__arraycount(nfsrv_v2errmap) == ELAST);
 
 /*
  * Maps errno values to nfs error numbers.
