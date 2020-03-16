@@ -1,0 +1,201 @@
+#	$NetBSD$
+
+PROG_CXX=	lldb-server
+NOMAN=		yes
+
+.include <bsd.init.mk>
+
+.PATH: ${LLDB_SRCDIR}/tools/lldb-server
+
+SRCS= \
+	Acceptor.cpp \
+	lldb-gdbserver.cpp \
+	lldb-platform.cpp \
+	lldb-server.cpp \
+	LLDBServerUtilities.cpp \
+	SystemInitializerLLGS.cpp
+
+LLDB_LIBS+= \
+	lldbBase \
+	lldbHost \
+	lldbInitialization \
+	lldbPluginProcessNetBSD \
+	lldbPluginObjectFileELF \
+	lldbPluginInstructionARM \
+	lldbPluginInstructionMIPS \
+	lldbPluginInstructionMIPS64 \
+	lldbPluginProcessGDBRemote \
+	lldbPluginPlatformMacOSX \
+	lldbPluginPlatformPOSIX \
+	lldbPluginProcessPOSIX \
+	lldbCore \
+	lldbSymbol \
+	lldbTarget \
+	lldbPluginProcessUtility \
+	lldbInterpreter \
+	lldbBreakpoint \
+	lldbDataFormatters \
+	lldbExpression \
+	lldbPluginCPlusPlusLanguage \
+	lldbPluginObjCLanguage \
+	lldbPluginExpressionParserClang \
+	lldbCommands \
+	lldbPluginObjectFileJIT \
+	lldbPluginClangCommon \
+	lldbPluginCPPRuntime \
+	lldbPluginAppleObjCRuntime \
+	lldbPluginObjCRuntime \
+	lldbPluginRenderScriptRuntime \
+	lldbPluginSymbolFileDWARF \
+	lldbPluginSymbolFilePDB \
+	lldbPluginSymbolFileNativePDB \
+	lldbCore \
+	lldbSymbol \
+	lldbTarget \
+	lldbPluginProcessUtility \
+	lldbInterpreter \
+	lldbBreakpoint \
+	lldbDataFormatters \
+	lldbExpression \
+	lldbPluginCPlusPlusLanguage \
+	lldbPluginObjCLanguage \
+	lldbPluginExpressionParserClang \
+	lldbCommands \
+	lldbPluginObjectFileJIT \
+	lldbPluginClangCommon \
+	lldbPluginCPPRuntime \
+	lldbPluginAppleObjCRuntime \
+	lldbPluginObjCRuntime \
+	lldbPluginRenderScriptRuntime \
+	lldbPluginSymbolFileDWARF \
+	lldbPluginSymbolFilePDB \
+	lldbPluginSymbolFileNativePDB \
+	lldbCore \
+	lldbSymbol \
+	lldbTarget \
+	lldbPluginProcessUtility \
+	lldbInterpreter \
+	lldbBreakpoint \
+	lldbDataFormatters \
+	lldbExpression \
+	lldbPluginCPlusPlusLanguage \
+	lldbPluginObjCLanguage \
+	lldbPluginExpressionParserClang \
+	lldbCommands \
+	lldbPluginObjectFileJIT \
+	lldbPluginClangCommon \
+	lldbPluginCPPRuntime \
+	lldbPluginAppleObjCRuntime \
+	lldbPluginObjCRuntime \
+	lldbPluginRenderScriptRuntime \
+	lldbPluginSymbolFileDWARF \
+	lldbPluginSymbolFilePDB \
+	lldbPluginSymbolFileNativePDB \
+	lldbCore \
+	lldbSymbol \
+	lldbTarget \
+	lldbPluginProcessUtility \
+	lldbInterpreter \
+	lldbBreakpoint \
+	lldbDataFormatters \
+	lldbExpression \
+	lldbPluginCPlusPlusLanguage \
+	lldbPluginObjCLanguage \
+	lldbPluginExpressionParserClang \
+	lldbCommands \
+	lldbPluginObjectFileJIT \
+	lldbPluginClangCommon \
+	lldbPluginCPPRuntime \
+	lldbPluginAppleObjCRuntime \
+	lldbPluginObjCRuntime \
+	lldbPluginRenderScriptRuntime \
+	lldbPluginSymbolFileDWARF \
+	lldbPluginSymbolFilePDB \
+	lldbPluginSymbolFileNativePDB \
+	lldbCore \
+	lldbSymbol \
+	lldbTarget \
+	lldbPluginProcessUtility \
+	lldbInterpreter \
+	lldbBreakpoint \
+	lldbDataFormatters \
+	lldbExpression \
+	lldbPluginCPlusPlusLanguage \
+	lldbPluginObjCLanguage \
+	lldbPluginExpressionParserClang \
+	lldbCommands \
+	lldbPluginObjectFileJIT \
+	lldbPluginClangCommon \
+	lldbPluginCPPRuntime \
+	lldbPluginAppleObjCRuntime \
+	lldbPluginObjCRuntime \
+	lldbPluginRenderScriptRuntime \
+	lldbPluginSymbolFileDWARF \
+	lldbPluginSymbolFilePDB \
+	lldbPluginSymbolFileNativePDB \
+	lldbBase \
+	lldbHost \
+	lldbUtility
+
+CLANG_LIBS+= \
+	clangCodeGen \
+	clangRewrite \
+	clangFrontend \
+	clangDriver \
+	clangParse \
+	clangSerialization \
+	clangSema \
+	clangEdit \
+	clangAnalysis \
+	clangASTMatchers \
+	clangAST \
+	clangLex \
+	clangBasic
+
+LLVM_LIBS+= \
+	Support \
+	LTO \
+	Passes \
+	ipo \
+	Instrumentation \
+	Linker \
+	Vectorize \
+	Option \
+	IRReader \
+	AsmParser \
+	MipsCodeGen \
+	AsmPrinter \
+	DebugInfoDWARF \
+	GlobalISel \
+	SelectionDAG \
+	CodeGen \
+	BitWriter \
+	ScalarOpts \
+	InstCombine \
+	Target \
+	Analysis \
+	Object \
+	BitReader \
+	TextAPI \
+	ProfileData \
+	Remarks \
+	BitstreamReader \
+	MipsAsmParser \
+	MCParser \
+	MipsDisassembler \
+	MCDisassembler \
+	MC \
+	BinaryFormat \
+	DebugInfoCodeView \
+	DebugInfoMSF \
+	Support \
+	Demangle
+
+.include "${.PARSEDIR}/../../link.mk"
+
+LDADD+=	-lkvm -lutil -lz
+.if !defined(HOSTPROG)
+DPADD+=	${LIBKVM} ${LIBUTIL} ${LIBZ}
+.endif
+
+.include <bsd.prog.mk>

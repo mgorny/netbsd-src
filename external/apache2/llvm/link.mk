@@ -10,6 +10,12 @@ LIB_BASE=	${NETBSDSRCDIR}/tools/llvm-lib
 LIB_BASE=	${LLVM_TOPLEVEL}/lib
 .endif
 
+.for l in ${LLDB_LIBS}
+LLDB_OBJDIR.${l}!=	cd ${LIB_BASE}/lib${l} && ${PRINTOBJDIR}
+LDADD+=	-L${LLDB_OBJDIR.${l}} -l${l}
+DPADD+=	${LLDB_OBJDIR.${l}}/lib${l}.a
+.endfor
+
 .for l in ${CLANG_LIBS}
 CLANG_OBJDIR.${l}!=	cd ${LIB_BASE}/lib${l} && ${PRINTOBJDIR}
 LDADD+=	-L${CLANG_OBJDIR.${l}} -l${l}

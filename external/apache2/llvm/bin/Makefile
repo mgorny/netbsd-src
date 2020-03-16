@@ -6,6 +6,13 @@ SUBDIR=	clang \
 	clang-tblgen \
 	tblgen
 
+.if ${MKLLDB} != "no"
+SUBDIR+= \
+	lldb \
+	lldb-server \
+	lldb-tblgen
+.endif
+
 .if defined(LLVM_DEVELOPER)
 SUBDIR+= \
 	bugpoint \

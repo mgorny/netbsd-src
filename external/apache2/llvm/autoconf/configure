@@ -10397,6 +10397,9 @@ if test -f ${clang_src_root}/README.txt; then
 
 fi
 
+ac_config_headers="$ac_config_headers include/lldb/Host/Config.h"
+
+
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
 # tests run on this system so they can be shared between configure
@@ -11096,6 +11099,7 @@ do
     "include/llvm/Config/Disassemblers.def") CONFIG_FILES="$CONFIG_FILES include/llvm/Config/Disassemblers.def" ;;
     "include/llvm/Support/DataTypes.h") CONFIG_HEADERS="$CONFIG_HEADERS include/llvm/Support/DataTypes.h" ;;
     "include/clang/Config/config.h") CONFIG_HEADERS="$CONFIG_HEADERS include/clang/Config/config.h" ;;
+    "include/lldb/Host/Config.h") CONFIG_HEADERS="$CONFIG_HEADERS include/lldb/Host/Config.h" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

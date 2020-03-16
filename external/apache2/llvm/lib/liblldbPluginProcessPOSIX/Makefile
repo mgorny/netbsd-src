@@ -1,0 +1,19 @@
+#	$NetBSD$
+
+LIB=	lldbPluginProcessPOSIX
+
+.include <bsd.init.mk>
+
+.PATH: ${LLDB_SRCDIR}/source/Plugins/Process/POSIX
+
+SRCS+= \
+	CrashReason.cpp \
+	NativeProcessELF.cpp \
+	ProcessMessage.cpp \
+	ProcessPOSIXLog.cpp
+
+.if defined(HOSTLIB)
+.include <bsd.hostlib.mk>
+.else
+.include <bsd.lib.mk>
+.endif

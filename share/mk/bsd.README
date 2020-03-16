@@ -327,6 +327,9 @@ MKLINKLIB	If "no", act as "MKLINT=no MKPICINSTALL=no MKPROFILE=no".
 MKLINT		If "no", don't build or install the lint libraries.
 		Default: yes
 
+MKLLDB		If "yes", build and install LLDB as host tool.
+		Default: no
+
 MKLLVM		If "yes", build and install clang as host tool and target
 		compiler.  Use as system compiler is enabled with HAVE_LLVM
 		(see below for details).

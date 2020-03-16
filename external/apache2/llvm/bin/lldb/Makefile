@@ -1,0 +1,286 @@
+#	$NetBSD$
+
+PROG_CXX=	lldb
+NOMAN=		yes
+
+.include <bsd.init.mk>
+
+.PATH: ${LLDB_SRCDIR}/tools/driver
+
+SRCS= \
+	Driver.cpp \
+	Platform.cpp
+
+LLDB_LIBS+= \
+	lldb \
+	lldbInitialization \
+	lldbPluginABIMacOSX_arm64 \
+	lldbPluginABISysV_arm64 \
+	lldbPluginABIMacOSX_arm \
+	lldbPluginABISysV_arm \
+	lldbPluginABISysV_mips \
+	lldbPluginABISysV_mips64 \
+	lldbPluginABISysV_ppc \
+	lldbPluginABISysV_ppc64 \
+	lldbPluginABISysV_i386 \
+	lldbPluginABISysV_x86_64 \
+	lldbPluginABIMacOSX_i386 \
+	lldbPluginABIWindows_x86_64 \
+	lldbPluginArchitectureArm \
+	lldbPluginArchitectureMips \
+	lldbPluginArchitecturePPC64 \
+	lldbPluginDisassemblerLLVM \
+	lldbPluginDynamicLoaderStatic \
+	lldbPluginDynamicLoaderHexagonDYLD \
+	lldbPluginDynamicLoaderWindowsDYLD \
+	lldbPluginInstructionARM \
+	lldbPluginInstructionARM64 \
+	lldbPluginInstructionMIPS \
+	lldbPluginInstructionMIPS64 \
+	lldbPluginInstructionPPC64 \
+	lldbPluginInstrumentationRuntimeASan \
+	lldbPluginInstrumentationRuntimeMainThreadChecker \
+	lldbPluginInstrumentationRuntimeTSan \
+	lldbPluginInstrumentationRuntimeUBSan \
+	lldbPluginJITLoaderGDB \
+	lldbPluginObjCPlusPlusLanguage \
+	lldbPluginCXXItaniumABI \
+	lldbPluginRenderScriptRuntime \
+	lldbPluginMemoryHistoryASan \
+	lldbPluginObjectContainerBSDArchive \
+	lldbPluginObjectContainerMachOArchive \
+	lldbPluginObjectFilePECOFF \
+	lldbPluginOSPython \
+	lldbPluginPlatformFreeBSD \
+	lldbPluginPlatformNetBSD \
+	lldbPluginPlatformOpenBSD \
+	lldbPluginPlatformWindows \
+	lldbPluginPlatformAndroid \
+	lldbPluginPlatformLinux \
+	lldbPluginPlatformGDB \
+	lldbPluginProcessNetBSD \
+	lldbPluginProcessPOSIX \
+	lldbPluginProcessGDBRemote \
+	lldbPluginProcessMachCore \
+	lldbPluginDynamicLoaderDarwinKernel \
+	lldbPluginPlatformMacOSX \
+	lldbPluginPlatformPOSIX \
+	lldbPluginDynamicLoaderMacOSXDYLD \
+	lldbPluginObjectFileMachO \
+	lldbPluginProcessMinidump \
+	lldbPluginDynamicLoaderPosixDYLD \
+	lldbPluginProcessElfCore \
+	lldbPluginDynamicLoaderPosixDYLD \
+	lldbPluginProcessElfCore \
+	lldbPluginScriptInterpreterNone \
+	lldbPluginStructuredDataDarwinLog \
+	lldbPluginSymbolFileBreakpad \
+	lldbPluginObjectFileBreakpad \
+	lldbPluginSymbolFileSymtab \
+	lldbPluginSystemRuntimeMacOSX \
+	lldbPluginSymbolVendorELF \
+	lldbPluginObjectFileELF \
+	lldbPluginUnwindAssemblyInstEmulation \
+	lldbPluginUnwindAssemblyX86 \
+	lldbBreakpoint \
+	lldbCore \
+	lldbDataFormatters \
+	lldbExpression \
+	lldbInterpreter \
+	lldbSymbol \
+	lldbTarget \
+	lldbPluginExpressionParserClang \
+	lldbPluginClangCommon \
+	lldbPluginCPlusPlusLanguage \
+	lldbPluginObjCLanguage \
+	lldbPluginCPPRuntime \
+	lldbPluginObjCRuntime \
+	lldbPluginAppleObjCRuntime \
+	lldbPluginObjectFileJIT \
+	lldbPluginProcessUtility \
+	lldbPluginSymbolFileDWARF \
+	lldbPluginSymbolFileNativePDB \
+	lldbPluginSymbolFilePDB \
+	lldbCommands \
+	lldbBreakpoint \
+	lldbCore \
+	lldbDataFormatters \
+	lldbExpression \
+	lldbInterpreter \
+	lldbSymbol \
+	lldbTarget \
+	lldbPluginExpressionParserClang \
+	lldbPluginClangCommon \
+	lldbPluginCPlusPlusLanguage \
+	lldbPluginObjCLanguage \
+	lldbPluginCPPRuntime \
+	lldbPluginObjCRuntime \
+	lldbPluginAppleObjCRuntime \
+	lldbPluginObjectFileJIT \
+	lldbPluginProcessUtility \
+	lldbPluginSymbolFileDWARF \
+	lldbPluginSymbolFileNativePDB \
+	lldbPluginSymbolFilePDB \
+	lldbCommands \
+	lldbBreakpoint \
+	lldbCore \
+	lldbDataFormatters \
+	lldbExpression \
+	lldbInterpreter \
+	lldbSymbol \
+	lldbTarget \
+	lldbPluginExpressionParserClang \
+	lldbPluginClangCommon \
+	lldbPluginCPlusPlusLanguage \
+	lldbPluginObjCLanguage \
+	lldbPluginCPPRuntime \
+	lldbPluginObjCRuntime \
+	lldbPluginAppleObjCRuntime \
+	lldbPluginObjectFileJIT \
+	lldbPluginProcessUtility \
+	lldbPluginSymbolFileDWARF \
+	lldbPluginSymbolFileNativePDB \
+	lldbPluginSymbolFilePDB \
+	lldbCommands \
+	lldbBreakpoint \
+	lldbCore \
+	lldbDataFormatters \
+	lldbExpression \
+	lldbInterpreter \
+	lldbSymbol \
+	lldbTarget \
+	lldbPluginExpressionParserClang \
+	lldbPluginClangCommon \
+	lldbPluginCPlusPlusLanguage \
+	lldbPluginObjCLanguage \
+	lldbPluginCPPRuntime \
+	lldbPluginObjCRuntime \
+	lldbPluginAppleObjCRuntime \
+	lldbPluginObjectFileJIT \
+	lldbPluginProcessUtility \
+	lldbPluginSymbolFileDWARF \
+	lldbPluginSymbolFileNativePDB \
+	lldbPluginSymbolFilePDB \
+	lldbCommands \
+	lldbBase \
+	lldbHost \
+	lldbUtility
+
+CLANG_LIBS+= \
+	clangCodeGen \
+	clangFrontend \
+	clangDriver \
+	clangParse \
+	clangRewrite \
+	clangSerialization \
+	clangSema \
+	clangEdit \
+	clangAnalysis \
+	clangASTMatchers \
+	clangAST \
+	clangLex \
+	clangBasic
+
+LLVM_LIBS+= \
+	Option \
+	Support \
+	AArch64CodeGen \
+	AArch64AsmParser \
+	AArch64Disassembler \
+	AArch64MCTargetDesc \
+	AArch64TargetInfo \
+	AArch64Utils \
+	AMDGPUCodeGen \
+	MIRParser \
+	AMDGPUAsmParser \
+	AMDGPUDisassembler \
+	AMDGPUMCTargetDesc \
+	AMDGPUTargetInfo \
+	AMDGPUUtils \
+	ARMCodeGen \
+	ARMAsmParser \
+	ARMDisassembler \
+	ARMMCTargetDesc \
+	ARMTargetInfo \
+	ARMUtils \
+	PowerPCCodeGen \
+	PowerPCAsmParser \
+	PowerPCMCTargetDesc \
+	PowerPCDisassembler \
+	PowerPCTargetInfo \
+	SparcCodeGen \
+	SparcAsmParser \
+	SparcMCTargetDesc \
+	SparcDisassembler \
+	SparcTargetInfo \
+	X86CodeGen \
+	MipsCodeGen \
+	AsmPrinter \
+	GlobalISel \
+	SelectionDAG \
+	MipsAsmParser \
+	MipsMCTargetDesc \
+	MipsDisassembler \
+	MipsTargetInfo \
+	X86AsmParser \
+	X86MCTargetDesc \
+	X86Disassembler \
+	X86TargetInfo \
+	X86Utils \
+	MCJIT \
+	ExecutionEngine \
+	RuntimeDyld \
+	LTO \
+	Passes \
+	ipo \
+	IRReader \
+	AsmParser \
+	Linker \
+	CodeGen \
+	Target \
+	BitWriter \
+	ScalarOpts \
+	Vectorize \
+	InstCombine \
+	Instrumentation \
+	Analysis \
+	Option \
+	ProfileData \
+	ProfileDataCoverage \
+	DebugInfoDWARF \
+	DebugInfoPDB \
+	DebugInfoPDBNative \
+	Object \
+	BitReader \
+	IR \
+	Remarks \
+	BitstreamReader \
+	MCParser \
+	TextAPI \
+	MCDisassembler \
+	MC \
+	BinaryFormat \
+	DebugInfoCodeView \
+	DebugInfoMSF \
+	TransformsCFGuard \
+	TransformsUtils \
+	Support \
+	Demangle
+
+.include "${.PARSEDIR}/../../link.mk"
+
+LDADD+=	-lkvm -lutil -lz
+.if !defined(HOSTPROG)
+DPADD+=	${LIBKVM} ${LIBUTIL} ${LIBZ}
+.endif
+
+TABLEGEN_SRC= \
+	Options.td
+TABLEGEN_OUTPUT= \
+	Options.inc|-gen-opt-parser-defs
+TABLEGEN_INCLUDES= \
+	-I${LLDB_SRCDIR}/tools/driver
+
+.include "${.PARSEDIR}/../../tablegen.mk"
+
+.include <bsd.prog.mk>

@@ -133,6 +133,10 @@ SUBDIR+= \
 SUBDIR+= \
 	llvm-clang-tblgen
 .endif
+.if ${MKLLVM} != "no" && ${MKLLDB} != "no"
+SUBDIR+= \
+	llvm-lldb-tblgen
+.endif
 .if ${MKLLVM} != "no" && !defined(EXTERNAL_TOOLCHAIN)
 SUBDIR+= \
 	.WAIT llvm-include .WAIT \

@@ -51,7 +51,9 @@
 ./usr/bin/lex					comp-c-bin
 ./usr/bin/lint					comp-c-bin
 ./usr/bin/lld					comp-obsolete		obsolete
-./usr/bin/lldb					comp-obsolete		obsolete
+./usr/bin/lldb					comp-c-bin		lldb
+./usr/bin/lldb-server				comp-c-bin		lldb
+./usr/bin/lldb-tblgen				comp-c-bin		lldb
 ./usr/bin/llvm-tblgen				comp-c-bin		llvm
 ./usr/bin/lorder				comp-util-bin
 ./usr/bin/luac					comp-util-bin

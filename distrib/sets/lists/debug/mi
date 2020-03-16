@@ -630,6 +630,9 @@
 ./usr/libdata/debug/usr/bin/lex.debug		comp-c-debug		debug
 ./usr/libdata/debug/usr/bin/lint.debug		comp-c-debug		debug
 ./usr/libdata/debug/usr/bin/lkbib.debug		comp-groff-debug	groff,debug
+./usr/libdata/debug/usr/bin/lldb.debug		comp-c-debug		lldb,debug
+./usr/libdata/debug/usr/bin/lldb-server.debug	comp-c-debug		lldb,debug
+./usr/libdata/debug/usr/bin/lldb-tblgen.debug	comp-c-debug		lldb,debug
 ./usr/libdata/debug/usr/bin/llvm-tblgen.debug	comp-c-debug		llvm,debug
 ./usr/libdata/debug/usr/bin/locale.debug	comp-locale-debug	debug
 ./usr/libdata/debug/usr/bin/locate.debug	comp-util-debug		debug

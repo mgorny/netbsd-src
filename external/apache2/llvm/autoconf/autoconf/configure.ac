@@ -2039,5 +2039,8 @@ if test -f ${clang_src_root}/README.txt; then
   AC_CONFIG_HEADERS([include/clang/Config/config.h])
 fi
 
+dnl Configure lldb
+AC_CONFIG_HEADERS([include/lldb/Host/Config.h])
+
 dnl Finally, crank out the output
 AC_OUTPUT

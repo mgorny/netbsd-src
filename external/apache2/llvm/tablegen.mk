@@ -30,3 +30,18 @@ CLEANFILES+=	${f:C,\|.*$,,} ${f:C,\|.*$,,:C,$,.d,}
 .sinclude "${f:C,\|.*$,,:C,$,.d,}"
 .endfor
 .endfor
+
+.for t in ${LLDB_TABLEGEN_SRC}
+.for f in ${LLDB_TABLEGEN_OUTPUT} ${LLDB_TABLEGEN_OUTPUT.${t}}
+${f:C,\|.*$,,}: ${t} ${TOOL_LLDB_TBLGEN}
+	[ -z "${f:C,\|.*$,,}" ] || mkdir -p ${f:C,\|.*$,,:H}
+	${TOOL_LLDB_TBLGEN} -I${LLVM_SRCDIR}/include \
+	    ${LLDB_TABLEGEN_INCLUDES} ${LLDB_TABLEGEN_INCLUDES.${t}} \
+	    ${f:C,^.*\|,,:C,\^, ,} \
+	    ${.ALLSRC:M*/${t}} -d ${.TARGET}.d -o ${.TARGET}
+DPSRCS+=	${f:C,\|.*$,,}
+CLEANFILES+=	${f:C,\|.*$,,} ${f:C,\|.*$,,:C,$,.d,}
+
+.sinclude "${f:C,\|.*$,,:C,$,.d,}"
+.endfor
+.endfor
