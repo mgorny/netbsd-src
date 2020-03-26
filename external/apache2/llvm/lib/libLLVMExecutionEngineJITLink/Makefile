@@ -11,7 +11,6 @@ SRCS+=	EHFrameSupport.cpp \
 	JITLinkGeneric.cpp \
 	JITLinkMemoryManager.cpp \
 	MachO_arm64.cpp \
-	MachOAtomGraphBuilder.cpp \
 	MachO.cpp \
 	MachOLinkGraphBuilder.cpp \
 	MachO_x86_64.cpp
