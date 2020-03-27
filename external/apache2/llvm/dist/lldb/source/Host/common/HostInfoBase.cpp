@@ -248,13 +248,7 @@ bool HostInfoBase::ComputeSharedLibraryDirectory(FileSpec &file_spec) {
   // contains this function. On MacOSX this will be "LLDB.framework/.../LLDB".
   // On other posix systems, we will get .../lib(64|32)?/liblldb.so.
 
-  FileSpec lldb_file_spec(Host::GetModuleFileSpecForHostAddress(
-      reinterpret_cast<void *>(reinterpret_cast<intptr_t>(
-          HostInfoBase::ComputeSharedLibraryDirectory))));
-
-  // This is necessary because when running the testsuite the shlib might be a
-  // symbolic link inside the Python resource dir.
-  FileSystem::Instance().ResolveSymbolicLink(lldb_file_spec, lldb_file_spec);
+  FileSpec lldb_file_spec("/usr/lib/liblldb.so");
 
   // Remove the filename so that this FileSpec only represents the directory.
   file_spec.GetDirectory() = lldb_file_spec.GetDirectory();
